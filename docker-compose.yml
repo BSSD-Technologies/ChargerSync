@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:3000"
     volumes:
-      - ./frontend:/app/frontend
+      - ./frontend/src:/app/frontend/src
     depends_on:
       - backend
 
