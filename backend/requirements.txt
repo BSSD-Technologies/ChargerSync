@@ -1,2 +1,3 @@
-flask
-Flask-CORS
+flask=3.0.2 
+Flask-CORS=4.0.0 
+pandas=2.2.0
