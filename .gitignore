@@ -1,2 +1,3 @@
 .vscode/settings.json
 runDocker.bat
+.DS_Store
