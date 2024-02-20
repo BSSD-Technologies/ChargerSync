@@ -7,16 +7,16 @@ import BlueLogo from "@/app/_assets/BlueLogo.svg";
 export default function Home() {
   return (
     <Container
-      
       sx={{
         display: "flex",
+        height: "80vh",
         justifyContent: "center",
         alignItems: "center"
       }}
     >
       <Stack spacing={2} alignItems={"center"}>
-        <Image src={BlueLogo} alt={"Charger Sync"} />
-        <Typography variant="h5">
+        <Image src={BlueLogo} alt={"Charger Sync"} style={{width: "55vw", height: "auto"}} />
+        <Typography sx={{wordWrap: 'break-word'}} variant="h6">
           Insert some basic description about the site here.
         </Typography>
         <Button variant="contained" sx={{width: "50vw"}}>Generate a Schedule</Button>

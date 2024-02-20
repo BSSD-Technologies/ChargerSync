@@ -46,6 +46,7 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
             textTransform: "none",
             borderRadius: "10px",
             fontSize: "16px",
+            padding: "10px",
           }),
         })
       }
