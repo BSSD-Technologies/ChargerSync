@@ -1,3 +1,7 @@
 .vscode/settings.json
 runDocker.bat
+<<<<<<< HEAD
 .DS_Store
+=======
+runBackendSH.bat
+>>>>>>> main
