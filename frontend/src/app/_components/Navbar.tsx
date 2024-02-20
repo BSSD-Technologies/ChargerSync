@@ -1,6 +1,7 @@
+"use client";
+
 import {
   AppBar,
-  Avatar,
   Box,
   Button,
   Container,
@@ -8,7 +9,6 @@ import {
   Menu,
   MenuItem,
   Toolbar,
-  Tooltip,
   Typography,
 } from "@mui/material";
 import MenuRoundedIcon from "@mui/icons-material/MenuRounded";

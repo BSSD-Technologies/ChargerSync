@@ -37,5 +37,18 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
       fontSize: "1rem",
     },
   },
-  components: {},
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: ({ theme, ownerState }) => ({
+          ...(ownerState.variant === "contained" && {
+            boxShadow: "none",
+            textTransform: "none",
+            borderRadius: "10px",
+            fontSize: "16px",
+          }),
+        })
+      }
+    }
+  },
 });
