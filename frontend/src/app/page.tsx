@@ -19,8 +19,8 @@ export default function Home() {
         <Typography sx={{wordWrap: 'break-word'}} variant="h6">
           Insert some basic description about the site here.
         </Typography>
-        <Button variant="contained" sx={{width: "50vw"}}>Generate a Schedule</Button>
-        <Button variant="contained" sx={{width: "50vw"}}>Help Manual</Button>
+        <Button variant="contained" href="/input-data" sx={{width: "50vw"}}>Generate a Schedule</Button>
+        <Button variant="contained" href="/help" sx={{width: "50vw"}}>Help Manual</Button>
       </Stack>
     </Container>
   );

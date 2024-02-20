@@ -48,6 +48,13 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
             fontSize: "16px",
             padding: "10px",
           }),
+          ...(ownerState.variant === "text" && {
+            boxShadow: "none",
+            textTransform: "none",
+            borderRadius: "10px",
+            fontSize: "16px",
+            padding: "10px",
+          }),
         })
       }
     }

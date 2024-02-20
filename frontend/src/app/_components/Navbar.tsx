@@ -6,17 +6,33 @@ import {
   Button,
   Container,
   IconButton,
-  Menu,
-  MenuItem,
   Toolbar,
   Typography,
 } from "@mui/material";
-import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
 import { useState } from "react";
 import Image from "next/image";
 import WhiteLogo from "@/app/_assets/WhiteLogo.svg";
+import Link from "next/link";
+import NavDrawer from "./NavDrawer";
 
-const pages = ["Generate Schedule", "Help Manual"];
+export interface NavbarItem {
+  name: string;
+  link: string;
+  key: string;
+}
+
+const pages: NavbarItem[] = [
+  {
+    name: "Generate Schedule",
+    link: "/input-data",
+    key: "generate",
+  },
+  {
+    name: "Help Manual",
+    link: "/help",
+    key: "help"
+  },
+];
 
 export default function Navbar() {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -34,70 +50,40 @@ export default function Navbar() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
-            component="a"
-            href=""
             sx={{
               mr: 3,
               display: { xs: "none", md: "flex" },
             }}
           >
-            <Image src={WhiteLogo} alt={"Charger Sync"} height={60}></Image>
+            <Link passHref href="/">
+              <Image src={WhiteLogo} alt={"Charger Sync"} height={60}></Image>
+            </Link>
           </Typography>
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-            <IconButton
-              size="large"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
-            >
-              <MenuRoundedIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
+            <NavDrawer navItems={pages} />
           </Box>
           <Typography
-            component="a"
-            href=""
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
               flexGrow: 1,
             }}
           >
-            <Image src={WhiteLogo} alt={"Charger Sync"} height={60}></Image>
+            <Link passHref href="/">
+              <Image src={WhiteLogo} alt={"Charger Sync"} height={60}></Image>
+            </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
+            {pages.map((page: NavbarItem) => (
+              <Link passHref href={page.link} key={page.key}>
+                <Button
+                  variant="text"
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page.name}
+                </Button>
+              </Link>
             ))}
           </Box>
         </Toolbar>
