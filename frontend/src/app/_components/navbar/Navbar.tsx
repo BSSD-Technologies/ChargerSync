@@ -5,22 +5,26 @@ import {
   Box,
   Button,
   Container,
-  IconButton,
   Toolbar,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
 import Image from "next/image";
 import WhiteLogo from "@/app/_assets/WhiteLogo.svg";
 import Link from "next/link";
 import NavDrawer from "./NavDrawer";
 
+/** Define interface for a navbar item
+ * name: button text
+ * link: href for navbar button
+ * key: a unique key name
+ */
 export interface NavbarItem {
   name: string;
   link: string;
   key: string;
 }
 
+/** Array of navbar links with associated NavbarItem data */
 const pages: NavbarItem[] = [
   {
     name: "Generate Schedule",

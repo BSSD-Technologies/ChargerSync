@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
+import { Button, Container, Stack, Typography } from "@mui/material";
 import Image from "next/image";
 import BlueLogo from "@/app/_assets/BlueLogo.svg";
 import Link from "next/link";

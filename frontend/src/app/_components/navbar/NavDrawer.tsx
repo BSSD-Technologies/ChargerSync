@@ -2,7 +2,6 @@
 
 import {
   Box,
-  Button,
   Drawer,
   IconButton,
   List,
@@ -18,15 +17,19 @@ import { useState } from "react";
 import { NavbarItem } from "./Navbar";
 import Link from "next/link";
 
+/** Define interface for NavDrawer props
+ * navItems: array of NavbarItem's for drawer
+ */
 interface NavDrawerProps {
   navItems: NavbarItem[];
 }
 
 export default function NavDrawer(props: NavDrawerProps) {
-  const anchor = "left";
-  const navItems: NavbarItem[] = props.navItems;
-  const [isOpen, setIsOpen] = useState(false);
+  const anchor = "left";  // Anchor drawer to the left of the page
+  const navItems: NavbarItem[] = props.navItems;  // Get NavbarItem prop
+  const [isOpen, setIsOpen] = useState(false);    // Drawer open state
 
+  /** Toggle drawer open state based on click event */
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
@@ -36,10 +39,10 @@ export default function NavDrawer(props: NavDrawerProps) {
       ) {
         return;
       }
-
       setIsOpen(open);
     };
 
+  /** List of NavbarItem's for drawer */
   const list = () => (
     <Box
       sx={{ width: 250 }}

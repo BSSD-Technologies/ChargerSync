@@ -5,11 +5,13 @@ import Providers from "./providers";
 import Navbar from "./_components/navbar/Navbar";
 import "@/style/globals.css";
 
+/* Define Inter font */
 const inter = Inter({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
+/* Define metadata for Charger Sync webpage */
 export const metadata: Metadata = {
   title: "Charger Sync",
   description: "",
