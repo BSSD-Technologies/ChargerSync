@@ -35,15 +35,6 @@ const pages: NavbarItem[] = [
 ];
 
 export default function Navbar() {
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
 
   return (
     <AppBar position="static">
@@ -78,7 +69,6 @@ export default function Navbar() {
               <Link passHref href={page.link} key={page.key}>
                 <Button
                   variant="text"
-                  onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
                   {page.name}
