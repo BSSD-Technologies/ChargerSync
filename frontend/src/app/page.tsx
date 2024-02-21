@@ -1,109 +1,40 @@
 "use client";
 
+import { Button, Container, Stack, Typography } from "@mui/material";
 import Image from "next/image";
-import { useEffect } from "react";
-import styles from "./page.module.css";
+import BlueLogo from "@/app/_assets/BlueLogo.svg";
+import Link from "next/link";
 
 export default function Home() {
-  
-  const testFetch = async () => {
-    fetch("http://localhost:5001/").then(response => {
-      response.text().then(t => console.log(t));
-    })  
-  }
-
-  useEffect(() => {
-    testFetch();
-  }, []) 
-  
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
+    <Container
+      sx={{
+        display: "flex",
+        height: "80vh",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Stack spacing={2} alignItems={"center"}>
         <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+          src={BlueLogo}
+          alt={"Charger Sync"}
+          style={{ width: "55vw", height: "auto" }}
         />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+        <Typography sx={{ wordWrap: "break-word" }} variant="h6">
+          Insert some basic description about the site here.
+        </Typography>
+        <Link passHref href="/input-data">
+          <Button variant="contained" sx={{ width: "50vw" }}>
+            Generate a Schedule
+          </Button>
+        </Link>
+        <Link passHref href="/help">
+          <Button variant="contained" sx={{ width: "50vw" }}>
+            Help Manual
+          </Button>
+        </Link>
+      </Stack>
+    </Container>
   );
 }
