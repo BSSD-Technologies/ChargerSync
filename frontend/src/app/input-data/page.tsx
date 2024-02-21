@@ -1,5 +1,13 @@
+import { Container, Divider } from "@mui/material";
+import CourseInput from "./input-sections/course-input";
+
 export default function InputData() {
   return (
-    <p>Input Data</p>
+    <Container sx={{
+      margin: "2%"
+    }}>
+      <CourseInput />
+      <Divider />
+    </Container>
   );
 }

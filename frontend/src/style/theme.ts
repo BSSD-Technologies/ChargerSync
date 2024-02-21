@@ -21,7 +21,6 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
     h4: {
       font: "Inter",
       fontSize: "2.125rem",
-      fontWeight: 600,
       letterSpacing: "0.25px",
     },
     h5: {
