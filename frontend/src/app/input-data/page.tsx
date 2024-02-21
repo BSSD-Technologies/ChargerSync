@@ -3,7 +3,7 @@ import CourseInput from "./input-sections/course-input";
 
 export default function InputData() {
   return (
-    <Container sx={{
+    <Container fullW sx={{
       margin: "2%"
     }}>
       <CourseInput />
