@@ -3,8 +3,8 @@ import CourseInput from "./input-sections/course-input";
 
 export default function InputData() {
   return (
-    <Container fullW sx={{
-      margin: "2%"
+    <Container sx={{
+      marginTop: "2%",
     }}>
       <CourseInput />
       <Divider />
