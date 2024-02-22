@@ -12,7 +12,6 @@ import {
   Typography,
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import NumberInput from "@/app/_components/NumberInput";
 
 function CourseTable() {
   return (
