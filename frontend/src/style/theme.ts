@@ -55,17 +55,24 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
             padding: "10px",
           }),
           ...(ownerState.variant === "outlined" &&
-            ownerState.color === "info" && {
-              boxShadow: "none",
-              textTransform: "none",
-              borderRadius: "10px",
+          ownerState.color === "info" && {
+            boxShadow: "none",
+            textTransform: "none",
+            borderRadius: "10px",
+            border: "dashed",
+            fontSize: "16px",
+            padding: "10px",
+            ":hover": {
               border: "dashed",
-              fontSize: "16px",
-              padding: "10px",
-              ":hover": {
-                border: "dashed",
-              },
-            }),
+            },
+          }),
+          ...(ownerState.variant === "outlined" && {
+            boxShadow: "none",
+            textTransform: "none",
+            borderRadius: "10px",
+            fontSize: "16px",
+            padding: "10px",
+          }),
         }),
       },
     },
