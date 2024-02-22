@@ -1,6 +1,6 @@
 from flask import Flask
 from extensions import db
-from Course import Section
+from Course import Section, Course
 from Instructor import Instructor
 
 app = Flask(__name__)
@@ -18,15 +18,20 @@ with app.app_context():
 
     retrieved_instructor = Instructor.query.filter_by(name='John Doe').first()
 
-    section = Section(name='CS101-1', instructor_id=instructor1.id)
-    section2 = Section(name='CS101-2', instructor_id=instructor1.id)
+    course = Course(name='CS101')
+    db.session.add(course)
+    db.session.commit()
+
+    section = Section(name='CS101-1', instructor_id=instructor1.id, course_id=course.id)
+    section2 = Section(name='CS101-2', instructor_id=instructor1.id, course_id=course.id)
     db.session.add(section)
     db.session.add(section2)
     db.session.commit()
 
     print(Section.query.all())
+    print(Course.query.all())
     print(Instructor.query.all())
-    print("John's Assigned Course:", retrieved_instructor.sections)
+    print("John's Assigned Sections:", retrieved_instructor.sections)
 
 
 """
