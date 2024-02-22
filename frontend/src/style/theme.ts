@@ -54,18 +54,18 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
             fontSize: "16px",
             padding: "10px",
           }),
-          ...(ownerState.variant === "outlined" && 
-          ownerState.color === "info" && {
-            boxShadow: "none",
-            textTransform: "none",
-            borderRadius: "10px",
-            border: "dashed",
-            fontSize: "16px",
-            padding: "10px",
-            ":hover": {
+          ...(ownerState.variant === "outlined" &&
+            ownerState.color === "info" && {
+              boxShadow: "none",
+              textTransform: "none",
+              borderRadius: "10px",
               border: "dashed",
-            },
-          }),
+              fontSize: "16px",
+              padding: "10px",
+              ":hover": {
+                border: "dashed",
+              },
+            }),
         }),
       },
     },
@@ -77,6 +77,13 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
               borderRadius: "10px",
             },
           }),
+        }),
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: ({ theme, ownerState }) => ({
+          borderRadius: "10px",
         }),
       },
     },

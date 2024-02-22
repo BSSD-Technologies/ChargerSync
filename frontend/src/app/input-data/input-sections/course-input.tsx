@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Input,
   Table,
   TableBody,
   TableCell,
@@ -11,6 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import NumberInput from "@/app/_components/NumberInput";
 
 function CourseTable() {
   return (
@@ -26,23 +28,18 @@ function CourseTable() {
         <TableBody>
           <TableRow>
             <TableCell>
-              <TextField fullWidth
-                variant="outlined"
-                placeholder="Course ID" />
-            </TableCell>
-            <TableCell>
               <TextField
                 fullWidth
                 variant="outlined"
-                placeholder="Max Enrollment"
+                placeholder="Course ID"
+                type="text"
               />
             </TableCell>
             <TableCell>
-              <TextField
-                fullWidth
-                variant="outlined"
-                placeholder="Preliminary Enrollment"
-              />
+              <NumberInput placeholder="Max Enrollment" min={1} />
+            </TableCell>
+            <TableCell>
+              <NumberInput placeholder="Preliminary Enrollment" min={1} />
             </TableCell>
           </TableRow>
         </TableBody>
