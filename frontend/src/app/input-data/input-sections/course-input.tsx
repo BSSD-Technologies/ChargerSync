@@ -19,8 +19,8 @@ function CourseTable() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Course ID</TableCell>
-            <TableCell>Max Enrollment</TableCell>
+            <TableCell>Course ID *</TableCell>
+            <TableCell>Max Enrollment *</TableCell>
             <TableCell>Preliminary Enrollment</TableCell>
           </TableRow>
         </TableHead>
@@ -37,6 +37,7 @@ function CourseTable() {
             <TableCell>
               <OutlinedInput
                 fullWidth
+                required
                 inputComponent={"input"}
                 inputProps={{
                   type: "number",
@@ -48,6 +49,7 @@ function CourseTable() {
             <TableCell>
               <OutlinedInput
                 fullWidth
+                required
                 inputComponent={"input"}
                 inputProps={{
                   type: "number",

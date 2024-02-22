@@ -8,6 +8,7 @@ export default function InputData() {
   return (
     <Container sx={{
       marginTop: "2%",
+      paddingBottom: "10%",
     }}>
       <CourseInput />
       <Divider />
@@ -16,6 +17,7 @@ export default function InputData() {
       <TimeInput />
       <Divider />
       <InstructorInput />
+      <Divider />
     </Container>
   );
 }

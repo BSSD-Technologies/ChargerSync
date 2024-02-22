@@ -20,8 +20,8 @@ function TimeTable() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Start Time</TableCell>
-            <TableCell>End Time</TableCell>
+            <TableCell>Start Time *</TableCell>
+            <TableCell>End Time *</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -29,6 +29,7 @@ function TimeTable() {
             <TableCell>
               <TextField
                 fullWidth
+                required
                 id="start-time"
                 variant="outlined"
                 type="time"
@@ -37,6 +38,7 @@ function TimeTable() {
             <TableCell>
               <TextField
                 fullWidth
+                required
                 id="end-time"
                 variant="outlined"
                 type="time"

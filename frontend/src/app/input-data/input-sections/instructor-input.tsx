@@ -19,8 +19,8 @@ function InstructorTable() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>First Name</TableCell>
-            <TableCell>Last Name</TableCell>
+            <TableCell>First Name *</TableCell>
+            <TableCell>Last Name *</TableCell>
             <TableCell>Priority</TableCell>
           </TableRow>
         </TableHead>
@@ -29,6 +29,7 @@ function InstructorTable() {
             <TableCell>
               <TextField
                 fullWidth
+                required
                 variant="outlined"
                 placeholder="First Name"
                 type="text"
@@ -37,6 +38,7 @@ function InstructorTable() {
             <TableCell>
               <TextField
                 fullWidth
+                required
                 variant="outlined"
                 placeholder="Last Name"
                 type="text"

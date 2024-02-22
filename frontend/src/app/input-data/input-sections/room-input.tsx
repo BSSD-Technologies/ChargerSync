@@ -19,8 +19,8 @@ function RoomTable() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Room ID</TableCell>
-            <TableCell>Max Capacity</TableCell>
+            <TableCell>Room ID *</TableCell>
+            <TableCell>Max Capacity *</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -28,6 +28,7 @@ function RoomTable() {
             <TableCell>
               <TextField
                 fullWidth
+                required
                 variant="outlined"
                 placeholder="Room ID"
                 type="text"
@@ -36,6 +37,7 @@ function RoomTable() {
             <TableCell>
               <OutlinedInput
                 fullWidth
+                required
                 inputComponent={"input"}
                 inputProps={{
                   type: "number",
