@@ -1,7 +1,8 @@
+"use client";
+
 import {
   Box,
   Button,
-  OutlinedInput,
   Table,
   TableBody,
   TableCell,
@@ -12,17 +13,15 @@ import {
   Typography,
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import NumberInput from "@/app/_components/NumberInput";
 
-function CourseTable() {
+function TimeTable() {
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Course ID</TableCell>
-            <TableCell>Max Enrollment</TableCell>
-            <TableCell>Preliminary Enrollment</TableCell>
+            <TableCell>Start Time</TableCell>
+            <TableCell>End Time</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -30,31 +29,17 @@ function CourseTable() {
             <TableCell>
               <TextField
                 fullWidth
+                id="start-time"
                 variant="outlined"
-                placeholder="Course ID"
-                type="text"
+                type="time"
               />
             </TableCell>
             <TableCell>
-              <OutlinedInput
+              <TextField
                 fullWidth
-                inputComponent={"input"}
-                inputProps={{
-                  type: "number",
-                  min: 1,
-                  placeholder: "Max Enrollment",
-                }}
-              />
-            </TableCell>
-            <TableCell>
-              <OutlinedInput
-                fullWidth
-                inputComponent={"input"}
-                inputProps={{
-                  type: "number",
-                  min: 1,
-                  placeholder: "Preliminary Enrollment",
-                }}
+                id="end-time"
+                variant="outlined"
+                type="time"
               />
             </TableCell>
           </TableRow>
@@ -67,14 +52,14 @@ function CourseTable() {
           fullWidth
           startIcon={<AddCircleRoundedIcon />}
         >
-          Add a course
+          Add a time block
         </Button>
       </Box>
     </TableContainer>
   );
 }
 
-export default function CourseInput() {
+export default function TimeInput() {
   return (
     <Box
       sx={{
@@ -82,12 +67,12 @@ export default function CourseInput() {
         marginBottom: "2%",
       }}
     >
-      <Typography variant="h4">List of Courses</Typography>
+      <Typography variant="h4">List of Class Blocks</Typography>
       <Typography variant="body1">
         A short description about what type of data goes here.
       </Typography>
       <br />
-      <CourseTable />
+      <TimeTable />
     </Box>
   );
 }

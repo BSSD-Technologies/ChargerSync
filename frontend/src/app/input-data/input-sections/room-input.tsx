@@ -14,15 +14,14 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import NumberInput from "@/app/_components/NumberInput";
 
-function CourseTable() {
+function RoomTable() {
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Course ID</TableCell>
-            <TableCell>Max Enrollment</TableCell>
-            <TableCell>Preliminary Enrollment</TableCell>
+            <TableCell>Room ID</TableCell>
+            <TableCell>Max Capacity</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -31,7 +30,7 @@ function CourseTable() {
               <TextField
                 fullWidth
                 variant="outlined"
-                placeholder="Course ID"
+                placeholder="Room ID"
                 type="text"
               />
             </TableCell>
@@ -42,18 +41,7 @@ function CourseTable() {
                 inputProps={{
                   type: "number",
                   min: 1,
-                  placeholder: "Max Enrollment",
-                }}
-              />
-            </TableCell>
-            <TableCell>
-              <OutlinedInput
-                fullWidth
-                inputComponent={"input"}
-                inputProps={{
-                  type: "number",
-                  min: 1,
-                  placeholder: "Preliminary Enrollment",
+                  placeholder: "Max Capacity",
                 }}
               />
             </TableCell>
@@ -67,14 +55,14 @@ function CourseTable() {
           fullWidth
           startIcon={<AddCircleRoundedIcon />}
         >
-          Add a course
+          Add a room
         </Button>
       </Box>
     </TableContainer>
   );
 }
 
-export default function CourseInput() {
+export default function RoomInput() {
   return (
     <Box
       sx={{
@@ -82,12 +70,12 @@ export default function CourseInput() {
         marginBottom: "2%",
       }}
     >
-      <Typography variant="h4">List of Courses</Typography>
+      <Typography variant="h4">List of Rooms</Typography>
       <Typography variant="body1">
         A short description about what type of data goes here.
       </Typography>
       <br />
-      <CourseTable />
+      <RoomTable />
     </Box>
   );
 }

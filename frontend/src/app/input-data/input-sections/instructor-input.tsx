@@ -14,15 +14,15 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import NumberInput from "@/app/_components/NumberInput";
 
-function CourseTable() {
+function InstructorTable() {
   return (
     <TableContainer>
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Course ID</TableCell>
-            <TableCell>Max Enrollment</TableCell>
-            <TableCell>Preliminary Enrollment</TableCell>
+            <TableCell>First Name</TableCell>
+            <TableCell>Last Name</TableCell>
+            <TableCell>Priority</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -31,7 +31,15 @@ function CourseTable() {
               <TextField
                 fullWidth
                 variant="outlined"
-                placeholder="Course ID"
+                placeholder="First Name"
+                type="text"
+              />
+            </TableCell>
+            <TableCell>
+              <TextField
+                fullWidth
+                variant="outlined"
+                placeholder="Last Name"
                 type="text"
               />
             </TableCell>
@@ -41,19 +49,8 @@ function CourseTable() {
                 inputComponent={"input"}
                 inputProps={{
                   type: "number",
-                  min: 1,
-                  placeholder: "Max Enrollment",
-                }}
-              />
-            </TableCell>
-            <TableCell>
-              <OutlinedInput
-                fullWidth
-                inputComponent={"input"}
-                inputProps={{
-                  type: "number",
-                  min: 1,
-                  placeholder: "Preliminary Enrollment",
+                  min: 0,
+                  placeholder: "Priority",
                 }}
               />
             </TableCell>
@@ -67,14 +64,14 @@ function CourseTable() {
           fullWidth
           startIcon={<AddCircleRoundedIcon />}
         >
-          Add a course
+          Add an instructor
         </Button>
       </Box>
     </TableContainer>
   );
 }
 
-export default function CourseInput() {
+export default function InstructorInput() {
   return (
     <Box
       sx={{
@@ -82,12 +79,12 @@ export default function CourseInput() {
         marginBottom: "2%",
       }}
     >
-      <Typography variant="h4">List of Courses</Typography>
+      <Typography variant="h4">List of Instructors</Typography>
       <Typography variant="body1">
         A short description about what type of data goes here.
       </Typography>
       <br />
-      <CourseTable />
+      <InstructorTable />
     </Box>
   );
 }
