@@ -94,5 +94,16 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
         }),
       },
     },
+    MuiFilledInput: {
+      styleOverrides: {
+        root: ({ theme, ownerState }) => ({
+          borderTopLeftRadius: "10px",
+          borderTopRightRadius: "10px",
+          "& .MuiInputBase-input": {
+            paddingTop: "20px",
+          },
+        }),
+      },
+    },
   },
 });

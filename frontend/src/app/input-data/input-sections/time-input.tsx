@@ -31,7 +31,7 @@ function TimeTable() {
                 fullWidth
                 required
                 id="start-time"
-                variant="outlined"
+                variant="filled"
                 type="time"
               />
             </TableCell>
@@ -40,7 +40,7 @@ function TimeTable() {
                 fullWidth
                 required
                 id="end-time"
-                variant="outlined"
+                variant="filled"
                 type="time"
               />
             </TableCell>

@@ -1,7 +1,7 @@
 import {
   Box,
   Button,
-  OutlinedInput,
+  FilledInput,
   Table,
   TableBody,
   TableCell,
@@ -30,7 +30,7 @@ function InstructorTable() {
               <TextField
                 fullWidth
                 required
-                variant="outlined"
+                variant="filled"
                 placeholder="First Name"
                 type="text"
               />
@@ -39,13 +39,13 @@ function InstructorTable() {
               <TextField
                 fullWidth
                 required
-                variant="outlined"
+                variant="filled"
                 placeholder="Last Name"
                 type="text"
               />
             </TableCell>
             <TableCell>
-              <OutlinedInput
+              <FilledInput
                 fullWidth
                 inputComponent={"input"}
                 inputProps={{
