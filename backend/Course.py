@@ -24,22 +24,18 @@ class Course(db.Model):
         return '<Course %r>' % self.name
     
     
-# need to perform database operations within app_context
 with app.app_context():
+    # Now you can perform database operations
     db.create_all()
 
-    # Maintains a list of course and instructor names to be checked
     existing_course_names = {course.name for course in Course.query.all()} # This prevents Integrity Errors!
-    existing_instructor_names = {instructor.name for instructor in Instructor.query.all()} # This prevents Integrity Errors!
+    existing_instructor_names = {Instructor.name for instructor in Instructor.query.all()} # This prevents Integrity Errors!
 
-    # List of course objects to add to database
     courses_to_add = [
         Course(name='CS121'),
         Course(name='CS453')
     ]
-
-    # For each course in courses to add, add course name if there is not already a course name
-    # We need to do this only because I listed name as "unique"
+    
     for course in courses_to_add:
         if course.name not in existing_course_names:
             db.session.add(course)
@@ -48,17 +44,14 @@ with app.app_context():
 
     courseToAssign = Course.query.filter_by(name='CS121').first()
 
-    # Another way to check for uniqueness
-    existing_instructor = Instructor.query.filter_by(name='Susan').first()
+    instructor_name = 'Susan'
+    existing_instructor = Instructor.query.filter_by(name=instructor_name).first()
     if not existing_instructor:
-        # Creating a new instructor
-        instructor = Instructor(name='Susan', course=courseToAssign)
-
-        # adding to database
+        instructor = Instructor(name=instructor_name, course=courseToAssign)
         db.session.add(instructor)
         db.session.commit()
     
-    # Printing
+    
     print(Course.query.all())
     print(Instructor.query.all())
 
