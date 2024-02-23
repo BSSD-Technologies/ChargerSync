@@ -69,7 +69,7 @@ export default function TimeInput() {
         marginBottom: "2%",
       }}
     >
-      <Typography variant="h4">List of Class Time Blocks</Typography>
+      <Typography variant="h4">List of Time Blocks</Typography>
       <Typography variant="body1">
         A short description about what type of data goes here.
       </Typography>
