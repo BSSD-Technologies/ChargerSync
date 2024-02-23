@@ -2,6 +2,7 @@ from flask import Flask
 from extensions import db
 from Course import Section, Course
 from Instructor import Instructor
+from Room import Room
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -12,18 +13,27 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
-    instructor1 = Instructor(name='John Doe', max_enrollment=30, preliminary_enrollment=10)
+    instructor1 = Instructor(name='John Doe')
     db.session.add(instructor1)
+    db.session.commit()
+
+    instructor2 = Instructor(name='Jose Moe')
+    db.session.add(instructor2)
     db.session.commit()
 
     retrieved_instructor = Instructor.query.filter_by(name='John Doe').first()
 
-    course = Course(name='CS101')
+    course = Course(name='CS101', max_enrollment=30, preliminary_enrollment=10)
     db.session.add(course)
     db.session.commit()
 
-    section = Section(name='CS101-1', instructor_id=instructor1.id, course_id=course.id)
+    room = Room(name='OKT357')
+    db.session.add(room)
+    db.session.commit()
+
+    section = Section(name='CS101-1', instructor_id=instructor1.id, course_id=course.id, room_id=room.id)
     section2 = Section(name='CS101-2', instructor_id=instructor1.id, course_id=course.id)
+
     db.session.add(section)
     db.session.add(section2)
     db.session.commit()
@@ -32,6 +42,9 @@ with app.app_context():
     print(Course.query.all())
     print(Instructor.query.all())
     print("John's Assigned Sections:", retrieved_instructor.sections)
+    print("Jose's Assigned Sections:", instructor2.sections)
+    print("CS101-1 Classroom:", section.room)
+    print("CS101-2 Classroom:", section2.room)
 
 
 """
