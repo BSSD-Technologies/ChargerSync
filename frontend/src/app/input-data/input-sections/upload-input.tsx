@@ -4,11 +4,15 @@ import {
   Box,
   Button,
   Grid,
+  Input,
+  OutlinedInput,
   Stack,
   Typography,
   styled,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { useTheme } from "@emotion/react";
+import Link from "next/link";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -23,6 +27,8 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export default function UploadInput() {
+  const theme = useTheme();
+
   return (
     <Box
       sx={{
@@ -32,12 +38,17 @@ export default function UploadInput() {
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
         <Stack direction={"column"}>
+          <a href={process.env.PUBLIC_URL + '/SchedulerTemplate.xlsx'} download={"SchedulerTemplate.xlsx"}>Test</a>
           <Typography variant="h5">Upload schedule data</Typography>
           <Typography variant="body1">
             Upload a filled-out template of schedule data for generating a
             schedule.
           </Typography>
         </Stack>
+        <OutlinedInput
+          type="file"
+          startAdornment={<CloudUploadIcon sx={{ marginRight: "10px" }} />}
+        />
         <Button
           component="label"
           role={undefined}
@@ -48,7 +59,7 @@ export default function UploadInput() {
             paddingLeft: "15px",
           }}
         >
-          Upload file
+          Download template
           <VisuallyHiddenInput type="file" />
         </Button>
       </Grid>
