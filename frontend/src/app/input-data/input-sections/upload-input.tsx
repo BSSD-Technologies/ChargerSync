@@ -29,6 +29,13 @@ const VisuallyHiddenInput = styled("input")({
 export default function UploadInput() {
   const theme = useTheme();
 
+  const onDownload = () => {
+    const link = document.createElement("a");
+    link.download = `download.csv`;
+    link.href = "/CourseListTemplate.csv";
+    link.click();
+  };
+
   return (
     <Box
       sx={{
@@ -38,7 +45,6 @@ export default function UploadInput() {
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
         <Stack direction={"column"}>
-          <a href={process.env.PUBLIC_URL + '/SchedulerTemplate.xlsx'} download={"SchedulerTemplate.xlsx"}>Test</a>
           <Typography variant="h5">Upload schedule data</Typography>
           <Typography variant="body1">
             Upload a filled-out template of schedule data for generating a
@@ -49,19 +55,9 @@ export default function UploadInput() {
           type="file"
           startAdornment={<CloudUploadIcon sx={{ marginRight: "10px" }} />}
         />
-        <Button
-          component="label"
-          role={undefined}
-          variant="contained"
-          tabIndex={-1}
-          startIcon={<CloudUploadIcon />}
-          sx={{
-            paddingLeft: "15px",
-          }}
-        >
-          Download template
-          <VisuallyHiddenInput type="file" />
-        </Button>
+        <Link passHref href="/CourseListTemplate.csv" download={"CourseListTemplate.csv"}>
+          <Button>Download Template</Button>
+        </Link>
       </Grid>
     </Box>
   );
