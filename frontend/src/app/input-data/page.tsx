@@ -19,6 +19,7 @@ import InstructorInput from "./input-sections/instructor-input";
 import UploadInput from "./input-sections/upload-input";
 import SubmitInput from "./input-sections/submit-input";
 import { useState } from "react";
+import PreferenceInput from "./input-sections/preference-input";
 
 const steps = [
   {
@@ -36,6 +37,10 @@ const steps = [
   {
     label: "List of Instructors",
     component: <InstructorInput />
+  },
+  {
+    label: "Instructor Preferences",
+    component: <PreferenceInput />
   }
 ];
 
