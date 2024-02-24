@@ -12,6 +12,9 @@ class Course(db.Model):
 
     def __repr__(self):
         return '<Course %r>' % self.name
+    
+    def sectionCount(self):
+        return Section.query.filter_by(course_id=self.id).count()
 
 class Section(db.Model):
     __tablename__ = 'section'
@@ -20,7 +23,8 @@ class Section(db.Model):
     name = db.Column(db.String(255), nullable=False)
     instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.id'), default='None')
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
-    room_id = db.Column(db.String(255), db.ForeignKey('room.id'), default='None')
+    room_id = db.Column(db.Integer, db.ForeignKey('room.id'), default='None')
+    period_id = db.Column(db.Integer, db.ForeignKey('period.id'), default='None')
 
     # one to many relationship w/ Course
     course = db.relationship('Course', backref='sections', lazy=True)
@@ -28,7 +32,8 @@ class Section(db.Model):
     # one to one relationship w/ Room
     room = db.relationship('Room', uselist=False, backref='section', lazy=True)
 
-
+    # one to one relationship w/ Period
+    period = db.relationship('Period', uselist=False, backref='section', lazy=True)
 
     def __repr__(self):
         return '<Section %r>' % self.name

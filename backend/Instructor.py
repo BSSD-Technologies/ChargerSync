@@ -11,5 +11,7 @@ class Instructor(db.Model):
     # one to many relationship with sections
     sections = db.relationship('Section', backref='instructor', lazy=True)
 
+    # Preferences will go somewhere in here
+
     def __repr__(self):
         return '<Instructor %r>' % self.name
