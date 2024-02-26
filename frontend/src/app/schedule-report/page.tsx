@@ -12,7 +12,6 @@ import {
 import Report from "./reports/report";
 import ConflictReport from "./reports/conflict-report";
 import NonConflictReport from "./reports/nonconflict-report";
-import Link from "next/link";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import { useState } from "react";
 import ExportModal from "./export-modal";
