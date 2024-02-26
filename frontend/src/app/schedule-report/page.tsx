@@ -18,7 +18,7 @@ import { useState } from "react";
 import ExportModal from "./export-modal";
 
 export default function ScheduleReport() {
-  const [open, setOpen] =useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
