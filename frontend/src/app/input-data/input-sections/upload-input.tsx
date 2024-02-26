@@ -25,7 +25,7 @@ export default function UploadInput() {
         <Stack direction={"column"}>
           <Typography variant="h5">Upload schedule data</Typography>
           <Typography variant="body1">
-            Upload a filled-out template of schedule data for generating a
+            Upload filled-out templates of schedule data for generating a
             schedule.
           </Typography>
         </Stack>

@@ -116,6 +116,7 @@ export default function InputData() {
             <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
               Back
             </Button>
+            <SubmitInput />
           </Paper>
         )}
       </Box>
