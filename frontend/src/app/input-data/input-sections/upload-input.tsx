@@ -4,37 +4,15 @@ import {
   Box,
   Button,
   Grid,
-  Input,
-  OutlinedInput,
   Stack,
   Typography,
-  styled,
 } from "@mui/material";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useTheme } from "@emotion/react";
 import Link from "next/link";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
+import DownloadRoundedIcon from '@mui/icons-material/DownloadRounded';
 
 export default function UploadInput() {
   const theme = useTheme();
-
-  const onDownload = () => {
-    const link = document.createElement("a");
-    link.download = `download.csv`;
-    link.href = "/CourseListTemplate.csv";
-    link.click();
-  };
 
   return (
     <Box
@@ -51,12 +29,12 @@ export default function UploadInput() {
             schedule.
           </Typography>
         </Stack>
-        <OutlinedInput
-          type="file"
-          startAdornment={<CloudUploadIcon sx={{ marginRight: "10px" }} />}
-        />
-        <Link passHref href="/CourseListTemplate.csv" download={"CourseListTemplate.csv"}>
-          <Button>Download Template</Button>
+        <Link
+          passHref
+          href="/CourseListTemplate.csv"
+          download={"CourseListTemplate.csv"}
+        >
+          <Button variant="outlined" startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}>Download Template</Button>
         </Link>
       </Grid>
     </Box>

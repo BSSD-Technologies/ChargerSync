@@ -10,8 +10,10 @@ import {
   Grid,
   InputLabel,
   MenuItem,
+  OutlinedInput,
   Select,
   SelectChangeEvent,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -23,6 +25,7 @@ import {
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useState } from "react";
 
 // Dummy course list data
@@ -61,7 +64,7 @@ function CoursePreferenceSelect() {
   };
 
   return (
-    <FormControl fullWidth sx={{ margin: 2, }}>
+    <FormControl fullWidth sx={{ margin: 2 }}>
       <InputLabel id="course-list-select">Course Preferences</InputLabel>
       <Select
         fullWidth
@@ -104,11 +107,7 @@ function InstructorListAccordion() {
             {instructor}
           </AccordionSummary>
           <AccordionDetails>
-            <Grid
-              container
-              alignItems={"center"}
-              justifyContent={"left"}
-            >
+            <Grid container alignItems={"center"} justifyContent={"left"}>
               <Typography variant="subtitle1">Course preferences</Typography>
               <CoursePreferenceSelect />
             </Grid>
@@ -188,10 +187,21 @@ export default function PreferenceInput() {
         marginBottom: "2%",
       }}
     >
-      <Typography variant="h4">Instructor Preferences</Typography>
-      <Typography variant="body1">
-        A short description about what type of data goes here.
-      </Typography>
+      <Grid container alignItems={"center"} justifyContent={"space-between"}>
+        <Stack direction={"column"}>
+          <Typography variant="h4">Instructor Preferences</Typography>
+          <Typography variant="body1">
+            A short description about what type of data goes here.
+          </Typography>
+        </Stack>
+        <OutlinedInput
+          type="file"
+          startAdornment={<CloudUploadIcon sx={{ marginRight: "10px" }} />}
+          sx={{
+            width: "20%",
+          }}
+        />
+      </Grid>
       <br />
       <InstructorListAccordion />
     </Box>

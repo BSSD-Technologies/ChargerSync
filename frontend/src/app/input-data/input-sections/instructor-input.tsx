@@ -2,6 +2,9 @@ import {
   Box,
   Button,
   FilledInput,
+  Grid,
+  OutlinedInput,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -12,6 +15,7 @@ import {
   Typography,
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 function InstructorTable() {
   return (
@@ -80,10 +84,21 @@ export default function InstructorInput() {
         marginBottom: "2%",
       }}
     >
-      <Typography variant="h4">List of Instructors</Typography>
-      <Typography variant="body1">
-        A short description about what type of data goes here.
-      </Typography>
+      <Grid container alignItems={"center"} justifyContent={"space-between"}>
+        <Stack direction={"column"}>
+          <Typography variant="h4">List of Instructors</Typography>
+          <Typography variant="body1">
+            A short description about what type of data goes here.
+          </Typography>
+        </Stack>
+        <OutlinedInput
+          type="file"
+          startAdornment={<CloudUploadIcon sx={{ marginRight: "10px" }} />}
+          sx={{
+            width: "20%",
+          }}
+        />
+      </Grid>
       <br />
       <InstructorTable />
     </Box>
