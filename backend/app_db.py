@@ -1,10 +1,10 @@
 from flask import Flask
 from extensions import db
-from Course import Section, Course
-from Instructor import Instructor
-from Room import Room
-from Period import Period
-from Preferences import CoursePreference, PeriodPreference
+from models.Course import Section, Course
+from models.Instructor import Instructor
+from models.Room import Room
+from models.Period import Period
+from models.Preferences import CoursePreference, PeriodPreference
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
