@@ -1,86 +1,94 @@
 #! /usr/bin/env python3
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
-import pandas as pd
 import sqlalchemy as magic
 from datetime import time
+import sys, os
+sys.path.extend([f'{item[0]}' for item in os.walk(".") if os.path.isdir(item[0])])
 
+
+
+from extensions import db
+from Instructor import Instructor, load_prof_data
+from Room import Room
+from Course import Section, Course, load_course_data
+from Period import Period
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-db = SQLAlchemy(app)
+db.init_app(app)
 
 
 
+course_CSV_File = "./dummyData/CourseListTemplate.csv"
+course_ID, course_Max, course_Prelim = load_course_data(course_CSV_File)
+
+professor_CSV_File = "./dummyData/InstructorListTemplate.csv"
+prof_Fname, prof_Lname, prof_Prio = load_prof_data(professor_CSV_File)
+
+
+room_CSV_File = "./dummyData/RoomListTemplate.csv"
+time_CSV_File = "./dummyData/TimeBlockTemplate.csv"
 
 
 
-courseList = pd.read_csv("./dummyData/CourseListTemplate.csv", dtype={0:'string', 1:'int', 2:'int'})
-
-course_ID = courseList['Course ID'].tolist()
-course_Max = courseList['Max Enrollment']
-course_Prelim = courseList['Preliminary Enrollment']
-
-
-print(course_ID[1])
-
-
-
-class Instructor(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(256), unique=True, nullable=False)
-
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
-    course = db.relationship('Course',backref=db.backref('instructors', lazy=True))
-
-    def __repr__(self):
-        return '<Instructor %r>' % self.name
-    
-    
-class Course(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(128), unique=True, nullable=False)
-    # maxEnroll = db.Column(db.Integer, nullable=False)
-    # prelimEnroll = db.Column(db.Integer, nullable=False)
-
-    def __repr__(self):
-        return '<Course %r>' % self.name
-    
-    
+# need to perform database operations within app_context
 with app.app_context():
-    # Now you can perform database operations
+    db.drop_all()
     db.create_all()
 
-    existing_course_names = {course.name for course in Course.query.all()} # This prevents Integrity Errors!
-    # existing_instructor_names = {Instructor.name for instructor in Instructor.query.all()} # This prevents Integrity Errors!
-
-    # courses_to_add = [
-    #     Course(name='CS121'),
-    #     Course(name='CS453')
-    # ]
-    
-    for course in course_ID:
-        if course.name not in existing_course_names:
-            db.session.add(course)
-            
+    # Create instructors
+    instructor1 = Instructor(name='John Doe')
+    db.session.add(instructor1)
     db.session.commit()
 
-    courseToAssign = Course.query.filter_by(name='CS121').first()
+    for i in range(len(prof_Fname)):
+        professor = Instructor(prof_Fname = prof_Fname)
 
-    instructor_name = 'Susan'
-    existing_instructor = Instructor.query.filter_by(name=instructor_name).first()
-    if not existing_instructor:
-        instructor = Instructor(name=instructor_name, course=courseToAssign)
-        db.session.add(instructor)
-        db.session.commit()
-    
-    
+
+
+    # Demonstrating how to query instructors
+    retrieved_instructor = Instructor.query.filter_by(name='John Doe').first()
+
+    # Create Courses
+
+    for i in range(len(course_ID)):
+        course = Course(name=course_ID[i], max_enrollment=course_Max[i], preliminary_enrollment=course_Prelim[i])
+        print(f"{course_ID[i]} \t {course_Max[i]} \t {course_Prelim[i]}")
+        
+        db.session.add(course)
+
+    db.session.commit()
+
+    # Create Rooms
+    room = Room(name='OKT357')
+    db.session.add(room)
+    db.session.commit()
+
+    room2 = Room(name='OKT155')
+    db.session.add(room2)
+    db.session.commit()
+
+    # # Making sections
+    # section_101 = Section(name='CS101-1', instructor_id=instructor1.id, course_id=course.id, room_id=room.id)
+    # section2_101 = Section(name='CS101-2', instructor_id=instructor1.id, course_id=course.id)
+    # section_488 = Section(name='CS488-1', course_id=course2.id, room_id=room2.id)
+    # section2_488 = Section(name='CS488-2', instructor_id=instructor2.id, course_id=course2.id)
+    # db.session.add(section_101)
+    # db.session.add(section2_101)
+    # db.session.add(section_488)
+    # db.session.add(section2_488)
+    # db.session.commit()
+
+    # #A bunch of print statements for testing :)
+    # print(Section.query.all())
     print(Course.query.all())
     print(Instructor.query.all())
-
-    existing_instructor_assigned_course = existing_instructor.course if existing_instructor else None
-    print("Susan's Assigned Course:", existing_instructor_assigned_course)
-
-
-
-
+    # print("Number of Sections for Course CS101:", course.sectionCount())
+    # print("Number of Sections for Course CS488:", course2.sectionCount())
+    # print("John's Assigned Sections:", retrieved_instructor.sections)
+    # print("Jose's Assigned Sections:", instructor2.sections)
+    # print("CS101-1 Classroom:", section_101.room)
+    # print("CS101-2 Classroom:", section2_101.room)
+    # print("CS488-1 Classroom:", section_488.room)
+    # print("CS488-2 Classroom:", section2_488.room)
