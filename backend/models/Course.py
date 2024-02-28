@@ -5,7 +5,7 @@ from extensions import db
 class Course(db.Model):
     __tablename__ = 'course'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
     name = db.Column(db.String(255), nullable=False)
     max_enrollment = db.Column(db.Integer, nullable=False)
     preliminary_enrollment = db.Column(db.Integer, default=0)
@@ -19,7 +19,7 @@ class Course(db.Model):
 class Section(db.Model):
     __tablename__ = 'section'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
     name = db.Column(db.String(255), nullable=False)
     instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.id'), default='None')
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
