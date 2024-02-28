@@ -2,10 +2,10 @@ import { PaletteMode, ThemeOptions } from "@mui/material";
 
 export const getTheme = (mode: PaletteMode): ThemeOptions => ({
   palette: {
-    mode
+    mode,
   },
   typography: {
-    fontFamily: 'inherit',
+    fontFamily: "inherit",
     h1: {
       font: "Inter",
       fontSize: "6rem",
@@ -21,7 +21,6 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
     h4: {
       font: "Inter",
       fontSize: "2.125rem",
-      fontWeight: 600,
       letterSpacing: "0.25px",
     },
     h5: {
@@ -55,8 +54,56 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
             fontSize: "16px",
             padding: "10px",
           }),
-        })
-      }
-    }
+          ...(ownerState.variant === "outlined" &&
+          ownerState.color === "info" && {
+            boxShadow: "none",
+            textTransform: "none",
+            borderRadius: "10px",
+            border: "dashed",
+            fontSize: "16px",
+            padding: "10px",
+            ":hover": {
+              border: "dashed",
+            },
+          }),
+          ...(ownerState.variant === "outlined" && {
+            boxShadow: "none",
+            textTransform: "none",
+            borderRadius: "10px",
+            fontSize: "16px",
+            padding: "10px",
+          }),
+        }),
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: ({ theme, ownerState }) => ({
+          ...(ownerState.variant === "outlined" && {
+            "& .MuiInputBase-root": {
+              borderRadius: "10px",
+            },
+          }),
+        }),
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: ({ theme, ownerState }) => ({
+          borderRadius: "10px",
+        }),
+      },
+    },
+    MuiFilledInput: {
+      styleOverrides: {
+        root: ({ theme, ownerState }) => ({
+          borderTopLeftRadius: "10px",
+          borderTopRightRadius: "10px",
+          "& .MuiInputBase-input": {
+            paddingTop: "20px",
+          },
+        }),
+      },
+    },
   },
 });
