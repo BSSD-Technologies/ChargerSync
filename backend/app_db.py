@@ -4,6 +4,7 @@ from Course import Section, Course
 from Instructor import Instructor
 from Room import Room
 from Period import Period
+from Preferences import CoursePreference, PeriodPreference
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -15,16 +16,16 @@ with app.app_context():
     db.create_all()
 
     # Create instructors
-    instructor1 = Instructor(name='John Doe')
+    instructor1 = Instructor(fname='John', lname = 'Doe')
     db.session.add(instructor1)
     db.session.commit()
 
-    instructor2 = Instructor(name='Jose Moe')
+    instructor2 = Instructor(fname='Jose', lname = 'Moe')
     db.session.add(instructor2)
     db.session.commit()
 
     # Demonstrating how to query instructors
-    retrieved_instructor = Instructor.query.filter_by(name='John Doe').first()
+    retrieved_instructor = Instructor.query.filter_by(fname='John').first()
 
     # Create Courses
     course = Course(name='CS101', max_enrollment=30, preliminary_enrollment=10)
@@ -34,6 +35,10 @@ with app.app_context():
     course2 = Course(name='CS488', max_enrollment=50)
     db.session.add(course2)
     db.session.commit()
+
+    # Messing with Preferences
+    instructor1.addCoursePreference(course.id)
+    instructor2.addCoursePreference(course2.id)
 
     # Create Rooms
     room = Room(name='OKT357')
