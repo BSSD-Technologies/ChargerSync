@@ -2,6 +2,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from extensions import db
 from Preferences import CoursePreference, PeriodPreference
+from Course import Course
+from Period import Period
 
 class Instructor(db.Model):
     __tablename__ = 'instructor'
@@ -21,6 +23,17 @@ class Instructor(db.Model):
 
     def __repr__(self):
         return '<Instructor %r %r >' % (self.fname, self.lname)
+    
+    def printPreferences(self):
+        print(f"Professor {self.fname} {self.lname} Preferences:")
+        print("Course Preferences:")
+        for preference in self.course_preferences:
+            course = Course.query.get(preference.course_id)
+            print(f"- Course ID: {course.name}")
+        print("Period Preferences:")
+        for preference in self.period_preferences:
+            period = Period.query.get(preference.course_id)
+            print(f"- Period ID: {preference.name}")
     
     def addCoursePreference(self, course_id):
         new_preference = CoursePreference(instructor_id=self.id, course_id=course_id)

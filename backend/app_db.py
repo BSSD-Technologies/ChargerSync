@@ -72,3 +72,4 @@ with app.app_context():
     print("CS101-2 Classroom:", section2_101.room)
     print("CS488-1 Classroom:", section_488.room)
     print("CS488-2 Classroom:", section2_488.room)
+    instructor1.printPreferences()
