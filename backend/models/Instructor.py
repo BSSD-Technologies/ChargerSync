@@ -11,6 +11,7 @@ class Instructor(db.Model):
     id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
     fname = db.Column(db.String(256), nullable=False)
     lname = db.Column(db.String(256), nullable=False)
+    priority = db.Column(db.Integer, default='None')
     
     # one to many relationship with sections
     sections = db.relationship('Section', backref='instructor', lazy=True)
