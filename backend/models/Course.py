@@ -22,8 +22,6 @@ class Course(db.Model):
         new_section = Section(name=new_name, course_id=self.id)
         return new_section
 
-    
-
 class Section(db.Model):
     __tablename__ = 'section'
 
