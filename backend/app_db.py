@@ -108,11 +108,6 @@ with app.app_context():
     print("Number of Sections for Course CS488:", course2.sectionCount())
     print("John's Assigned Sections:", retrieved_instructor.sections)
     print("Jose's Assigned Sections:", instructor2.sections)
-    print("CS101-1 Classroom:", section_101.room)
-    print("CS101-2 Classroom:", section2_101.room)
-    print("CS488-1 Classroom:", section_488.room)
-    print("CS488-2 Classroom:", section2_488.room)
-    instructor1.printPreferences()
 
     def print_all_periods():
         periods = Period.query.all()

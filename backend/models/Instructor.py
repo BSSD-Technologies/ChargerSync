@@ -34,7 +34,7 @@ class Instructor(db.Model):
         print("Period Preferences:")
         for preference in self.period_preferences:
             period = Period.query.get(preference.course_id)
-            print(f"- Period ID: {preference.name}")
+            print(f"ID: {period.id}, Day: {period.day}, Start Time: {period.start_time.strftime('%I:%M %p')}, End Time: {period.end_time.strftime('%I:%M %p')}")
     
     def addCoursePreference(self, course_id):
         new_preference = CoursePreference(instructor_id=self.id, course_id=course_id)
