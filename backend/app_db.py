@@ -5,6 +5,7 @@ from models.Course import Section, Course
 from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
+import DataGenerator
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -32,6 +33,12 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 
+    DataGenerator.loadData()
+
+    print(Course.query.all())
+    print(Instructor.query.all())
+
+    '''
     # Create instructors
     instructor1 = Instructor(fname='John', lname = 'Doe')
     db.session.add(instructor1)
@@ -115,4 +122,6 @@ with app.app_context():
             print(f"ID: {period.id}, Day: {period.day}, Start Time: {period.start_time.strftime('%I:%M %p')}, End Time: {period.end_time.strftime('%I:%M %p')}")
     
     print_all_periods()
+
+    '''
 

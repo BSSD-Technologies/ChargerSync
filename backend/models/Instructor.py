@@ -40,4 +40,9 @@ class Instructor(db.Model):
         new_preference = CoursePreference(instructor_id=self.id, course_id=course_id)
         db.session.add(new_preference)
         db.session.commit()
+
+    def addPeriodPreference(self, period_id):
+        new_preference = PeriodPreference(instructor_id=self.id, period_id=period_id)
+        db.session.add(new_preference)
+        db.session.commit()
     
