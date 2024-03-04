@@ -1,10 +1,6 @@
 #! /usr/bin/env python3
 import pandas as pd
-from functions.Course import *
-from functions.Instructor import *
-from functions.Room import *
-from functions.Period import *
-from functions.csv2List import *
+from functions import *
 import json
 
 course_CSV_File = "./dummyData/CourseListTemplate.csv"
@@ -15,30 +11,29 @@ time_CSV_File = "./dummyData/TimeBlockTemplate.csv"
 
 
 
-# # Using csv2List.py
+# # Using fileConversion.py
 # # Will automatically send everything to a list
-# course_ID, course_Max, course_Prelim = csv_to_lists(course_CSV_File)
-# prof_Fname, prof_Lname, prof_Prio = csv_to_lists(professor_CSV_File)
-# room_ID, room_Max = csv_to_lists(room_CSV_File)
-# startTime, endTime = csv_to_lists(time_CSV_File)
+# course_ID, course_Max, course_Prelim = csv_to_list(course_CSV_File)
+# prof_Fname, prof_Lname, prof_Prio = csv_to_list(professor_CSV_File)
+# room_ID, room_Max = csv_to_list(room_CSV_File)
+# startTime, endTime = csv_to_list(time_CSV_File)
 
-# print(course_ID, course_Max, course_Prelim)
-# print(prof_Fname, prof_Lname, prof_Prio)
-# print(room_ID, room_Max)
-# print(startTime, endTime)
 
 courses = csv_to_json(course_CSV_File)
 professors = csv_to_json(professor_CSV_File)
-print(professors)
+rooms = csv_to_json(room_CSV_File)
+time = csv_to_json(time_CSV_File)
+
+# print(time)
 
 
+# time = convert_time_format(time)
 
+# print(time)
 
-# course_ID, course_Max, course_Prelim = course_CSV_to_List(course_CSV_File)
-# prof_Fname, prof_Lname, prof_Prio = prof_CSV_to_List(professor_CSV_File)
-# room_ID, room_Max = room_CSV_to_List(room_CSV_File)
-# startTime, endTime = time_CSV_to_List(time_CSV_File)
-
-# # Used to make JSON print pretty
-# x = json.loads(course_CSV_to_JSON(course_ID,course_Max,course_Prelim))
-# print(json.dumps(x, indent=2))
+# print(time)
+# print_JSON(courses)
+# print_JSON(professors)
+# print_JSON(rooms)
+# print_JSON(courses)
+# print_JSON(time)
