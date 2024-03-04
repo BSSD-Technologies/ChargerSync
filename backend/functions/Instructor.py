@@ -19,7 +19,7 @@ class Instructor(db.Model):
     def __repr__(self):
         return '<Instructor %r>' % self.name
     
-def load_prof_data(csv_file):
+def prof_CSV_to_List(csv_file):
     """
     Load professor data from a CSV file.
 

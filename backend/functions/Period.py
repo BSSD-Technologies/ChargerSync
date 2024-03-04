@@ -15,7 +15,7 @@ class Period(db.Model):
     def __repr__(self):
         return '<Time Period %r %r %r>' % (self.day, self.start_time, self.end_time)
     
-def load_time_data(csv_file):
+def time_CSV_to_List(csv_file):
     """
     Load time block data from a CSV file.
 

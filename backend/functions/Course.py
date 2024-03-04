@@ -3,7 +3,7 @@ from flask import Flask
 from .extensions import db
 import pandas as pd
 
-def load_course_data(csv_file):
+def course_CSV_to_List(csv_file):
     """
     Load course data from a CSV file.
 
@@ -19,3 +19,12 @@ def load_course_data(csv_file):
     Prelim = courseList['Preliminary Enrollment'].tolist()
 
     return ID, Max, Prelim
+
+def course_CSV_to_JSON(ID, Max, Prelim):
+    courseData = list(zip(ID, Max, Prelim))
+    columns = ['Course ID', 'Max Enrollment', 'Preliminary Enrollment']
+
+    df = pd.DataFrame(courseData, columns=columns)
+    couses_JSON = df.to_json(orient='records')
+
+    return couses_JSON

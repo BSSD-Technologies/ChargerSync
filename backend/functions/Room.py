@@ -13,7 +13,7 @@ class Room(db.Model):
         return '<Room %r>' % self.name
     
 
-def load_room_data(csv_file):
+def room_CSV_to_List(csv_file):
     """
     Load room data from a CSV file.
 
