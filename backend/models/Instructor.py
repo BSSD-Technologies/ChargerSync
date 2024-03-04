@@ -11,6 +11,7 @@ class Instructor(db.Model):
     id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
     fname = db.Column(db.String(256), nullable=False)
     lname = db.Column(db.String(256), nullable=False)
+    priority = db.Column(db.Integer, default='None')
     
     # one to many relationship with sections
     sections = db.relationship('Section', backref='instructor', lazy=True)
@@ -33,10 +34,15 @@ class Instructor(db.Model):
         print("Period Preferences:")
         for preference in self.period_preferences:
             period = Period.query.get(preference.course_id)
-            print(f"- Period ID: {preference.name}")
+            print(f"ID: {period.id}, Day: {period.day}, Start Time: {period.start_time.strftime('%I:%M %p')}, End Time: {period.end_time.strftime('%I:%M %p')}")
     
     def addCoursePreference(self, course_id):
         new_preference = CoursePreference(instructor_id=self.id, course_id=course_id)
+        db.session.add(new_preference)
+        db.session.commit()
+
+    def addPeriodPreference(self, period_id):
+        new_preference = PeriodPreference(instructor_id=self.id, period_id=period_id)
         db.session.add(new_preference)
         db.session.commit()
     

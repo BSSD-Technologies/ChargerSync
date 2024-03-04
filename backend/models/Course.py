@@ -14,7 +14,13 @@ class Course(db.Model):
         return '<Course %r>' % self.name
     
     def sectionCount(self):
-        return Section.query.filter_by(course_id=self.id).count()
+        return Section.query.filter_by(course_id=self.id).count()  
+
+    def newSection(self):
+        new_number = self.sectionCount() + 1
+        new_name = self.name + "-" + str(new_number)
+        new_section = Section(name=new_name, course_id=self.id)
+        return new_section
 
 class Section(db.Model):
     __tablename__ = 'section'
@@ -37,6 +43,15 @@ class Section(db.Model):
 
     def __repr__(self):
         return '<Section %r>' % self.name
+    
+    def setInstructor(self, instructor):
+        self.instructor_id = instructor.id
+
+    def setRoom(self, room):
+        self.room_id = room.id
+
+    def setPeriod(self, period):
+        self.period_id = period.id     
     
 
 
