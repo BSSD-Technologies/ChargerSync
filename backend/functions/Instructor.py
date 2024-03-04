@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
-from extensions import db
+from .extensions import db
 import pandas as pd
 
 class Instructor(db.Model):

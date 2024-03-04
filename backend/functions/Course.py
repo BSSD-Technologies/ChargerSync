@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
-from extensions import db
+from .extensions import db
 import pandas as pd
 
 def load_course_data(csv_file):
