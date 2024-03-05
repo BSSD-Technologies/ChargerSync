@@ -6,6 +6,7 @@ from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
 import DataGenerator
+import Algorithm
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -17,6 +18,11 @@ with app.app_context():
     db.create_all()
 
     DataGenerator.loadData()
+    instructors = Algorithm.getIntructorsWithSectionCount()
+
+    classrooms = Algorithm.getClassroomsAndAvailability(Algorithm.getNumOfPeriods())
+    print(instructors)
+    print(classrooms)
 
     print(Course.query.all())
     print(Instructor.query.all())

@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from extensions import db
 from models.Preferences import CoursePreference, PeriodPreference
-from models.Course import Course
+from models.Course import Course, Section
 from models.Period import Period
 
 class Instructor(db.Model):
@@ -24,6 +24,9 @@ class Instructor(db.Model):
 
     def __repr__(self):
         return '<Instructor %r %r >' % (self.fname, self.lname)
+    
+    def countAssignedSections(self):
+        return Section.query.filter_by(instructor_id=self.id).count() 
     
     def printPreferences(self):
         print(f"Professor {self.fname} {self.lname} Preferences:")

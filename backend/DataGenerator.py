@@ -26,13 +26,13 @@ tr_times = [
 ]
 
 instructor_list = [
-    # First name, Last name
-    ('Beth', 'Allen'),
-    ('Dan', 'Schrimpcher'),
-    ('Robert', 'Preston'),
-    ('John', 'Doe'),
-    ('Super', 'Man'),
-    ('Danny', 'Hardin'),
+    # First name, Last name, priorty
+    ('Beth', 'Allen', 1),
+    ('Dan', 'Schrimpcher', 3),
+    ('Robert', 'Preston', 2),
+    ('John', 'Doe', 9),
+    ('Super', 'Man', 9),
+    ('Danny', 'Hardin', 9),
 ]
 
 room_list = [
@@ -82,8 +82,8 @@ def loadData():
     db.session.commit()
 
     # Add Instructors
-    for first_name, last_name in instructor_list:
-        new_instructor = Instructor(fname=first_name, lname=last_name)
+    for first_name, last_name, priority in instructor_list:
+        new_instructor = Instructor(fname=first_name, lname=last_name, priority=priority)
         db.session.add(new_instructor)
     db.session.commit()
 
