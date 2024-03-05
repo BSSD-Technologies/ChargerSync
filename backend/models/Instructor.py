@@ -16,7 +16,7 @@ class Instructor(db.Model):
     sections = db.relationship('Section', backref='instructor', lazy=True)
 
     # one to many relationship with course preferences
-    #course_preferences = db.relationship('CoursePreference', backref='instructor', lazy=True)
+    course_preferences = db.relationship('CoursePreference', backref='instructor', lazy=True)
 
     # one to many relationship with time preferences
     #period_preferences = db.relationship('PeriodPreference', backref='instructor', lazy=True)
@@ -42,5 +42,12 @@ class Instructor(db.Model):
     
     def getPeriodPreferences(self):
         return PeriodPreference.query.filter_by(instructor_id=self.id).all()
+    
+    def findCoursePreference(self, course_id):
+        for preference in self.course_preferences:
+            if preference.course_id == course_id:
+                return preference
+        
+        return None
 
     

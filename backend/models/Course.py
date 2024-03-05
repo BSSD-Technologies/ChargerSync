@@ -35,10 +35,9 @@ class Course(db.Model):
             tuple_item = (instructor, instructor_priority)
             arr_instructors.append(tuple_item)
         sorted_array = sorted(arr_instructors, key=lambda x: x[1])
-        pref = CoursePreference.query.filter((CoursePreference.course_id == self.id) and (CoursePreference.instructor_id == sorted_array[0].id)).first()
-        pref.prefFulfilled()
-        return sorted_array[0]
 
+        # Highest priority professor is returned
+        return sorted_array[0][0]
 
 
 class Section(db.Model):
