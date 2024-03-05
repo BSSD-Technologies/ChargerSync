@@ -44,19 +44,24 @@ with app.app_context():
         if not course_preferences:
             available_instructor = instructors_with_no_preferences[instructors_with_no_preferences_pos]
             section.setInstructor(available_instructor)
+            print(available_instructor)
+            print(section)
             instructors_with_no_preferences_pos = (instructors_with_no_preferences_pos + 1) % len(instructors_with_no_preferences)
         else:
             course_for_section = Course.query.filter_by(id=course_for_section).first()
             selected_instructor = course_for_section.getInstructorWithPriority()
             print(selected_instructor)
+            print(section)
             section.setInstructor(selected_instructor[0])
+
+
             
 
 
     sections = Section.query.all()
-    print(sections)
+    #print(sections)
 
-    print(Course.query.all())
-    print(Instructor.query.all())
+    #print(Course.query.all())
+    #print(Instructor.query.all())
 
 
