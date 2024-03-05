@@ -3,12 +3,7 @@ from models.Course import Section, Course
 from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
-from models.Preferences import CoursePreference, PeriodPreference
 
-
-class Assignment():
-    
-    pass
 
 def getIntructorsByPriority():
     return Instructor.query.order_by(Instructor.priority).all()
@@ -64,6 +59,21 @@ def getInstructorsWithNoPref():
         if not instructor.getCoursePreferences() and not instructor.getPeriodPreferences():
             instructors_list.append(instructor)
     return instructors_list
+
+def getTimesAndClassrooms():
+    times_rooms_list = []
+    times = Period.query.all()
+    room_count = roomCount()
+    for time in times:
+        rooms = [0] * room_count
+        period_id = time.id
+        tuple_item = (period_id, rooms)
+        times_rooms_list.append(tuple_item)
+    return times_rooms_list
+
+def roomCount():
+    return Room.query.count()
+
 
 
 '''For each professor by priority rank

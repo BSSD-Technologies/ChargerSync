@@ -11,3 +11,4 @@ class Room(db.Model):
 
     def __repr__(self):
         return '<Room %r>' % self.name
+

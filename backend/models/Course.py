@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from extensions import db
+from models.Preferences import CoursePreference
 
 class Course(db.Model):
     __tablename__ = 'course'
@@ -9,6 +10,7 @@ class Course(db.Model):
     name = db.Column(db.String(255), nullable=False)
     max_enrollment = db.Column(db.Integer, nullable=False)
     preliminary_enrollment = db.Column(db.Integer, default=0)
+
 
     def __repr__(self):
         return '<Course %r>' % self.name
@@ -23,6 +25,21 @@ class Course(db.Model):
         db.session.add(new_section)
         db.session.commit()
         return new_section
+    
+    def getInstructorWithPriority(self):
+        course_preferences = CoursePreference.query.filter((CoursePreference.course_id == self.id) and (CoursePreference.fulfilled == 0))
+        arr_instructors = []
+        for pref in course_preferences:
+            instructor = pref.instructor
+            instructor_priority = instructor.priority
+            tuple_item = (instructor, instructor_priority)
+            arr_instructors.append(tuple_item)
+        sorted_array = sorted(arr_instructors, key=lambda x: x[1])
+        pref = CoursePreference.query.filter((CoursePreference.course_id == self.id) and (CoursePreference.instructor_id == sorted_array[0].id)).first()
+        pref.prefFulfilled()
+        return sorted_array[0]
+
+
 
 class Section(db.Model):
     __tablename__ = 'section'

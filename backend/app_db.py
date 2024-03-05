@@ -5,7 +5,7 @@ from models.Course import Section, Course
 from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
-from models.Preferences import CoursePreference, PeriodPreference
+from models.Preferences import CoursePreference
 import DataGenerator
 import Algorithm
 
@@ -40,12 +40,16 @@ with app.app_context():
 
     for section in sections:
         course_for_section = section.course_id
-        course_preferences = CoursePreference.query.filter_by(course_id=course_for_section).all()
+        course_preferences = CoursePreference.query.filter((CoursePreference.course_id == course_for_section) and (CoursePreference.fulfilled == 0)).all()
         if not course_preferences:
             available_instructor = instructors_with_no_preferences[instructors_with_no_preferences_pos]
             section.setInstructor(available_instructor)
             instructors_with_no_preferences_pos = (instructors_with_no_preferences_pos + 1) % len(instructors_with_no_preferences)
-        
+        else:
+            course_for_section = Course.query.filter_by(id=course_for_section).first()
+            selected_instructor = course_for_section.getInstructorWithPriority()
+            print(selected_instructor)
+            section.setInstructor(selected_instructor[0])
             
 
 
