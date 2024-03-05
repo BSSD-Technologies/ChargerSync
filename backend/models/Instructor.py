@@ -48,4 +48,11 @@ class Instructor(db.Model):
         new_preference = PeriodPreference(instructor_id=self.id, period_id=period_id)
         db.session.add(new_preference)
         db.session.commit()
+
+    def getCoursePreferences(self):
+        return CoursePreference.query.filter_by(instructor_id=self.id).all()
+    
+    def getPeriodPreferences(self):
+        return PeriodPreference.query.filter_by(instructor_id=self.id).all()
+
     

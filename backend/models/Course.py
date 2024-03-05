@@ -19,7 +19,9 @@ class Course(db.Model):
     def newSection(self):
         new_number = self.sectionCount() + 1
         new_name = self.name + "-" + str(new_number)
-        new_section = Section(name=new_name, course_id=self.id)
+        new_section = Section(name=new_name, course_id=self.id, section_no=new_number)
+        db.session.add(new_section)
+        db.session.commit()
         return new_section
 
 class Section(db.Model):
@@ -31,6 +33,7 @@ class Section(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     room_id = db.Column(db.Integer, db.ForeignKey('room.id'), default='None')
     period_id = db.Column(db.Integer, db.ForeignKey('period.id'), default='None')
+    section_no = db.Column(db.Integer, nullable=False)
 
     # one to many relationship w/ Course
     course = db.relationship('Course', backref='sections', lazy=True)

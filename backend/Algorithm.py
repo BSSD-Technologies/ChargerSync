@@ -3,15 +3,18 @@ from models.Course import Section, Course
 from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
+from models.Preferences import CoursePreference, PeriodPreference
 
 
 class Assignment():
+    
     pass
 
 def getIntructorsByPriority():
     return Instructor.query.order_by(Instructor.priority).all()
 
 def getTimes():
+    # Creating a tuple of all times and the number of classes at that time?
     periods_list = []
     periods = Period.query.all()
     for period in periods:
@@ -24,6 +27,7 @@ def getNumOfPeriods():
     return Period.query.count()
 
 def getIntructorsWithSectionCount():
+    # Creating a tuple to represent instructors and section count, this is sorted by priority
     instructors_list = []
     instructors = getIntructorsByPriority()
     for instructor in instructors:
@@ -33,15 +37,17 @@ def getIntructorsWithSectionCount():
     return instructors_list
 
 def getCoursesAndEnrollment():
+    # Creating a tuple to represent course, max enrollment, and fulfilled/not fulfilled
     courses_list = []
     courses = Course.query.all()
     for course in courses:
         pull_course = course.id
-        tuple_item = (pull_course, course.max_enrollment, course.preliminary_enrollment)
+        tuple_item = (pull_course, course.max_enrollment, 0)
         courses_list.append(tuple_item)
     return courses_list
 
 def getClassroomsAndAvailability(numPeriods):
+    # Creating a tuple to represent room, occupancy, and availabily
     classrooms_list = []
     classrooms = Room.query.all()
     for room in classrooms:
@@ -51,6 +57,13 @@ def getClassroomsAndAvailability(numPeriods):
         classrooms_list.append(tuple_item)
     return classrooms_list
 
+def getInstructorsWithNoPref():
+    instructors_list = []
+    instructors = Instructor.query.order_by(Instructor.priority).all()
+    for instructor in instructors:
+        if not instructor.getCoursePreferences() and not instructor.getPeriodPreferences():
+            instructors_list.append(instructor)
+    return instructors_list
 
 
 '''For each professor by priority rank
