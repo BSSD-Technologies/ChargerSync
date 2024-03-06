@@ -1,13 +1,13 @@
 /**
  * Instructor
  * @uuid - unique ID for instructor
- * @firstName - instructor first name
- * @lastName - instructor last name
- * @priority - priority level among other instructors
+ * @fname Instructor first name;
+ * @lname Instructor last name;
+ * @priority Priority relative to other instructors;
  */
 export type Instructor = {
   uuid: string;
-  firstName: string;
-  lastName: string;
-  priority?: number | 0;
+  fname: string;
+  lname: string;
+  priority: number | 0;
 }
