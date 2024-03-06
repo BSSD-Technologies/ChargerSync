@@ -88,24 +88,24 @@ def getClassroomsAndAvailability():
         classrooms_list.append(tuple_item)
     return classrooms_list
 
-def getProfessorAvailability():
-    professor_list = []
+def getInstructorAvailability():
+    instructor_list = []
     instructors = Instructor.query.all()
     periods = Period.query.all()
     for instructor in instructors:
         pull_insturctor = instructor.id
         period_ids = [period.id for period in periods]
         tuple_item = (pull_insturctor, period_ids)
-        professor_list.append(tuple_item)
-    return professor_list
+        instructor_list.append(tuple_item)
+    return instructor_list
 
-def updateProfessorAvailability(professor_list, period_id, instructor_id):
-    for professor in professor_list:
-        if professor[0] == period_id:
-            availability_array = professor[1]
+def updateInstructorAvailability(instructor_list, period_id, instructor_id):
+    for instructor in instructor_list:
+        if instructor[0] == period_id:
+            availability_array = instructor[1]
             if period_id in availability_array:
-                professor_index = availability_array.index(period_id)
-                availability_array[professor_index] = None
+                instructor_index = availability_array.index(period_id)
+                availability_array[instructor_index] = None
             return  # No need to continue after updating
     # Period ID not found, or room_id not found in the availability array
     print("Period ID or Instructor ID not found.")
@@ -115,6 +115,12 @@ def findClassroomAvailability(rooms_list, period_id):
         if room[0] == period_id:
             return room[1]  # Return the availability array if period_id matches
     return None  # Return None if period_id is not found
+
+def findInstructorAvailability(profressor_list, period_id):
+    for instructor in profressor_list:
+        if instructor[0] == period_id:
+            return instructor[1]
+        return None
 
 def updateRoomAvailability(rooms_list, period_id, room_id):
     for room in rooms_list:
@@ -151,7 +157,7 @@ def roomCount():
 
 
 
-'''For each professor by priority rank
+'''For each instructor by priority rank
 
     Creating lists for each course
         Get list of classes, store length in a variable.
@@ -160,16 +166,16 @@ def roomCount():
             Deques[coursenames[i]] = deque()
         Return deques
 
-    Sorting Professors into Course Lists.
-        For each professor
+    Sorting instructors into Course Lists.
+        For each instructor
             For each course preference
-                Add professor name into the respective course list.
+                Add instructor name into the respective course list.
 
 Courses start with 1 section
 
 For each course (sorted by current enrollment):
 
-	Assign a section to a professor at a time (check list of profs for each class first, then go to highest priority first at first available time)
+	Assign a section to a instructor at a time (check list of profs for each class first, then go to highest priority first at first available time)
 	Assign a section to a classroom closest in size to Current enrollment if possible (only on first loop, add classrooms closest in size to first classroom assigned later)
 	Subtract max occupancy of the classroom from Max Enrollment
 	If Max Enrollment >0, add another section and repeat.
@@ -178,7 +184,7 @@ Rebalance Class sizes (TBD)
 '''
 
 '''
-Section-Professor-Time Assignments
+Section-instructor-Time Assignments
 For each course
 	Create an object and populate w/ course name + section number
 	Details to be filled in here.
