@@ -29,7 +29,7 @@ with app.app_context():
     courses = Algorithm.getCoursesAndEnrollment()
 
     # Classrooms and Times
-    classroom_availability = Algorithm.getClassroomsAndAvailability(Algorithm.getNumOfPeriods())
+    classroom_availability = Algorithm.getClassroomsAndAvailability()
     current_section_no = 1
     sections = []
 
@@ -45,7 +45,7 @@ with app.app_context():
 
     for section in sections:
         course_for_section = section.course_id
-        course_preferences = CoursePreference.query.filter((CoursePreference.course_id == course_for_section) and (CoursePreference.fulfilled == 0)).all()
+        course_preferences = CoursePreference.getUnfulfilledPreferences(course_for_section)
         if not course_preferences:
             # Assign professor from professors who have no preferance
             available_instructor = instructors_with_no_preferences[instructors_with_no_preferences_pos]
@@ -54,30 +54,61 @@ with app.app_context():
             instructors_with_no_preferences_pos = (instructors_with_no_preferences_pos + 1) % len(instructors_with_no_preferences)
             
             # Change to assigned_professor for the time assignment
-            assigned_professor = available_instructor
+            assigned_instructor = available_instructor
         else:
             # Assign professor from professors who do have preference for specific course based on priority
             course_for_section = Course.query.filter_by(id=course_for_section).first()
             selected_instructor = course_for_section.getInstructorWithPriority()
             section.setInstructor(selected_instructor)
 
+            # Update instructor preferences
             pref = selected_instructor.findCoursePreference(course_for_section.id)
             pref.prefFulfilled()
 
             # Change to assigned_professor for the time assignment
-            assigned_professor = selected_instructor
+            assigned_instructor = selected_instructor
 
 
-        print(assigned_professor)
+        print(assigned_instructor)
         print(section)
-        '''
+
         # Check if professor has any time preferences
-        available_instructor_id = available_instructor.id
-        period_preference = PeriodPreference.query.filter((PeriodPreference.instructor_id == available_instructor_id) and (PeriodPreference.fulfilled == 0)).first()
-        if period_preference:
-            section.setTime(period_preference)
-            period_preference.prefFulfilled    
-            '''
+        assigned_instructor_id = assigned_instructor.id
+        period_preferences = assigned_instructor.getPeriodPreferences()
+
+        # check each of instructor's time preference for open classrooms
+        if period_preferences:
+            for period_pref in period_preferences:
+                period_id = period_pref.period_id
+                rooms_at_period = Algorithm.findClassroomAvailability(classroom_availability, period_id)
+                for room in rooms_at_period:
+                    if room != None:
+                        print("instructor is assigned a room based on preference, room:" + str(room))
+                        # ROOM IS AVAILABLE
+                        # assign section to room
+                        # assign section to time
+                        # make room unavailable (set to None)
+                    break
+                break
+            # No room available - giving instructor time period with no room:
+            pass
+        else:
+            # Professor has no preference
+            for period in classroom_availability:
+                period_id = classroom_availability[0]
+                for room in rooms_at_period:
+                    if room != None:
+                        print("instructor is assigned any room, room:" + str(room))
+                        # ROOM IS AVAILABLE
+                        # assign section to room
+                        # assign section to time
+                        # make room unavailable (set to None)
+                        # break
+                        pass
+                    break
+                break
+                
+
 
 
             

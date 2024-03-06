@@ -45,10 +45,10 @@ class Section(db.Model):
 
     id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
     name = db.Column(db.String(255), nullable=False)
-    instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.id'), default='None')
+    instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.id'), default=None)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
-    room_id = db.Column(db.Integer, db.ForeignKey('room.id'), default='None')
-    period_id = db.Column(db.Integer, db.ForeignKey('period.id'), default='None')
+    room_id = db.Column(db.Integer, db.ForeignKey('room.id'), default=None)
+    period_id = db.Column(db.Integer, db.ForeignKey('period.id'), default=None)
     section_no = db.Column(db.Integer, nullable=False)
 
     # one to many relationship w/ Course

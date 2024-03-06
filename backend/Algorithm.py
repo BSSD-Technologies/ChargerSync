@@ -41,16 +41,23 @@ def getCoursesAndEnrollment():
         courses_list.append(tuple_item)
     return courses_list
 
-def getClassroomsAndAvailability(numPeriods):
-    # Creating a tuple to represent room, occupancy, and availabily
+def getClassroomsAndAvailability():
+    # Creating a tuple to represent room and availabily
     classrooms_list = []
-    classrooms = Room.query.all()
-    for room in classrooms:
-        pull_room = room.id
-        array_of_zeros = [0] * numPeriods
-        tuple_item = (pull_room, room.max_occupancy, array_of_zeros)
+    periods = Period.query.all()
+    rooms = Room.query.all()
+    for period in periods:
+        pull_period = period.id
+        room_ids = [room.id for room in rooms]
+        tuple_item = (pull_period, room_ids)
         classrooms_list.append(tuple_item)
     return classrooms_list
+
+def findClassroomAvailability(rooms_list, period_id):
+    for room in rooms_list:
+        if room[0] == period_id:
+            return room[1]  # Return the availability array if period_id matches
+    return None  # Return None if period_id is not found
 
 def getInstructorsWithNoPref():
     instructors_list = []

@@ -18,6 +18,10 @@ class CoursePreference(db.Model):
     def prefFulfilled(self):
         self.fulfilled = 1
         db.session.commit()
+
+    def getUnfulfilledPreferences(course_id):
+        return CoursePreference.query.filter((CoursePreference.course_id == course_id) and (CoursePreference.fulfilled == 0)).all()
+
         
     
 class PeriodPreference(db.Model):
@@ -28,7 +32,7 @@ class PeriodPreference(db.Model):
     period_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     fulfilled = db.Column(db.Integer, default=0)
 
-    instructor = db.relationship('Instructor', backref='period_preferences')
+    #instructor = db.relationship('Instructor', backref='period_preferences')
 
     def __repr__(self):
         return '<Instructor %r, Period Preference %r >' % (self.instructor_id, self.period_id)

@@ -10,7 +10,7 @@ class Instructor(db.Model):
     id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
     fname = db.Column(db.String(256), nullable=False)
     lname = db.Column(db.String(256), nullable=False)
-    priority = db.Column(db.Integer, default='None')
+    priority = db.Column(db.Integer, default=None)
     
     # one to many relationship with sections
     sections = db.relationship('Section', backref='instructor', lazy=True)
@@ -19,7 +19,7 @@ class Instructor(db.Model):
     course_preferences = db.relationship('CoursePreference', backref='instructor', lazy=True)
 
     # one to many relationship with time preferences
-    #period_preferences = db.relationship('PeriodPreference', backref='instructor', lazy=True)
+    period_preferences = db.relationship('PeriodPreference', backref='instructor', lazy=True)
 
     def __repr__(self):
         return '<Instructor %r %r >' % (self.fname, self.lname)
@@ -38,16 +38,21 @@ class Instructor(db.Model):
         db.session.commit()
 
     def getCoursePreferences(self):
-        return CoursePreference.query.filter_by(instructor_id=self.id).all()
-    
-    def getPeriodPreferences(self):
-        return PeriodPreference.query.filter_by(instructor_id=self.id).all()
+        arr_pref = []
+        for preference in self.course_preferences:
+            arr_pref.append(preference)
+        return arr_pref
     
     def findCoursePreference(self, course_id):
         for preference in self.course_preferences:
             if preference.course_id == course_id:
                 return preference
-        
         return None
+    
+    def getPeriodPreferences(self):
+        arr_pref = []
+        for preference in self.period_preferences:
+            arr_pref.append(preference)
+        return arr_pref
 
     
