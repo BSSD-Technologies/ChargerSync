@@ -52,6 +52,10 @@ def getCoursesAndEnrollment():
         courses_list.append(tuple_item)
     return courses_list
 
+# name
+# Arg 1 Type
+# Arg 2 Type
+# Expected Output
 def checkCoursesFulfillment(courses_and_enrollment):
     for course in courses_and_enrollment:
         fulfilled = course[2]
