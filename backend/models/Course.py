@@ -27,7 +27,7 @@ class Course(db.Model):
         return new_section
     
     def getInstructorWithPriority(self):
-        course_preferences = CoursePreference.query.filter((CoursePreference.course_id == self.id) and (CoursePreference.fulfilled == 0))
+        course_preferences = CoursePreference.query.filter((CoursePreference.course_id == self.id),(CoursePreference.fulfilled == 0)).all()
         arr_instructors = []
         for pref in course_preferences:
             instructor = pref.instructor

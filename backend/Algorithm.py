@@ -21,8 +21,19 @@ def getTimes():
 def getNumOfPeriods():
     return Period.query.count()
 
+def getRoomsAndOccupancy():
+    # Creating a tuple of all the rooms and occupancy
+    rooms_list = []
+    rooms = Room.query.all()
+    for room in rooms:
+        pull_room = room.id
+        pull_room_occupancy = room.max_occupancy
+        tuple_item = (pull_room, pull_room_occupancy)
+        rooms_list.append(tuple_item)
+    return rooms_list
+
 def getIntructorsWithSectionCount():
-    # Creating a tuple to represent instructors and section count, this is sorted by priority
+    # Creating a tuple to represent instructors and section count, this is sorted by priority - NOT CURRENTLY BEING USED
     instructors_list = []
     instructors = getIntructorsByPriority()
     for instructor in instructors:
@@ -40,6 +51,30 @@ def getCoursesAndEnrollment():
         tuple_item = (pull_course, course.max_enrollment, 0)
         courses_list.append(tuple_item)
     return courses_list
+
+def checkCoursesFulfillment(courses_and_enrollment):
+    for course in courses_and_enrollment:
+        fulfilled = course[2]
+        if fulfilled == 0:
+            return None
+    return True
+
+def updateCourseEnrollment(course_enrollment_list, course_id, room_id):
+    room = Room.query.filter_by(id=room_id).first()
+    room_occupancy = room.max_occupancy
+    for course in course_enrollment_list:
+        if course[0] == course_id:
+            new_occupancy = course[1] - room_occupancy
+            if new_occupancy <= 0:
+                fulfilled = 1
+            else:
+                fulfilled = 0
+            updated_course = (course[0], new_occupancy, fulfilled)
+            index = course_enrollment_list.index(course)
+            course_enrollment_list[index] = updated_course
+            if course[1] <= 0:
+                course
+            return 
 
 def getClassroomsAndAvailability():
     # Creating a tuple to represent room and availabily
@@ -74,7 +109,7 @@ def getInstructorsWithNoPref():
     instructors_list = []
     instructors = Instructor.query.order_by(Instructor.priority).all()
     for instructor in instructors:
-        if not instructor.getCoursePreferences() and not instructor.getPeriodPreferences():
+        if instructor.checkPreferences() == False:
             instructors_list.append(instructor)
     return instructors_list
 

@@ -27,7 +27,7 @@ tr_times = [
 
 instructor_list = [
     # First name, Last name, priorty
-    ('Beth', 'Allen', 1),
+    ('Beth', 'Allen', 5),
     ('Dan', 'Schrimpcher', 3),
     ('Robert', 'Preston', 2),
     ('John', 'Doe', 9),
@@ -37,11 +37,11 @@ instructor_list = [
 
 room_list = [
     # Name, Occupancy
-    ('OKT 200', 30),
-    ('OKT 307', 55),
-    ('OKT 155', 70),
+    ('OKT 200', 100),
+    ('OKT 307', 70),
+    ('OKT 155', 10),
     ('OKT 157', 10),
-    ('LIB 201', 30),
+    ('LIB 201', 50),
     ('OKT 105', 100),
 ]
 
