@@ -71,6 +71,15 @@ class Section(db.Model):
 
     def setPeriod(self, period):
         self.period_id = period.id     
+
+    def setRoomByID(self, room_id):
+        self.room_id = room_id
+
+    def setPeriodByID(self, period_id):
+        self.period_id = period_id  
+
+    def setInstructorByID(self, instructor_id):
+        self.instructor_id = instructor_id
     
 
 

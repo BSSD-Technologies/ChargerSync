@@ -59,6 +59,17 @@ def findClassroomAvailability(rooms_list, period_id):
             return room[1]  # Return the availability array if period_id matches
     return None  # Return None if period_id is not found
 
+def updateRoomAvailability(rooms_list, period_id, room_id):
+    for room in rooms_list:
+        if room[0] == period_id:
+            availability_array = room[1]
+            if room_id in availability_array:
+                room_index = availability_array.index(room_id)
+                availability_array[room_index] = None
+            return  # No need to continue after updating
+    # Period ID not found, or room_id not found in the availability array
+    print("Period ID or Room ID not found.")
+
 def getInstructorsWithNoPref():
     instructors_list = []
     instructors = Instructor.query.order_by(Instructor.priority).all()
