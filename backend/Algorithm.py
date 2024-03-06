@@ -88,6 +88,28 @@ def getClassroomsAndAvailability():
         classrooms_list.append(tuple_item)
     return classrooms_list
 
+def getProfessorAvailability():
+    professor_list = []
+    instructors = Instructor.query.all()
+    periods = Period.query.all()
+    for instructor in instructors:
+        pull_insturctor = instructor.id
+        period_ids = [period.id for period in periods]
+        tuple_item = (pull_insturctor, period_ids)
+        professor_list.append(tuple_item)
+    return professor_list
+
+def updateProfessorAvailability(professor_list, period_id, instructor_id):
+    for professor in professor_list:
+        if professor[0] == period_id:
+            availability_array = professor[1]
+            if period_id in availability_array:
+                professor_index = availability_array.index(period_id)
+                availability_array[professor_index] = None
+            return  # No need to continue after updating
+    # Period ID not found, or room_id not found in the availability array
+    print("Period ID or Instructor ID not found.")
+
 def findClassroomAvailability(rooms_list, period_id):
     for room in rooms_list:
         if room[0] == period_id:

@@ -31,6 +31,9 @@ with app.app_context():
     classroom_availability = Algorithm.getClassroomsAndAvailability()
     current_section_no = 0
 
+    #Professors
+    professor_availability = Algorithm.getProfessorAvailability()
+
     # Rooms and Occupancy
     room_occupancy = Algorithm.getRoomsAndOccupancy
 
@@ -109,6 +112,7 @@ with app.app_context():
                             Algorithm.updateCourseEnrollment(courses_and_enrollment, section.course_id, room)
                             Algorithm.updateRoomAvailability(classroom_availability, period, room)
                             break
+                Algorithm.updateProfessorAvailability(professor_availability, period, assigned_instructor_id)
                 section.setPeriodByID(period)
                 break
             print("\n")
