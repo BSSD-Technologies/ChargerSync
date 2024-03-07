@@ -17,7 +17,7 @@ export type Period = {
  * @MW - Monday/Wednesday class
  * @TR - Tuesday/Thursday class
  */
-enum Day {
+export enum Day {
   MW = "MW",
   TR = "TR",
 }

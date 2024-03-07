@@ -1,6 +1,4 @@
-interface Schedule {
-  
-};
+import { Day } from "./Period";
 
 export type Section = {
   uuid: string;
