@@ -7,7 +7,7 @@ from models.Room import Room
 from models.Period import Period
 from models.Preferences import CoursePreference, PeriodPreference
 import DataGenerator
-import Algorithm
+import Scheduler
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -25,23 +25,23 @@ with app.app_context():
     instructors_with_no_preferences_pos = 0
 
     # Courses and enrollment numbers
-    courses_and_enrollment = Algorithm.getCoursesAndEnrollment()
+    courses_and_enrollment = Scheduler.getCoursesAndEnrollment()
 
-    # Classrooms and Times
-    classroom_availability = Algorithm.getClassroomsAndAvailability()
+    # Rooms and Times
+    room_availability = Scheduler.getRoomsAndAvailability()
     current_section_no = 0
 
     #Instructors
-    Instructor_availability = Algorithm.getInstructorAvailability()
+    Instructor_availability = Scheduler.getInstructorAvailability()
 
     # Rooms and Occupancy
-    room_occupancy = Algorithm.getRoomsAndOccupancy
+    room_occupancy = Scheduler.getRoomsAndOccupancy
 
     for i in range(10):
         sections = []
         current_section_no += 1
 
-        instructors_with_no_preferences = Algorithm.getInstructorsWithNoPref()
+        instructors_with_no_preferences = Scheduler.getInstructorsWithNoPref()
 
         # Creates section list of sections to be assigned
         for course in courses_and_enrollment:
@@ -93,34 +93,34 @@ with app.app_context():
             if period_preferences:
                 for period_pref in period_preferences:
                     order_periods.append(period_pref.period_id)   
-                for period in classroom_availability:
+                for period in room_availability:
                     if period[0] not in order_periods:
                         order_periods.append(period_pref.period_id)
             else:
                 # Instructor has no preference - this could be used to change the order of which periods are checked first/last
-                for period in classroom_availability:
+                for period in room_availability:
                     if period[0] not in order_periods:
                         order_periods.append(period_pref.period_id)
             
             for period in order_periods:
                 
-                instructor_period_availabilty = Algorithm.findInstructorAvailability(Instructor_availability, period)
-                period_room_availabilty = Algorithm.findClassroomAvailability(classroom_availability, period)
+                instructor_period_availabilty = Scheduler.findInstructorAvailability(Instructor_availability, period)
+                period_room_availabilty = Scheduler.findRoomAvailability(room_availability, period)
                 for room in period_room_availabilty:
                     i = 0
                     if room != None and (not instructor_period_availabilty or instructor_period_availabilty.count(period) != 0):
                         print("instructor will be assigned room", room, " during ", period) # all room one because nothing is implemented
                         # ROOM IS AVAILABLE
                         section.setRoomByID(room)
-                        Algorithm.updateCourseEnrollment(courses_and_enrollment, section.course_id, room)
-                        Algorithm.updateRoomAvailability(classroom_availability, period, room)
+                        Scheduler.updateCourseEnrollment(courses_and_enrollment, section.course_id, room)
+                        Scheduler.updateRoomAvailability(room_availability, period, room)
                         break
-                Algorithm.updateInstructorAvailability(Instructor_availability, period, assigned_instructor_id)
+                Scheduler.updateInstructorAvailability(Instructor_availability, period, assigned_instructor_id)
                 section.setPeriodByID(period)
                 break
             print("\n")
             db.session.commit()
-            if Algorithm.checkCoursesFulfillment(courses_and_enrollment) == True:
+            if Scheduler.checkCoursesFulfillment(courses_and_enrollment) == True:
                 break
 
              

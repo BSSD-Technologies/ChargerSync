@@ -1,12 +1,23 @@
 from extensions import db
-from models.Course import Section, Course
+from models.Course import Course
 from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
 
+class Scheduler:
+    def __init__(self) -> None:
+        # Tuples ------
 
-def getIntructorsByPriority():
-    return Instructor.query.order_by(Instructor.priority).all()
+        # Courses, Enrollment, Fulfillment
+        courses_and_enrollment = getCoursesAndEnrollment()
+
+        # Time, [Room IDs]
+        room_availability = getRoomsAndAvailability()
+
+        # Room
+        room_occupancy = getRoomsAndOccupancy()
+
+
 
 def getTimes():
     # Creating a tuple of all times and the number of classes at that time?
@@ -17,9 +28,6 @@ def getTimes():
         tuple_item = (pull_period, 0)
         periods_list.append(tuple_item)
     return periods_list
-
-def getNumOfPeriods():
-    return Period.query.count()
 
 def getRoomsAndOccupancy():
     # Creating a tuple of all the rooms and occupancy
@@ -35,7 +43,7 @@ def getRoomsAndOccupancy():
 def getIntructorsWithSectionCount():
     # Creating a tuple to represent instructors and section count, this is sorted by priority - NOT CURRENTLY BEING USED
     instructors_list = []
-    instructors = getIntructorsByPriority()
+    instructors = instructor.getIntructorsByPriority()
     for instructor in instructors:
         pull_instructor = instructor.id
         tuple_item = (pull_instructor, instructor.countAssignedSections())
@@ -52,10 +60,6 @@ def getCoursesAndEnrollment():
         courses_list.append(tuple_item)
     return courses_list
 
-# name
-# Arg 1 Type
-# Arg 2 Type
-# Expected Output
 def checkCoursesFulfillment(courses_and_enrollment):
     for course in courses_and_enrollment:
         fulfilled = course[2]
@@ -80,17 +84,17 @@ def updateCourseEnrollment(course_enrollment_list, course_id, room_id):
                 course
             return 
 
-def getClassroomsAndAvailability():
+def getRoomsAndAvailability():
     # Creating a tuple to represent room and availabily
-    classrooms_list = []
+    rooms_list = []
     periods = Period.query.all()
     rooms = Room.query.all()
     for period in periods:
         pull_period = period.id
         room_ids = [room.id for room in rooms]
         tuple_item = (pull_period, room_ids)
-        classrooms_list.append(tuple_item)
-    return classrooms_list
+        rooms_list.append(tuple_item)
+    return rooms_list
 
 def getInstructorAvailability():
     instructor_list = []
@@ -114,7 +118,7 @@ def updateInstructorAvailability(instructor_list, period_id, instructor_id):
     # Period ID not found, or room_id not found in the availability array
     print("Period ID or Instructor ID not found.")
 
-def findClassroomAvailability(rooms_list, period_id):
+def findRoomAvailability(rooms_list, period_id):
     for room in rooms_list:
         if room[0] == period_id:
             return room[1]  # Return the availability array if period_id matches
@@ -145,19 +149,16 @@ def getInstructorsWithNoPref():
             instructors_list.append(instructor)
     return instructors_list
 
-def getTimesAndClassrooms():
+def getTimesAndRooms():
     times_rooms_list = []
     times = Period.query.all()
-    room_count = roomCount()
+    room_count = Room.roomCount()
     for time in times:
         rooms = [0] * room_count
         period_id = time.id
         tuple_item = (period_id, rooms)
         times_rooms_list.append(tuple_item)
     return times_rooms_list
-
-def roomCount():
-    return Room.query.count()
 
 
 
