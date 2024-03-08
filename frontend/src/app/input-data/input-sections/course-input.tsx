@@ -16,16 +16,16 @@ import {
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import { Course, defaultCourse } from "@/app/_types/Course";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 function CourseTableRow(props: {
   row: Course;
-  // On "delete", return true and Id of current course
-  onDelete: (value: boolean, id: string) => void;
+  // On "delete", send back Id of current course to delete
+  onDelete: (id: string) => void;
 }) {
-
   // States for course row inputs
   const [department, setDepartment] = useState(props?.row.department);
   const [courseNum, setCourseNum] = useState(props?.row.course_num);
@@ -88,13 +88,12 @@ function CourseTableRow(props: {
       </TableCell>
       <TableCell>
         <Button
-          variant="outlined"
+          variant="text"
           color="info"
           fullWidth
-          startIcon={<AddCircleRoundedIcon />}
-          onClick={() => props.onDelete(true, props.row.uuid)}
+          onClick={() => props.onDelete(props.row.uuid)}
         >
-          Delete
+          <ClearRoundedIcon />
         </Button>
       </TableCell>
     </TableRow>
@@ -119,9 +118,10 @@ export default function CourseInput() {
     },
   ]);
 
-  const handleDeleteCourse = (value: boolean, id: string) => {
-    console.log(id)
-    
+  const handleDeleteCourse = (id: string) => {
+    setCourseList((courseList) =>
+      courseList.filter((course) => course.uuid !== id)
+    );
   };
 
   return (
@@ -155,7 +155,7 @@ export default function CourseInput() {
               <TableCell>Course Number *</TableCell>
               <TableCell>Max Enrollment *</TableCell>
               <TableCell>Preliminary Enrollment</TableCell>
-              <TableCell>Delete</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -177,7 +177,7 @@ export default function CourseInput() {
             onClick={() => {
               setCourseList([
                 ...courseList,
-                {...defaultCourse, uuid: uuidv4()},
+                { ...defaultCourse, uuid: uuidv4() },
               ]);
             }}
           >
