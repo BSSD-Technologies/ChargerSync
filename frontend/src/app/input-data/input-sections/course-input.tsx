@@ -16,70 +16,89 @@ import {
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import { Course } from "@/app/_types/Course";
+import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-function CourseTable() {
+function CourseTableRow(props: { row: Course }) {
+  const [department, setDepartment] = useState(props?.row.department);
+  const [courseNum, setCourseNum] = useState(props?.row.course_num);
+  const [maxEnrollment, setMaxEnrollment] = useState(props?.row.max_enrollment);
+  const [prelimEnrollment, setPrelimEnrollment] = useState(
+    props?.row.prelim_enrollment
+  );
+
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Course ID *</TableCell>
-            <TableCell>Max Enrollment *</TableCell>
-            <TableCell>Preliminary Enrollment</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell>
-              <TextField
-                fullWidth
-                variant="filled"
-                placeholder="Course ID"
-                type="text"
-              />
-            </TableCell>
-            <TableCell>
-              <FilledInput
-                fullWidth
-                required
-                inputComponent={"input"}
-                inputProps={{
-                  type: "number",
-                  min: 1,
-                  placeholder: "Max Enrollment",
-                }}
-              />
-            </TableCell>
-            <TableCell>
-              <FilledInput
-                fullWidth
-                required
-                inputComponent={"input"}
-                inputProps={{
-                  type: "number",
-                  min: 1,
-                  placeholder: "Preliminary Enrollment",
-                }}
-              />
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-      <Box sx={{ paddingTop: "2%" }}>
-        <Button
-          variant="outlined"
-          color="info"
+    <TableRow key={props.row.uuid}>
+      <TableCell>
+        <TextField
           fullWidth
-          startIcon={<AddCircleRoundedIcon />}
-        >
-          Add a course
-        </Button>
-      </Box>
-    </TableContainer>
+          required
+          variant="filled"
+          placeholder="Course ID"
+          type="text"
+          value={department}
+          onChange={(e) => setDepartment(e.target.value)}
+        />
+      </TableCell>
+      <TableCell>
+        <TextField
+          fullWidth
+          required
+          variant="filled"
+          placeholder="Course ID"
+          type="text"
+          value={courseNum}
+          onChange={(e) => setCourseNum(e.target.value)}
+        />
+      </TableCell>
+      <TableCell>
+        <FilledInput
+          fullWidth
+          required
+          inputComponent={"input"}
+          inputProps={{
+            type: "number",
+            min: 1,
+            placeholder: "Max Enrollment",
+          }}
+        />
+      </TableCell>
+      <TableCell>
+        <FilledInput
+          fullWidth
+          required
+          value={prelimEnrollment}
+          inputComponent={"input"}
+          inputProps={{
+            type: "number",
+            min: 1,
+            placeholder: "Preliminary Enrollment",
+          }}
+        />
+      </TableCell>
+    </TableRow>
   );
 }
 
 export default function CourseInput() {
+  const [courseList, setCourseList] = useState<Course[]>([
+    {
+      uuid: "2",
+      department: "CS",
+      course_num: "121",
+      max_enrollment: 100,
+      prelim_enrollment: 90,
+    },
+    {
+      uuid: "3",
+      department: "CS",
+      course_num: "121",
+      max_enrollment: 100,
+      prelim_enrollment: 90,
+    },
+  ]);
+
   return (
     <Box
       sx={{
@@ -95,15 +114,54 @@ export default function CourseInput() {
           </Typography>
         </Stack>
         <OutlinedInput
-            type="file"
-            startAdornment={<CloudUploadIcon sx={{ marginRight: "10px" }} />}
-            sx={{
-              width: "20%",
-            }}
-          />
+          type="file"
+          startAdornment={<CloudUploadIcon sx={{ marginRight: "10px" }} />}
+          sx={{
+            width: "20%",
+          }}
+        />
       </Grid>
       <br />
-      <CourseTable />
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Course Department *</TableCell>
+              <TableCell>Course Number *</TableCell>
+              <TableCell>Max Enrollment *</TableCell>
+              <TableCell>Preliminary Enrollment</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {courseList.map((row) => (
+              <CourseTableRow key={row.uuid} row={row} />
+            ))}
+          </TableBody>
+        </Table>
+        <Box sx={{ paddingTop: "2%" }}>
+          <Button
+            variant="outlined"
+            color="info"
+            fullWidth
+            startIcon={<AddCircleRoundedIcon />}
+            onClick={() => {
+              setCourseList([
+                ...courseList,
+                {
+                  uuid: uuidv4(),
+                  department: "CS",
+                  course_num: "121",
+                  max_enrollment: 100,
+                  prelim_enrollment: 90,
+                },
+              ]);
+              console.log("Test");
+            }}
+          >
+            Add a course
+          </Button>
+        </Box>
+      </TableContainer>
     </Box>
   );
 }
