@@ -18,11 +18,15 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Course, defaultCourse } from "@/app/_types/Course";
 import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 function CourseTableRow(props: {
   row: Course;
+  // On "delete", return true and Id of current course
   onDelete: (value: boolean, id: string) => void;
 }) {
+
+  // States for course row inputs
   const [department, setDepartment] = useState(props?.row.department);
   const [courseNum, setCourseNum] = useState(props?.row.course_num);
   const [maxEnrollment, setMaxEnrollment] = useState(props?.row.max_enrollment);
@@ -116,10 +120,8 @@ export default function CourseInput() {
   ]);
 
   const handleDeleteCourse = (value: boolean, id: string) => {
-    if (value)
-      setCourseList((courseList) =>
-        courseList.filter((course) => course.uuid !== id)
-      );
+    console.log(id)
+    
   };
 
   return (
@@ -175,7 +177,7 @@ export default function CourseInput() {
             onClick={() => {
               setCourseList([
                 ...courseList,
-                {...defaultCourse},
+                {...defaultCourse, uuid: uuidv4()},
               ]);
             }}
           >

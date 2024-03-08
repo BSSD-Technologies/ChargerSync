@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
 /**
  * Course
  * @uuid Unique ID for course object;
@@ -17,7 +15,6 @@ export type Course = {
 };
 
 export const defaultCourse = {
-  uuid: uuidv4(),
   department: "",
   course_num: "",
   max_enrollment: NaN,

@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
 /**
  * Period Preference
  * @uuid Unique ID for period preference;
@@ -13,7 +11,6 @@ export type PeriodPreference = {
 };
 
 export const defaultPeriodPreference = {
-  uuid: uuidv4(),
   instructor_uuid: "",
   period_uuid: "",
 };

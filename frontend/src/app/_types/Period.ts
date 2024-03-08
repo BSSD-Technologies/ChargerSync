@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
 /**
  * Period
  * @uuid Unique ID for course object;
@@ -25,7 +23,6 @@ export enum Day {
 }
 
 export const defaultPeriod = {
-  uuid: uuidv4(),
   start_time: "",
   end_time: "",
   day: "MW",

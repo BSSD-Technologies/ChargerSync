@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
 /**
  * Room
  * @uuid Unique ID for course object;
@@ -13,7 +11,6 @@ export type Room = {
 };
 
 export const defaultRoom = {
-  uuid: uuidv4(),
   room_id: "",
   max_capacity: "",
 };

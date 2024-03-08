@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
-
 /**
  * Course Preference
  * @uuid Unique ID for course preference;
@@ -13,7 +11,6 @@ export type CoursePreference = {
 };
 
 export const defaultCoursePreference = {
-  uuid: uuidv4(),
   instructor_uuid: "",
   course_uuid: "",
 };
