@@ -83,7 +83,7 @@ export default function InputData() {
               <StepLabel>
                 {step.label}
               </StepLabel>
-              <StepContent>
+              <StepContent TransitionProps={{ unmountOnExit: false }}>
                 {step.component}
                 <Box sx={{ mb: 2 }}>
                   <div>
