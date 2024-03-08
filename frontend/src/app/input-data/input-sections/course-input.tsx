@@ -21,7 +21,7 @@ import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { Course, defaultCourse } from "@/app/_types/Course";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useValidateString } from "@/app/_hooks.ts/utilHooks";
+import { useValidateInt, useValidateString } from "@/app/_hooks.ts/utilHooks";
 
 function CourseTableRow(props: {
   row: Course;
@@ -36,7 +36,33 @@ function CourseTableRow(props: {
     props?.row.prelim_enrollment
   );
 
-  const { hasError, errorText, validateString } = useValidateString();
+  // Validation and error handling for department
+  const {
+    hasError: deptError,
+    errorText: deptErrorText,
+    validateString: validateDept,
+  } = useValidateString();
+
+  // Validation and error handling for course number
+  const {
+    hasError: courseNumError,
+    errorText: courseNumErrorText,
+    validateString: validateCourseNum,
+  } = useValidateString();
+
+  // Validation and error handling for max enrollment
+  const {
+    hasError: maxEnrollError,
+    errorText: maxEnrollErrorText,
+    validateInt: validateMaxEnroll,
+  } = useValidateInt();
+
+  // Validation and error handling for prelim enrollment
+  const {
+    hasError: prelimEnrollError,
+    errorText: prelimEnrollErrorText,
+    validateInt: validatePrelimEnroll,
+  } = useValidateInt();
 
   return (
     <TableRow key={props.row.uuid}>
@@ -49,11 +75,11 @@ function CourseTableRow(props: {
           type="text"
           value={department}
           onChange={(e) => {
-            validateString(e.target.value);
+            validateDept(e.target.value);
             setDepartment(e.target.value);
           }}
-          error={hasError}
-          helperText={errorText}
+          error={deptError}
+          helperText={deptErrorText}
         />
       </TableCell>
       <TableCell>
@@ -64,7 +90,12 @@ function CourseTableRow(props: {
           placeholder="Course Number"
           type="text"
           value={courseNum}
-          onChange={(e) => setCourseNum(e.target.value)}
+          onChange={(e) => {
+            validateCourseNum(e.target.value);
+            setCourseNum(e.target.value);
+          }}
+          error={courseNumError}
+          helperText={courseNumErrorText}
         />
       </TableCell>
       <TableCell>
@@ -75,28 +106,47 @@ function CourseTableRow(props: {
           inputProps={{
             type: "number",
             min: 1,
+            pattern: "[0-9]",
             placeholder: "Max Enrollment",
           }}
           value={maxEnrollment}
-          onChange={(e) => setMaxEnrollment(parseInt(e.target.value))}
+          onChange={(e) => {
+            validateMaxEnroll(e.target.value);
+            setMaxEnrollment(parseInt(e.target.value));
+          }}
+          error={maxEnrollError}
         />
-        <FormHelperText sx={{ visibility: "hidden" }}></FormHelperText>
+        <FormHelperText
+          error={maxEnrollError}
+          sx={{ visibility: maxEnrollError ? "visible" : "hidden" }}
+        >
+          {maxEnrollErrorText}
+        </FormHelperText>
       </TableCell>
       <TableCell>
         <FilledInput
           fullWidth
-          required
           inputComponent={"input"}
           inputProps={{
-            type: "text",
+            type: "number",
             min: 1,
+            max: maxEnrollment,
             pattern: "[0-9]",
-            placeholder: "Preliminary Enrollment",
+            placeholder: "Prelim Enrollment",
           }}
           value={prelimEnrollment}
-          onChange={(e) => setPrelimEnrollment(parseInt(e.target.value))}
+          onChange={(e) => {
+            validatePrelimEnroll(e.target.value, maxEnrollment);
+            setPrelimEnrollment(parseInt(e.target.value));
+          }}
+          error={prelimEnrollError}
         />
-        <FormHelperText sx={{ visibility: "hidden" }}></FormHelperText>
+        <FormHelperText
+          error={prelimEnrollError}
+          sx={{ visibility: prelimEnrollError ? "visible" : "hidden" }}
+        >
+          {prelimEnrollErrorText}
+        </FormHelperText>
       </TableCell>
       <TableCell>
         <Button
