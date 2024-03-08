@@ -65,19 +65,22 @@ function CourseTableRow(props: {
             min: 1,
             placeholder: "Max Enrollment",
           }}
+          value={maxEnrollment}
+          onChange={(e) => setMaxEnrollment(parseInt(e.target.value))}
         />
       </TableCell>
       <TableCell>
         <FilledInput
           fullWidth
           required
-          value={prelimEnrollment}
           inputComponent={"input"}
           inputProps={{
             type: "number",
             min: 1,
             placeholder: "Preliminary Enrollment",
           }}
+          value={prelimEnrollment}
+          onChange={(e) => setPrelimEnrollment(parseInt(e.target.value))}
         />
       </TableCell>
       <TableCell>
