@@ -16,9 +16,8 @@ import {
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { Course } from "@/app/_types/Course";
+import { Course, defaultCourse } from "@/app/_types/Course";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 function CourseTableRow(props: {
   row: Course;
@@ -176,12 +175,7 @@ export default function CourseInput() {
             onClick={() => {
               setCourseList([
                 ...courseList,
-                {
-                  uuid: uuidv4(),
-                  department: "",
-                  course_num: "",
-                  max_enrollment: 0,
-                },
+                {...defaultCourse},
               ]);
             }}
           >

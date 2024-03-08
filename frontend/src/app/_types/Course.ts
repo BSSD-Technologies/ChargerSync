@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 /**
  * Course
  * @uuid Unique ID for course object;
@@ -12,4 +14,11 @@ export type Course = {
   course_num: string;
   max_enrollment: number;
   prelim_enrollment?: number;
+};
+
+export const defaultCourse = {
+  uuid: uuidv4(),
+  department: "",
+  course_num: "",
+  max_enrollment: NaN,
 };
