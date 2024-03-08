@@ -20,7 +20,10 @@ import { Course } from "@/app/_types/Course";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-function CourseTableRow(props: { row: Course }) {
+function CourseTableRow(props: {
+  row: Course;
+  onDelete: (value: boolean, id: string) => void;
+}) {
   const [department, setDepartment] = useState(props?.row.department);
   const [courseNum, setCourseNum] = useState(props?.row.course_num);
   const [maxEnrollment, setMaxEnrollment] = useState(props?.row.max_enrollment);
@@ -35,7 +38,7 @@ function CourseTableRow(props: { row: Course }) {
           fullWidth
           required
           variant="filled"
-          placeholder="Course ID"
+          placeholder="Course Department"
           type="text"
           value={department}
           onChange={(e) => setDepartment(e.target.value)}
@@ -46,7 +49,7 @@ function CourseTableRow(props: { row: Course }) {
           fullWidth
           required
           variant="filled"
-          placeholder="Course ID"
+          placeholder="Course Number"
           type="text"
           value={courseNum}
           onChange={(e) => setCourseNum(e.target.value)}
@@ -77,6 +80,17 @@ function CourseTableRow(props: { row: Course }) {
           }}
         />
       </TableCell>
+      <TableCell>
+        <Button
+          variant="outlined"
+          color="info"
+          fullWidth
+          startIcon={<AddCircleRoundedIcon />}
+          onClick={() => props.onDelete(true, props.row.uuid)}
+        >
+          Delete
+        </Button>
+      </TableCell>
     </TableRow>
   );
 }
@@ -98,6 +112,13 @@ export default function CourseInput() {
       prelim_enrollment: 90,
     },
   ]);
+
+  const handleDeleteCourse = (value: boolean, id: string) => {
+    if (value)
+      setCourseList((courseList) =>
+        courseList.filter((course) => course.uuid !== id)
+      );
+  };
 
   return (
     <Box
@@ -130,11 +151,16 @@ export default function CourseInput() {
               <TableCell>Course Number *</TableCell>
               <TableCell>Max Enrollment *</TableCell>
               <TableCell>Preliminary Enrollment</TableCell>
+              <TableCell>Delete</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {courseList.map((row) => (
-              <CourseTableRow key={row.uuid} row={row} />
+              <CourseTableRow
+                key={row.uuid}
+                row={row}
+                onDelete={handleDeleteCourse}
+              />
             ))}
           </TableBody>
         </Table>
@@ -149,13 +175,11 @@ export default function CourseInput() {
                 ...courseList,
                 {
                   uuid: uuidv4(),
-                  department: "CS",
-                  course_num: "121",
-                  max_enrollment: 100,
-                  prelim_enrollment: 90,
+                  department: "",
+                  course_num: "",
+                  max_enrollment: 0,
                 },
               ]);
-              console.log("Test");
             }}
           >
             Add a course
