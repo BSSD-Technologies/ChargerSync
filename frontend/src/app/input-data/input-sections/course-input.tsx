@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   FilledInput,
+  FormHelperText,
   Grid,
   OutlinedInput,
   Stack,
@@ -16,10 +17,11 @@ import {
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { Course, defaultCourse } from "@/app/_types/Course";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { useValidateString } from "@/app/_hooks.ts/utilHooks";
 
 function CourseTableRow(props: {
   row: Course;
@@ -34,6 +36,8 @@ function CourseTableRow(props: {
     props?.row.prelim_enrollment
   );
 
+  const { hasError, errorText, validateString } = useValidateString();
+
   return (
     <TableRow key={props.row.uuid}>
       <TableCell>
@@ -44,7 +48,12 @@ function CourseTableRow(props: {
           placeholder="Course Department"
           type="text"
           value={department}
-          onChange={(e) => setDepartment(e.target.value)}
+          onChange={(e) => {
+            validateString(e.target.value);
+            setDepartment(e.target.value);
+          }}
+          error={hasError}
+          helperText={errorText}
         />
       </TableCell>
       <TableCell>
@@ -71,6 +80,7 @@ function CourseTableRow(props: {
           value={maxEnrollment}
           onChange={(e) => setMaxEnrollment(parseInt(e.target.value))}
         />
+        <FormHelperText sx={{ visibility: "hidden" }}></FormHelperText>
       </TableCell>
       <TableCell>
         <FilledInput
@@ -78,13 +88,15 @@ function CourseTableRow(props: {
           required
           inputComponent={"input"}
           inputProps={{
-            type: "number",
+            type: "text",
             min: 1,
+            pattern: "[0-9]",
             placeholder: "Preliminary Enrollment",
           }}
           value={prelimEnrollment}
           onChange={(e) => setPrelimEnrollment(parseInt(e.target.value))}
         />
+        <FormHelperText sx={{ visibility: "hidden" }}></FormHelperText>
       </TableCell>
       <TableCell>
         <Button
