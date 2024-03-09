@@ -19,14 +19,16 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { Course, defaultCourse } from "@/app/_types/Course";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { useValidateInt, useValidateString } from "@/app/_hooks.ts/utilHooks";
+import { useValidateInt, useValidateString } from "@/app/_hooks/utilHooks";
+import { useGlobalStore } from "@/app/_stores/store";
 
 function CourseTableRow(props: {
   row: Course;
   // On "delete", send back Id of current course to delete
   onDelete: (id: string) => void;
+  hasRowErrors: (hasRowError: boolean) => void;
 }) {
   // States for course row inputs
   const [department, setDepartment] = useState(props?.row.department);
@@ -63,6 +65,13 @@ function CourseTableRow(props: {
     errorText: prelimEnrollErrorText,
     validateInt: validatePrelimEnroll,
   } = useValidateInt();
+
+  useEffect(() => {
+    if (deptError || courseNumError || maxEnrollError || prelimEnrollError) 
+      props.hasRowErrors(true);
+    else
+      props.hasRowErrors(false);
+  }, [courseNumError, deptError, maxEnrollError, prelimEnrollError, props]);
 
   return (
     <TableRow key={props.row.uuid}>
@@ -163,27 +172,20 @@ function CourseTableRow(props: {
 }
 
 export default function CourseInput() {
-  const [courseList, setCourseList] = useState<Course[]>([
-    {
-      uuid: "2",
-      department: "CS",
-      course_num: "121",
-      max_enrollment: 100,
-      prelim_enrollment: 90,
-    },
-    {
-      uuid: "3",
-      department: "CS",
-      course_num: "121",
-      max_enrollment: 100,
-      prelim_enrollment: 90,
-    },
-  ]);
+  const [courseList, setCourseList] = useState<Course[]>([]);
+
+  const [errors, setErrors] = [useGlobalStore((state) => state.courseListErrors), useGlobalStore((state) => state.setCourseListErrors)] 
 
   const handleDeleteCourse = (id: string) => {
     setCourseList((courseList) =>
       courseList.filter((course) => course.uuid !== id)
     );
+  };
+
+  const handleRowErrors = (hasRowError: boolean) => {
+    console.log(errors);
+    setErrors(hasRowError);
+    console.log(errors);
   };
 
   return (
@@ -226,6 +228,7 @@ export default function CourseInput() {
                 key={row.uuid}
                 row={row}
                 onDelete={handleDeleteCourse}
+                hasRowErrors={handleRowErrors}
               />
             ))}
           </TableBody>

@@ -20,44 +20,36 @@ import UploadInput from "./input-sections/upload-input";
 import SubmitInput from "./input-sections/submit-input";
 import { useState } from "react";
 import PreferenceInput from "./input-sections/preference-input";
+import { useGlobalStore } from "../_stores/store";
 
 const steps = [
   {
     label: "List of Courses",
-    component: <CourseInput />
+    component: <CourseInput />,
   },
   {
     label: "List of Rooms",
-    component: <RoomInput />
+    component: <RoomInput />,
   },
   {
     label: "List of Time Blocks",
-    component: <TimeInput />
+    component: <TimeInput />,
   },
   {
     label: "List of Instructors",
-    component: <InstructorInput />
+    component: <InstructorInput />,
   },
   {
     label: "Instructor Preferences",
-    component: <PreferenceInput />
-  }
+    component: <PreferenceInput />,
+  },
 ];
 
 export default function InputData() {
+  /** Stepper state */
   const [activeStep, setActiveStep] = useState(0);
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  const [errors] = [useGlobalStore((state) => state.courseListErrors)];
 
   return (
     <Container
@@ -68,8 +60,8 @@ export default function InputData() {
     >
       <Typography variant="h3">Schedule Inputs</Typography>
       <Typography variant="body1">
-        Insert a description of the input process. Let people know that they can upload data 
-        or they can manually input it.
+        Insert a description of the input process. Let people know that they can
+        upload data or they can manually input it.
       </Typography>
       <br />
       <Divider />
@@ -80,23 +72,26 @@ export default function InputData() {
         <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((step, index) => (
             <Step key={step.label}>
-              <StepLabel>
-                {step.label}
-              </StepLabel>
+              <StepLabel>{step.label}</StepLabel>
               <StepContent TransitionProps={{ unmountOnExit: false }}>
                 {step.component}
                 <Box sx={{ mb: 2 }}>
                   <div>
                     <Button
                       variant="contained"
-                      onClick={handleNext}
+                      onClick={() => {
+                        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+                      }}
                       sx={{ mt: 1, mr: 1 }}
+                      disabled={!errors}
                     >
                       {index === steps.length - 1 ? "Finish" : "Continue"}
                     </Button>
                     <Button
                       disabled={index === 0}
-                      onClick={handleBack}
+                      onClick={() => {
+                        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+                      }}
                       sx={{ mt: 1, mr: 1 }}
                     >
                       Back
@@ -110,10 +105,20 @@ export default function InputData() {
         {activeStep === steps.length && (
           <Paper square elevation={0} sx={{ p: 3 }}>
             <Typography>All steps completed - you&apos;re finished</Typography>
-            <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+            <Button
+              onClick={() => {
+                setActiveStep(0);
+              }}
+              sx={{ mt: 1, mr: 1 }}
+            >
               Reset
             </Button>
-            <Button onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
+            <Button
+              onClick={() => {
+                setActiveStep(0);
+              }}
+              sx={{ mt: 1, mr: 1 }}
+            >
               Back
             </Button>
             <SubmitInput />
