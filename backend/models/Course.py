@@ -7,7 +7,7 @@ class Course(db.Model):
     __tablename__ = 'course'
 
     id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
-    name = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(255), nullable=False) # TODO Split to department and course number
     max_enrollment = db.Column(db.Integer, nullable=False)
     preliminary_enrollment = db.Column(db.Integer, default=0)
 

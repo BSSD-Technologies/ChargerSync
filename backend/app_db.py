@@ -7,7 +7,7 @@ from models.Room import Room
 from models.Period import Period
 from models.Preferences import CoursePreference, PeriodPreference
 import DataGenerator
-import Scheduler
+from Scheduler import Scheduler
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -21,48 +21,36 @@ with app.app_context():
     db.create_all()
     DataGenerator.loadData()
 
-    # Instructors w/ no preference
-    instructors_with_no_preferences_pos = 0
-
-    # Courses and enrollment numbers
-    courses_and_enrollment = Scheduler.getCoursesAndEnrollment()
-
-    # Rooms and Times
-    room_availability = Scheduler.getRoomsAndAvailability()
-    current_section_no = 0
-
-    #Instructors
-    Instructor_availability = Scheduler.getInstructorAvailability()
-
-    # Rooms and Occupancy
-    room_occupancy = Scheduler.getRoomsAndOccupancy
+    scheduler = Scheduler()
 
     for i in range(10):
         sections = []
-        current_section_no += 1
-
-        instructors_with_no_preferences = Scheduler.getInstructorsWithNoPref()
+        scheduler.section_counter += 1
 
         # Creates section list of sections to be assigned
-        for course in courses_and_enrollment:
+        for course in scheduler.courses_and_enrollment:
             # if course enrollement is unfulfilled, add section to list of sections to be assigned
             if course[2] == 0:
                 queried_course = Course.query.filter_by(id=course[0]).first()
                 new_section = queried_course.newSection()
                 db.session.add(new_section)
                 sections.append(new_section)
-
         db.session.commit()
 
+        scheduler.getInstructorsWithNoPref()
+
         for section in sections:
+            # Gather course information
             course_for_section = section.course_id
             course_preferences = CoursePreference.getUnfulfilledPreferences(course_for_section)
+
             if not course_preferences:
+                # There are no professors with a preference for this course
                 # Assign section to instructor from instructors who have no preferance or have already met their preference
-                available_instructor = instructors_with_no_preferences[instructors_with_no_preferences_pos]
+                available_instructor = scheduler.instructors_with_no_preferences[scheduler.instructors_with_no_preferences_pos]
                 section.setInstructor(available_instructor)
 
-                instructors_with_no_preferences_pos = (instructors_with_no_preferences_pos + 1) % len(instructors_with_no_preferences)
+                scheduler.instructors_with_no_preferences_pos = (scheduler.instructors_with_no_preferences_pos + 1) % len(scheduler.instructors_with_no_preferences)
                 
                 # Change to assigned_Instructor for the time assignment
                 assigned_instructor = available_instructor
@@ -93,35 +81,39 @@ with app.app_context():
             if period_preferences:
                 for period_pref in period_preferences:
                     order_periods.append(period_pref.period_id)   
-                for period in room_availability:
+                for period in scheduler.room_availability:
                     if period[0] not in order_periods:
                         order_periods.append(period_pref.period_id)
             else:
                 # Instructor has no preference - this could be used to change the order of which periods are checked first/last
-                for period in room_availability:
+                for period in scheduler.room_availability:
                     if period[0] not in order_periods:
                         order_periods.append(period_pref.period_id)
             
             for period in order_periods:
                 
-                instructor_period_availabilty = Scheduler.findInstructorAvailability(Instructor_availability, period)
-                period_room_availabilty = Scheduler.findRoomAvailability(room_availability, period)
+                instructor_period_availabilty = scheduler.findInstructorAvailability(period)
+                period_room_availabilty = scheduler.findRoomAvailability(period)
                 for room in period_room_availabilty:
                     i = 0
                     if room != None and (not instructor_period_availabilty or instructor_period_availabilty.count(period) != 0):
                         print("instructor will be assigned room", room, " during ", period) # all room one because nothing is implemented
                         # ROOM IS AVAILABLE
                         section.setRoomByID(room)
-                        Scheduler.updateCourseEnrollment(courses_and_enrollment, section.course_id, room)
-                        Scheduler.updateRoomAvailability(room_availability, period, room)
+                        scheduler.updateCourseEnrollment(section.course_id, room)
+                        scheduler.updateRoomAvailability(period, room)
                         break
-                Scheduler.updateInstructorAvailability(Instructor_availability, period, assigned_instructor_id)
+                scheduler.updateInstructorAvailability(period, assigned_instructor_id)
                 section.setPeriodByID(period)
                 break
             print("\n")
             db.session.commit()
-            if Scheduler.checkCoursesFulfillment(courses_and_enrollment) == True:
+            if scheduler.checkCoursesFulfillment() == True:
                 break
+
+        scheduler.instructors_with_no_preferences = []
+
+    
 
              
     
