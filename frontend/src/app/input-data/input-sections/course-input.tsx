@@ -67,10 +67,9 @@ function CourseTableRow(props: {
   } = useValidateInt();
 
   useEffect(() => {
-    if (deptError || courseNumError || maxEnrollError || prelimEnrollError) 
+    if (deptError || courseNumError || maxEnrollError || prelimEnrollError)
       props.hasRowErrors(true);
-    else
-      props.hasRowErrors(false);
+    else props.hasRowErrors(false);
   }, [courseNumError, deptError, maxEnrollError, prelimEnrollError, props]);
 
   return (
@@ -172,14 +171,20 @@ function CourseTableRow(props: {
 }
 
 export default function CourseInput() {
-  const [courseList, setCourseList] = useState<Course[]>([]);
-
-  const [errors, setErrors] = [useGlobalStore((state) => state.courseListErrors), useGlobalStore((state) => state.setCourseListErrors)] 
+  /** Course list */
+  const [courseList, addCourseList, deleteCourseList] = [
+    useGlobalStore((state) => state.courseList),
+    useGlobalStore((state) => state.addCourseList),
+    useGlobalStore((state) => state.deleteCourseList),
+  ];
+  /** Course list error handling */
+  const [errors, setErrors] = [
+    useGlobalStore((state) => state.courseListErrors),
+    useGlobalStore((state) => state.setCourseListErrors),
+  ];
 
   const handleDeleteCourse = (id: string) => {
-    setCourseList((courseList) =>
-      courseList.filter((course) => course.uuid !== id)
-    );
+    
   };
 
   const handleRowErrors = (hasRowError: boolean) => {
@@ -227,7 +232,7 @@ export default function CourseInput() {
               <CourseTableRow
                 key={row.uuid}
                 row={row}
-                onDelete={handleDeleteCourse}
+                onDelete={(id: string) => deleteCourseList(id)}
                 hasRowErrors={handleRowErrors}
               />
             ))}
@@ -240,10 +245,8 @@ export default function CourseInput() {
             fullWidth
             startIcon={<AddCircleRoundedIcon />}
             onClick={() => {
-              setCourseList([
-                ...courseList,
-                { ...defaultCourse, uuid: uuidv4() },
-              ]);
+              const newCourse = { ...defaultCourse, uuid: uuidv4() };
+              addCourseList(newCourse);
             }}
           >
             Add a course

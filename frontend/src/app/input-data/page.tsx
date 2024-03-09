@@ -49,7 +49,11 @@ export default function InputData() {
   /** Stepper state */
   const [activeStep, setActiveStep] = useState(0);
 
-  const [errors] = [useGlobalStore((state) => state.courseListErrors)];
+  /** Course list error handling */
+  const [courseListErrors, setCourseListErrors] = [
+    useGlobalStore((state) => state.courseListErrors),
+    useGlobalStore((state) => state.setCourseListErrors),
+  ];
 
   return (
     <Container
@@ -83,7 +87,7 @@ export default function InputData() {
                         setActiveStep((prevActiveStep) => prevActiveStep + 1);
                       }}
                       sx={{ mt: 1, mr: 1 }}
-                      disabled={!errors}
+                      disabled={!courseListErrors}
                     >
                       {index === steps.length - 1 ? "Finish" : "Continue"}
                     </Button>
