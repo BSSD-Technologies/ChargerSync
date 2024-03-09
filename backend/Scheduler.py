@@ -1,4 +1,3 @@
-from extensions import db
 from models.Course import Course
 from models.Instructor import Instructor
 from models.Room import Room
@@ -21,6 +20,7 @@ class Scheduler:
 
     # ----- Arrays ------
     instructors_with_no_preferences = []
+    sections = []
     
     # ----- Other Attributes ------
     section_counter = 0
@@ -140,6 +140,12 @@ class Scheduler:
         
     # OTHER
         
+    def prepareForMoreSections(self):
+        self.sections = []
+        self.section_counter += 1
+        self.getInstructorsWithNoPref()
+        return
+        
     def checkCoursesFulfillment(self):
         for course in self.courses_and_enrollment:
             fulfilled = course[2]
@@ -157,6 +163,15 @@ class Scheduler:
             tuple_item = (period_id, rooms)
             times_rooms_list.append(tuple_item)
         return times_rooms_list
+    
+    def createNewSections(self):
+        # Creates section list of sections to be assigned
+        for course in self.courses_and_enrollment:
+            # if course enrollement is unfulfilled, add section to list of sections to be assigned
+            if course[2] == 0:
+                new_section = Course.newSectionFromId(course[0])
+                self.sections.append(new_section)
+        
 
     def getIntructorsWithSectionCount():
         # Creating a tuple to represent instructors and section count, this is sorted by priority - NOT CURRENTLY BEING USED
@@ -176,7 +191,9 @@ class Scheduler:
             pull_period = period.id
             tuple_item = (pull_period, 0)
             periods_list.append(tuple_item)
-        return periods_list    
+        return periods_list   
+    
+     
 
 
 

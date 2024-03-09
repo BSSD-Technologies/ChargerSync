@@ -2,10 +2,7 @@ from flask import Flask
 from datetime import time
 from extensions import db
 from models.Course import Section, Course
-from models.Instructor import Instructor
-from models.Room import Room
-from models.Period import Period
-from models.Preferences import CoursePreference, PeriodPreference
+from models.Preferences import CoursePreference
 import DataGenerator
 from Scheduler import Scheduler
 
@@ -24,25 +21,14 @@ with app.app_context():
     scheduler = Scheduler()
 
     for i in range(10):
-        sections = []
-        scheduler.section_counter += 1
 
-        # Creates section list of sections to be assigned
-        for course in scheduler.courses_and_enrollment:
-            # if course enrollement is unfulfilled, add section to list of sections to be assigned
-            if course[2] == 0:
-                queried_course = Course.query.filter_by(id=course[0]).first()
-                new_section = queried_course.newSection()
-                db.session.add(new_section)
-                sections.append(new_section)
-        db.session.commit()
+        scheduler.prepareForMoreSections()
+        scheduler.createNewSections()
 
-        scheduler.getInstructorsWithNoPref()
-
-        for section in sections:
+        for section in scheduler.sections:
             # Gather course information
-            course_for_section = section.course_id
-            course_preferences = CoursePreference.getUnfulfilledPreferences(course_for_section)
+            section_course_id = section.course_id
+            course_preferences = CoursePreference.getUnfulfilledPreferences(section_course_id)
 
             if not course_preferences:
                 # There are no professors with a preference for this course
@@ -55,26 +41,26 @@ with app.app_context():
                 # Change to assigned_Instructor for the time assignment
                 assigned_instructor = available_instructor
             else:
+                # There exists professor(s) with a preference for this course
                 # Assign Instructor from Instructors who do have preference for the specific course - based on priority
-                course_for_section = Course.query.filter_by(id=course_for_section).first()
-                selected_instructor = course_for_section.getInstructorWithPriority()
+                section_course_id = Course.query.filter_by(id=section_course_id).first()
+                selected_instructor = section_course_id.getInstructorWithPriority()
                 section.setInstructor(selected_instructor)
 
                 # Update instructor preferences
-                pref = selected_instructor.findCoursePreference(course_for_section.id)
+                pref = selected_instructor.findCoursePreference(section_course_id.id)
                 pref.prefFulfilled()
 
                 # Change to assigned_Instructor for the time assignment
                 assigned_instructor = selected_instructor
 
-
+            # Some printing for testing
             print(assigned_instructor)
             print(section)
 
             # Check if Instructor has any time preferences
             assigned_instructor_id = assigned_instructor.id
             period_preferences = assigned_instructor.getPeriodPreferences()
-
             order_periods = []
 
             # order check_periods_room based on whether instructor has preference or not
@@ -118,8 +104,8 @@ with app.app_context():
              
     
 
-    sections = Section.query.all()
-    print(sections)
+    scheduler.sections = Section.query.all()
+    print(scheduler.sections)
 
     #print(Course.query.all())
     #print(Instructor.query.all())

@@ -26,6 +26,14 @@ class Course(db.Model):
         db.session.commit()
         return new_section
     
+    def newSectionFromId(course_id):
+        new_section = Course.query.filter_by(id=course_id).first()
+        new_section = new_section.newSection()
+        db.session.add(new_section)
+        db.session.commit()
+        return new_section
+    
+
     def getInstructorWithPriority(self):
         course_preferences = CoursePreference.query.filter((CoursePreference.course_id == self.id),(CoursePreference.fulfilled == 0)).all()
         arr_instructors = []
@@ -35,7 +43,6 @@ class Course(db.Model):
             tuple_item = (instructor, instructor_priority)
             arr_instructors.append(tuple_item)
         sorted_array = sorted(arr_instructors, key=lambda x: x[1])
-
         # Highest priority professor is returned
         return sorted_array[0][0]
 
@@ -80,6 +87,8 @@ class Section(db.Model):
 
     def setInstructorByID(self, instructor_id):
         self.instructor_id = instructor_id
+
+    
     
 
 
