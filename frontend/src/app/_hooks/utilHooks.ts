@@ -54,16 +54,21 @@ interface UseValidateInt {
   errorText: string;
   /** Check if an int, sent as string, is valid or not. Optionally check if exceeds max */
   validateInt: (value: string, max?: number) => void;
+  setError: (value: boolean) => void;
 }
 
 /**
- * Validate int input, and deal with error handling
+ * Validate REQUIRED int input, and deal with error handling
  * @param hasErrorDefault = false
  * @returns hasError, errorText, validateInt
  */
 export function useValidateInt(hasErrorDefault = false): UseValidateInt {
   const [hasError, setHasError] = useState(hasErrorDefault);
   const [errorText, setErrorText] = useState(" ");
+  
+  const setError = useCallback((value: boolean) => {
+    setHasError(value);
+  }, []);
 
   const validateInt = useCallback((value: string, max?: number) => {
     if (!value || value.length <= 0) {
@@ -84,5 +89,37 @@ export function useValidateInt(hasErrorDefault = false): UseValidateInt {
     }
   }, []);
 
-  return { hasError, errorText, validateInt };
+  return { hasError, errorText, validateInt, setError };
+}
+
+/**
+ * Validate NON-REQUIRED int input, and deal with error handling
+ * @param hasErrorDefault = false
+ * @returns hasError, errorText, validateInt
+ */
+export function useValidateIntNR(hasErrorDefault = false): UseValidateInt {
+  const [hasError, setHasError] = useState(hasErrorDefault);
+  const [errorText, setErrorText] = useState(" ");
+
+  const setError = useCallback((value: boolean) => {
+    setHasError(value);
+  }, []);
+
+  const validateInt = useCallback((value: string, max?: number) => {
+    if (value.includes("-")) {
+      setHasError(true);
+      setErrorText("Negative values are not allowed.");
+    } else if (value.includes(".")) {
+      setHasError(true);
+      setErrorText("Please enter a whole number.");
+    } else if (max && parseInt(value) > max) {
+      setHasError(true);
+      setErrorText("Cannot exceed maximum enrollment.");
+    } else {
+      setHasError(false);
+      setErrorText(" ");
+    }
+  }, []);
+
+  return { hasError, errorText, validateInt, setError };
 }

@@ -20,13 +20,11 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { Course, defaultCourse } from "@/app/_types/Course";
 import { useEffect, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { useValidateInt, useValidateString } from "@/app/_hooks/utilHooks";
+import { v4 as uuidv4, validate } from "uuid";
+import { useValidateInt, useValidateIntNR, useValidateString } from "@/app/_hooks/utilHooks";
 import { useGlobalStore } from "@/app/_stores/store";
 
-function CourseTableRow(props: {
-  row: Course;
-}) {
+function CourseTableRow(props: { row: Course }) {
   // States for course row inputs
   const uuid = props?.row.uuid;
   const [department, setDepartment] = useState(props?.row.department);
@@ -35,6 +33,7 @@ function CourseTableRow(props: {
   const [prelimEnrollment, setPrelimEnrollment] = useState(
     props?.row.prelim_enrollment
   );
+  const [prelimDisabled, setPrelimDisabled] = useState<boolean>(true);
 
   // States for updating course list for current row, or deleting from list
   const [updateCourseList, deleteCourseList, hasErrors] = [
@@ -43,13 +42,23 @@ function CourseTableRow(props: {
     useGlobalStore((state) => state.hasErrors),
   ];
 
+  const handleMaxEnrollment = (value: string) => {
+    validateMaxEnroll(value);
+    setMaxEnrollment(parseInt(value));
+    if (value.length <= 0 && prelimEnrollment) {
+      setPrelimDisabled(true);
+      setPrelimEnrollment(NaN);
+      setPrelimEnrollError(false);
+    } else setPrelimDisabled(false);
+  };
+
   const handleDelete = () => {
     if (deptError) hasErrors.pop();
     if (courseNumError) hasErrors.pop();
     if (maxEnrollError) hasErrors.pop();
     if (prelimEnrollError) hasErrors.pop();
     deleteCourseList(uuid);
-  }
+  };
 
   // Validation and error handling for department
   const {
@@ -77,7 +86,8 @@ function CourseTableRow(props: {
     hasError: prelimEnrollError,
     errorText: prelimEnrollErrorText,
     validateInt: validatePrelimEnroll,
-  } = useValidateInt();
+    setError: setPrelimEnrollError,
+  } = useValidateIntNR();
 
   useEffect(() => {
     updateCourseList({
@@ -162,10 +172,7 @@ function CourseTableRow(props: {
             placeholder: "Max Enrollment",
           }}
           value={maxEnrollment}
-          onChange={(e) => {
-            validateMaxEnroll(e.target.value);
-            setMaxEnrollment(parseInt(e.target.value));
-          }}
+          onChange={(e) => handleMaxEnrollment(e.target.value)}
           error={maxEnrollError}
         />
         <FormHelperText
@@ -178,6 +185,7 @@ function CourseTableRow(props: {
       <TableCell>
         <FilledInput
           fullWidth
+          disabled={prelimDisabled}
           inputComponent={"input"}
           inputProps={{
             type: "number",
@@ -201,12 +209,7 @@ function CourseTableRow(props: {
         </FormHelperText>
       </TableCell>
       <TableCell>
-        <Button
-          variant="text"
-          color="info"
-          fullWidth
-          onClick={handleDelete}
-        >
+        <Button variant="text" color="info" fullWidth onClick={handleDelete}>
           <ClearRoundedIcon />
         </Button>
       </TableCell>
@@ -260,10 +263,7 @@ export default function CourseInput() {
           </TableHead>
           <TableBody>
             {courseList.map((row) => (
-              <CourseTableRow
-                key={row.uuid}
-                row={row}
-              />
+              <CourseTableRow key={row.uuid} row={row} />
             ))}
           </TableBody>
         </Table>
