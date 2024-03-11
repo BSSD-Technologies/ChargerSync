@@ -19,8 +19,7 @@ class CoursePreference(db.Model):
         self.fulfilled = 1
         db.session.commit()
 
-    def getUnfulfilledPreferences(course_id):
-        return CoursePreference.query.filter((CoursePreference.course_id == course_id),(CoursePreference.fulfilled == 0)).all()
+
 
         
     

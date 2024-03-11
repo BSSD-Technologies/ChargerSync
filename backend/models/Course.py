@@ -11,6 +11,7 @@ class Course(db.Model):
     max_enrollment = db.Column(db.Integer, nullable=False)
     preliminary_enrollment = db.Column(db.Integer, default=0)
 
+    preferences = db.relationship('CoursePreference', backref='Instructor', lazy=True)
 
     def __repr__(self):
         return '<Course %r>' % self.name
@@ -32,10 +33,9 @@ class Course(db.Model):
         db.session.add(new_section)
         db.session.commit()
         return new_section
-    
 
-    def getInstructorWithPriority(self):
-        course_preferences = CoursePreference.query.filter((CoursePreference.course_id == self.id),(CoursePreference.fulfilled == 0)).all()
+    def getInstructorWithPriority(course_id):
+        course_preferences = CoursePreference.query.filter((CoursePreference.course_id == course_id),(CoursePreference.fulfilled == 0)).all()
         arr_instructors = []
         for pref in course_preferences:
             instructor = pref.instructor
@@ -67,6 +67,8 @@ class Section(db.Model):
     # one to one relationship w/ Period
     period = db.relationship('Period', uselist=False, backref='section', lazy=True)
 
+    instructor = db.relationship('Instructor', uselist=False, backref='section', lazy=True)
+
     def __repr__(self):
         return '<Section %r>' % self.name
     
@@ -87,6 +89,42 @@ class Section(db.Model):
 
     def setInstructorByID(self, instructor_id):
         self.instructor_id = instructor_id
+
+    def printInfo(self):
+        print("Section Information:")
+        print(f"ID: {self.id}")
+        print(f"Name: {self.name}")
+        if self.instructor:
+            print(f"Instructor: {self.instructor.fname} {self.instructor.lname}")
+        else:
+            print("Instructor: Not assigned")
+        if self.course:
+            print(f"Course: {self.course.name}")
+        else:
+            print("Course: Not assigned")
+        if self.room:
+            print(f"Room: {self.room.name}")
+        else:
+            print("Room: Not assigned")
+        if self.period:
+            print(f"Period: {self.period.start_time} Day: {self.period.day}")
+        else:
+            print("Period: Not assigned")
+        print(f"Section Number: {self.section_no}")
+
+    def findCoursePreference(self):
+        selected_instructor_preferences = self.instructor.course_preferences
+        course = self.course
+        for preference in selected_instructor_preferences:
+            if preference.course_id == course.id:
+                return preference
+        return None
+    
+    def getCoursePreferences(self):
+        return self.instructor.course_preferences
+    
+    def getPeriodPreferences(self):
+        return self.instructor.period_preferences
 
     
     

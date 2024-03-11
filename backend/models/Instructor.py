@@ -13,7 +13,7 @@ class Instructor(db.Model):
     priority = db.Column(db.Integer, default=None)
     
     # one to many relationship with sections
-    sections = db.relationship('Section', backref='instructor', lazy=True)
+    # sections = db.relationship('Section', backref='instructor', lazy=True)
 
     # one to many relationship with course preferences
     course_preferences = db.relationship('CoursePreference', backref='instructor', lazy=True)
@@ -36,18 +36,6 @@ class Instructor(db.Model):
         new_preference = PeriodPreference(instructor_id=self.id, period_id=period_id)
         db.session.add(new_preference)
         db.session.commit()
-
-    def getCoursePreferences(self):
-        arr_pref = []
-        for preference in self.course_preferences:
-            arr_pref.append(preference)
-        return arr_pref
-    
-    def findCoursePreference(self, course_id):
-        for preference in self.course_preferences:
-            if preference.course_id == course_id:
-                return preference
-        return None
     
     def getPeriodPreferences(self):
         arr_pref = []
@@ -56,18 +44,20 @@ class Instructor(db.Model):
         return arr_pref
     
     def checkPreferences(self):
-        course_preferences = self.getCoursePreferences()
-        for course_pref in course_preferences:
-            fulfilled = course_pref.fulfilled
-            if fulfilled == 0:
-                # unfulilled preference still exists
-                return True
-        period_preferences = self.getCoursePreferences()
-        for period_pref in period_preferences:
-            fulfilled = period_pref.fulfilled
-            if fulfilled == 0:
-                # unfulilled preference still exists
-                return True
+        if self.course_preferences:
+            for course_pref in self.course_preferences:
+                fulfilled = course_pref.fulfilled
+                if fulfilled == 0:
+                    # unfulilled preference still exists
+                    return True
+        if self.period_preferences:
+            for period_pref in self.period_preferences:
+                fulfilled = period_pref.fulfilled
+                if fulfilled == 0:
+                    # unfulilled preference still exists
+                    return True
         return False
+    
+
 
     

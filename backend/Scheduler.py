@@ -2,6 +2,7 @@ from models.Course import Course
 from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
+from models.Preferences import CoursePreference
 
 class Scheduler:
     # ----- Tuple Arrays ------
@@ -20,6 +21,7 @@ class Scheduler:
 
     # ----- Arrays ------
     instructors_with_no_preferences = []
+    instructors_with_course_preference = []
     sections = []
     
     # ----- Other Attributes ------
@@ -79,7 +81,7 @@ class Scheduler:
         instructors = Instructor.query.order_by(Instructor.priority).all()
         for instructor in instructors:
             if instructor.checkPreferences() == False:
-                self.instructors_with_no_preferences.append(instructor)
+                self.instructors_with_no_preferences.append(instructor.id)
 
 
     # Update Functions -----
@@ -192,6 +194,45 @@ class Scheduler:
             tuple_item = (pull_period, 0)
             periods_list.append(tuple_item)
         return periods_list   
+    
+    def getUnfulfilledPreferences(list_of_preferences):
+        unfulfilled_preferences = []
+        for pref in list_of_preferences:
+            if pref.fulfilled == 0:
+                unfulfilled_preferences.append(pref)
+        return unfulfilled_preferences
+    
+    def getNextAvailableInstructor(self):
+        available_instructor = self.instructors_with_no_preferences[self.instructors_with_no_preferences_pos]
+        self.instructors_with_no_preferences_pos = (self.instructors_with_no_preferences_pos + 1) % len(self.instructors_with_no_preferences)
+        return available_instructor
+    
+    def getInstructorWithPriority(course_id):
+        course_preferences = CoursePreference.query.filter((CoursePreference.course_id == course_id),(CoursePreference.fulfilled == 0)).all()
+        arr_instructors = []
+        for pref in course_preferences:
+            instructor = pref.instructor
+            instructor_priority = instructor.priority
+            tuple_item = (instructor.id, instructor_priority)
+            arr_instructors.append(tuple_item)
+        sorted_array = sorted(arr_instructors, key=lambda x: x[1])
+        # Highest priority professor is returned
+        return sorted_array[0][0]
+    
+    def createOrderPeriods(self, period_preferences):
+    # order check_periods_room based on whether instructor has preference or not
+        order_periods = []
+        if period_preferences:
+            order_periods = [period_pref.period_id for period_pref in period_preferences]
+            for period in self.room_availability:
+                if period[0] not in order_periods:
+                    order_periods.append(period[0])
+        else:
+            # Instructor has no preference - this could be used to change the order of which periods are checked first/last
+            for period in self.room_availability:
+                if period[0] not in order_periods:
+                    order_periods.append(period[0])
+        return order_periods
     
      
 
