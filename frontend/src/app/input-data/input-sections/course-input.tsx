@@ -31,6 +31,7 @@ function CourseTableRow(props: {
   //hasRowErrors: (id: string, hasRowError: boolean) => void;
 }) {
   // States for course row inputs
+  const uuid = props?.row.uuid;
   const [department, setDepartment] = useState(props?.row.department);
   const [courseNum, setCourseNum] = useState(props?.row.course_num);
   const [maxEnrollment, setMaxEnrollment] = useState(props?.row.max_enrollment);
@@ -38,19 +39,20 @@ function CourseTableRow(props: {
     props?.row.prelim_enrollment
   );
 
-  const [updateCourseList] = [
+  const [updateCourseList, deleteCourseList] = [
     useGlobalStore((state) => state.updateCourseList),
+    useGlobalStore((state) => state.deleteCourseList),
   ];
 
   useEffect(() => {
     updateCourseList({
-      uuid: props.row.uuid,
+      uuid: uuid,
       department: department,
       course_num: courseNum,
       max_enrollment: maxEnrollment,
       prelim_enrollment: prelimEnrollment,
     });
-  }, [courseNum, department, maxEnrollment, prelimEnrollment, props.row.uuid]);
+  }, [courseNum, department, maxEnrollment, prelimEnrollment, uuid, updateCourseList]);
 
   // Validation and error handling for department
   const {
@@ -81,7 +83,7 @@ function CourseTableRow(props: {
   } = useValidateInt();
 
   return (
-    <TableRow key={props.row.uuid}>
+    <TableRow key={uuid}>
       <TableCell>
         <TextField
           fullWidth
@@ -169,7 +171,7 @@ function CourseTableRow(props: {
           variant="text"
           color="info"
           fullWidth
-          //onClick={() => props.onDelete(props.row.uuid)}
+          onClick={() => deleteCourseList(uuid)}
         >
           <ClearRoundedIcon />
         </Button>
@@ -180,9 +182,8 @@ function CourseTableRow(props: {
 
 export default function CourseInput() {
   /** Course list */
-  const [courseList, updateCourseList, addCourseList, deleteCourseList] = [
+  const [courseList, addCourseList, deleteCourseList] = [
     useGlobalStore((state) => state.courseList),
-    useGlobalStore((state) => state.updateCourseList),
     useGlobalStore((state) => state.addCourseList),
     useGlobalStore((state) => state.deleteCourseList),
   ];
