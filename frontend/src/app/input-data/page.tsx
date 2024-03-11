@@ -21,6 +21,7 @@ import SubmitInput from "./input-sections/submit-input";
 import { useState } from "react";
 import PreferenceInput from "./input-sections/preference-input";
 import { useGlobalStore } from "../_stores/store";
+import TestCourseInput from "./input-sections/test-course-input";
 
 const steps = [
   {
@@ -48,12 +49,6 @@ const steps = [
 export default function InputData() {
   /** Stepper state */
   const [activeStep, setActiveStep] = useState(0);
-
-  /** Course list error handling */
-  const [courseListErrors, setCourseListErrors] = [
-    useGlobalStore((state) => state.courseListErrors),
-    useGlobalStore((state) => state.setCourseListErrors),
-  ];
 
   return (
     <Container
@@ -87,7 +82,6 @@ export default function InputData() {
                         setActiveStep((prevActiveStep) => prevActiveStep + 1);
                       }}
                       sx={{ mt: 1, mr: 1 }}
-                      disabled={!courseListErrors}
                     >
                       {index === steps.length - 1 ? "Finish" : "Continue"}
                     </Button>

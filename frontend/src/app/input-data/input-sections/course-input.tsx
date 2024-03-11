@@ -27,8 +27,8 @@ import { useGlobalStore } from "@/app/_stores/store";
 function CourseTableRow(props: {
   row: Course;
   // On "delete", send back Id of current course to delete
-  onDelete: (id: string) => void;
-  hasRowErrors: (hasRowError: boolean) => void;
+  //onDelete: (id: string) => void;
+  //hasRowErrors: (id: string, hasRowError: boolean) => void;
 }) {
   // States for course row inputs
   const [department, setDepartment] = useState(props?.row.department);
@@ -37,6 +37,20 @@ function CourseTableRow(props: {
   const [prelimEnrollment, setPrelimEnrollment] = useState(
     props?.row.prelim_enrollment
   );
+
+  const [updateCourseList] = [
+    useGlobalStore((state) => state.updateCourseList),
+  ];
+
+  useEffect(() => {
+    updateCourseList({
+      uuid: props.row.uuid,
+      department: department,
+      course_num: courseNum,
+      max_enrollment: maxEnrollment,
+      prelim_enrollment: prelimEnrollment,
+    });
+  }, [courseNum, department, maxEnrollment, prelimEnrollment, props.row.uuid]);
 
   // Validation and error handling for department
   const {
@@ -65,12 +79,6 @@ function CourseTableRow(props: {
     errorText: prelimEnrollErrorText,
     validateInt: validatePrelimEnroll,
   } = useValidateInt();
-
-  useEffect(() => {
-    if (deptError || courseNumError || maxEnrollError || prelimEnrollError)
-      props.hasRowErrors(true);
-    else props.hasRowErrors(false);
-  }, [courseNumError, deptError, maxEnrollError, prelimEnrollError, props]);
 
   return (
     <TableRow key={props.row.uuid}>
@@ -161,7 +169,7 @@ function CourseTableRow(props: {
           variant="text"
           color="info"
           fullWidth
-          onClick={() => props.onDelete(props.row.uuid)}
+          //onClick={() => props.onDelete(props.row.uuid)}
         >
           <ClearRoundedIcon />
         </Button>
@@ -172,26 +180,19 @@ function CourseTableRow(props: {
 
 export default function CourseInput() {
   /** Course list */
-  const [courseList, addCourseList, deleteCourseList] = [
+  const [courseList, updateCourseList, addCourseList, deleteCourseList] = [
     useGlobalStore((state) => state.courseList),
+    useGlobalStore((state) => state.updateCourseList),
     useGlobalStore((state) => state.addCourseList),
     useGlobalStore((state) => state.deleteCourseList),
   ];
-  /** Course list error handling */
-  const [errors, setErrors] = [
-    useGlobalStore((state) => state.courseListErrors),
-    useGlobalStore((state) => state.setCourseListErrors),
+
+  const [hasErrors, setHasErrors] = [
+    useGlobalStore((state) => state.hasCourseErrors),
+    useGlobalStore((state) => state.setCourseErrors),
   ];
 
-  const handleDeleteCourse = (id: string) => {
-    
-  };
-
-  const handleRowErrors = (hasRowError: boolean) => {
-    console.log(errors);
-    setErrors(hasRowError);
-    console.log(errors);
-  };
+  const handleRowErrors = (uuid: string, hasErrors: boolean) => {};
 
   return (
     <Box
@@ -229,12 +230,7 @@ export default function CourseInput() {
           </TableHead>
           <TableBody>
             {courseList.map((row) => (
-              <CourseTableRow
-                key={row.uuid}
-                row={row}
-                onDelete={(id: string) => deleteCourseList(id)}
-                hasRowErrors={handleRowErrors}
-              />
+              <CourseTableRow key={row.uuid} row={row} />
             ))}
           </TableBody>
         </Table>
@@ -251,6 +247,7 @@ export default function CourseInput() {
           >
             Add a course
           </Button>
+          <Button onClick={() => console.log(courseList)}>Test</Button>
         </Box>
       </TableContainer>
     </Box>
