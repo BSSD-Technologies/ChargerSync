@@ -26,9 +26,6 @@ import { useGlobalStore } from "@/app/_stores/store";
 
 function CourseTableRow(props: {
   row: Course;
-  // On "delete", send back Id of current course to delete
-  //onDelete: (id: string) => void;
-  //hasRowErrors: (id: string, hasRowError: boolean) => void;
 }) {
   // States for course row inputs
   const uuid = props?.row.uuid;
@@ -39,20 +36,20 @@ function CourseTableRow(props: {
     props?.row.prelim_enrollment
   );
 
-  const [updateCourseList, deleteCourseList] = [
+  // States for updating course list for current row, or deleting from list
+  const [updateCourseList, deleteCourseList, hasErrors] = [
     useGlobalStore((state) => state.updateCourseList),
     useGlobalStore((state) => state.deleteCourseList),
+    useGlobalStore((state) => state.hasErrors),
   ];
 
-  useEffect(() => {
-    updateCourseList({
-      uuid: uuid,
-      department: department,
-      course_num: courseNum,
-      max_enrollment: maxEnrollment,
-      prelim_enrollment: prelimEnrollment,
-    });
-  }, [courseNum, department, maxEnrollment, prelimEnrollment, uuid, updateCourseList]);
+  const handleDelete = () => {
+    if (deptError) hasErrors.pop();
+    if (courseNumError) hasErrors.pop();
+    if (maxEnrollError) hasErrors.pop();
+    if (prelimEnrollError) hasErrors.pop();
+    deleteCourseList(uuid);
+  }
 
   // Validation and error handling for department
   const {
@@ -81,6 +78,43 @@ function CourseTableRow(props: {
     errorText: prelimEnrollErrorText,
     validateInt: validatePrelimEnroll,
   } = useValidateInt();
+
+  useEffect(() => {
+    updateCourseList({
+      uuid: uuid,
+      department: department,
+      course_num: courseNum,
+      max_enrollment: maxEnrollment,
+      prelim_enrollment: prelimEnrollment,
+    });
+  }, [
+    courseNum,
+    department,
+    maxEnrollment,
+    prelimEnrollment,
+    uuid,
+    updateCourseList,
+  ]);
+
+  useEffect(() => {
+    if (deptError) hasErrors.push(true);
+    else hasErrors.pop();
+  }, [deptError, hasErrors]);
+
+  useEffect(() => {
+    if (courseNumError) hasErrors.push(true);
+    else hasErrors.pop();
+  }, [courseNumError, hasErrors]);
+
+  useEffect(() => {
+    if (maxEnrollError) hasErrors.push(true);
+    else hasErrors.pop();
+  }, [hasErrors, maxEnrollError]);
+
+  useEffect(() => {
+    if (prelimEnrollError) hasErrors.push(true);
+    else hasErrors.pop();
+  }, [hasErrors, prelimEnrollError]);
 
   return (
     <TableRow key={uuid}>
@@ -171,7 +205,7 @@ function CourseTableRow(props: {
           variant="text"
           color="info"
           fullWidth
-          onClick={() => deleteCourseList(uuid)}
+          onClick={handleDelete}
         >
           <ClearRoundedIcon />
         </Button>
@@ -182,18 +216,13 @@ function CourseTableRow(props: {
 
 export default function CourseInput() {
   /** Course list */
-  const [courseList, addCourseList, deleteCourseList] = [
+  const [courseList, addCourseList, getHasErrors] = [
     useGlobalStore((state) => state.courseList),
     useGlobalStore((state) => state.addCourseList),
-    useGlobalStore((state) => state.deleteCourseList),
+    useGlobalStore((state) => state.getHasErrors),
   ];
 
-  const [hasErrors, setHasErrors] = [
-    useGlobalStore((state) => state.hasCourseErrors),
-    useGlobalStore((state) => state.setCourseErrors),
-  ];
-
-  const handleRowErrors = (uuid: string, hasErrors: boolean) => {};
+  const [copyArray, setCopyArray] = useState([{}]);
 
   return (
     <Box
@@ -231,7 +260,10 @@ export default function CourseInput() {
           </TableHead>
           <TableBody>
             {courseList.map((row) => (
-              <CourseTableRow key={row.uuid} row={row} />
+              <CourseTableRow
+                key={row.uuid}
+                row={row}
+              />
             ))}
           </TableBody>
         </Table>
@@ -248,7 +280,7 @@ export default function CourseInput() {
           >
             Add a course
           </Button>
-          <Button onClick={() => console.log(courseList)}>Test</Button>
+          <Button onClick={() => console.log(getHasErrors())}>Test</Button>
         </Box>
       </TableContainer>
     </Box>
