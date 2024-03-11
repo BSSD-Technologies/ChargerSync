@@ -20,8 +20,6 @@ import UploadInput from "./input-sections/upload-input";
 import SubmitInput from "./input-sections/submit-input";
 import { useState } from "react";
 import PreferenceInput from "./input-sections/preference-input";
-import { useGlobalStore } from "../_stores/store";
-import TestCourseInput from "./input-sections/test-course-input";
 
 const steps = [
   {
@@ -49,8 +47,6 @@ const steps = [
 export default function InputData() {
   /** Stepper state */
   const [activeStep, setActiveStep] = useState(0);
-
-  
 
   return (
     <Container

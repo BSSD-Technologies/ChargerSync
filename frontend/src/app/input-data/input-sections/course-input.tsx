@@ -20,28 +20,35 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { Course, defaultCourse } from "@/app/_types/Course";
 import { useEffect, useState } from "react";
-import { v4 as uuidv4, validate } from "uuid";
-import { useValidateInt, useValidateIntNR, useValidateString } from "@/app/_hooks/utilHooks";
-import { useGlobalStore } from "@/app/_stores/store";
+import { v4 as uuidv4 } from "uuid";
+import {
+  useFirstRender,
+  useValidateInt,
+  useValidateIntNR,
+  useValidateString,
+} from "@/app/_hooks/utilHooks";
+import { useGlobalCourseListStore } from "@/app/_stores/store";
 
 function CourseTableRow(props: { row: Course }) {
-  // States for course row inputs
+  /** States for course row inputs */
   const uuid = props?.row.uuid;
   const [department, setDepartment] = useState(props?.row.department);
   const [courseNum, setCourseNum] = useState(props?.row.course_num);
   const [maxEnrollment, setMaxEnrollment] = useState(props?.row.max_enrollment);
   const [prelimEnrollment, setPrelimEnrollment] = useState(
-    props?.row.prelim_enrollment
+    props?.row.prelim_enrollment ? props?.row.prelim_enrollment : NaN
   );
-  const [prelimDisabled, setPrelimDisabled] = useState<boolean>(true);
+  const [prelimDisabled, setPrelimDisabled] = useState<boolean>(true); // Disabled state for preliminary input
+  const isFirstRender = useFirstRender(); // Used for first render functions
 
-  // States for updating course list for current row, or deleting from list
+  /** States for updating course list for current row, or deleting from list */
   const [updateCourseList, deleteCourseList, hasErrors] = [
-    useGlobalStore((state) => state.updateCourseList),
-    useGlobalStore((state) => state.deleteCourseList),
-    useGlobalStore((state) => state.hasErrors),
+    useGlobalCourseListStore((state) => state.updateCourseList),
+    useGlobalCourseListStore((state) => state.deleteCourseList),
+    useGlobalCourseListStore((state) => state.hasErrors),
   ];
 
+  /** Handle max enrollment & preliminary enrollment dependency validation */
   const handleMaxEnrollment = (value: string) => {
     validateMaxEnroll(value);
     setMaxEnrollment(parseInt(value));
@@ -52,6 +59,7 @@ function CourseTableRow(props: { row: Course }) {
     } else setPrelimDisabled(false);
   };
 
+  /** Handle row deletion and error handling */
   const handleDelete = () => {
     if (deptError) hasErrors.pop();
     if (courseNumError) hasErrors.pop();
@@ -89,6 +97,7 @@ function CourseTableRow(props: { row: Course }) {
     setError: setPrelimEnrollError,
   } = useValidateIntNR();
 
+  /** Update courseList on change */
   useEffect(() => {
     updateCourseList({
       uuid: uuid,
@@ -106,25 +115,55 @@ function CourseTableRow(props: { row: Course }) {
     updateCourseList,
   ]);
 
+  /** Update prelim enrollment based on max enrollment */
+  useEffect(() => {
+    if (maxEnrollment) setPrelimDisabled(false);
+    else setPrelimDisabled(true);
+  }, [maxEnrollment]);
+
+  /** Update hasErrors for deptError */
   useEffect(() => {
     if (deptError) hasErrors.push(true);
     else hasErrors.pop();
   }, [deptError, hasErrors]);
 
+  /** Update hasErrors for courseNumError */
   useEffect(() => {
     if (courseNumError) hasErrors.push(true);
     else hasErrors.pop();
   }, [courseNumError, hasErrors]);
 
+  /** Update hasErrors for maxEnrollError */
   useEffect(() => {
     if (maxEnrollError) hasErrors.push(true);
     else hasErrors.pop();
   }, [hasErrors, maxEnrollError]);
 
+  /** Update hasErrors for prelimEnrollError */
   useEffect(() => {
     if (prelimEnrollError) hasErrors.push(true);
     else hasErrors.pop();
   }, [hasErrors, prelimEnrollError]);
+
+  /** First render validation */
+  useEffect(() => {
+    if (isFirstRender) {
+      validateDept(department);
+      validateCourseNum(courseNum);
+      validateMaxEnroll(maxEnrollment.toString());
+      validatePrelimEnroll(prelimEnrollment.toString(), maxEnrollment);
+    }
+  }, [
+    courseNum,
+    department,
+    isFirstRender,
+    maxEnrollment,
+    prelimEnrollment,
+    validateCourseNum,
+    validateDept,
+    validateMaxEnroll,
+    validatePrelimEnroll,
+  ]);
 
   return (
     <TableRow key={uuid}>
@@ -219,13 +258,10 @@ function CourseTableRow(props: { row: Course }) {
 
 export default function CourseInput() {
   /** Course list */
-  const [courseList, addCourseList, getHasErrors] = [
-    useGlobalStore((state) => state.courseList),
-    useGlobalStore((state) => state.addCourseList),
-    useGlobalStore((state) => state.getHasErrors),
+  const [courseList, addCourseList] = [
+    useGlobalCourseListStore((state) => state.courseList),
+    useGlobalCourseListStore((state) => state.addCourseList),
   ];
-
-  const [copyArray, setCopyArray] = useState([{}]);
 
   return (
     <Box
@@ -280,7 +316,6 @@ export default function CourseInput() {
           >
             Add a course
           </Button>
-          <Button onClick={() => console.log(getHasErrors())}>Test</Button>
         </Box>
       </TableContainer>
     </Box>

@@ -54,6 +54,7 @@ interface UseValidateInt {
   errorText: string;
   /** Check if an int, sent as string, is valid or not. Optionally check if exceeds max */
   validateInt: (value: string, max?: number) => void;
+  /** Set the value for hasError manually */
   setError: (value: boolean) => void;
 }
 
@@ -65,24 +66,26 @@ interface UseValidateInt {
 export function useValidateInt(hasErrorDefault = false): UseValidateInt {
   const [hasError, setHasError] = useState(hasErrorDefault);
   const [errorText, setErrorText] = useState(" ");
-  
+
   const setError = useCallback((value: boolean) => {
     setHasError(value);
   }, []);
 
   const validateInt = useCallback((value: string, max?: number) => {
-    if (!value || value.length <= 0) {
+    // Check if value DNE, is empty string, or NaN
+    if (!value || value.length <= 0 || value == "NaN") {
       setHasError(true);
       setErrorText("Please enter a value.");
-    } else if (value.includes("-")) {
+    }
+    // Check if value is negative
+    else if (value.includes("-")) {
       setHasError(true);
       setErrorText("Negative values are not allowed.");
-    } else if (value.includes(".")) {
+    }
+    // Check if value has a decimal
+    else if (value.includes(".")) {
       setHasError(true);
       setErrorText("Please enter a whole number.");
-    } else if (max && parseInt(value) > max) {
-      setHasError(true);
-      setErrorText("Cannot exceed maximum enrollment.");
     } else {
       setHasError(false);
       setErrorText(" ");
@@ -106,13 +109,18 @@ export function useValidateIntNR(hasErrorDefault = false): UseValidateInt {
   }, []);
 
   const validateInt = useCallback((value: string, max?: number) => {
+    // Check if value is negative
     if (value.includes("-")) {
       setHasError(true);
       setErrorText("Negative values are not allowed.");
-    } else if (value.includes(".")) {
+    }
+    // Check if value has a decimal
+    else if (value.includes(".")) {
       setHasError(true);
       setErrorText("Please enter a whole number.");
-    } else if (max && parseInt(value) > max) {
+    }
+    // Check if value exceeds maximum value
+    else if (max && parseInt(value) > max) {
       setHasError(true);
       setErrorText("Cannot exceed maximum enrollment.");
     } else {
