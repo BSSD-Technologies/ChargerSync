@@ -34,18 +34,6 @@ class Course(db.Model):
         db.session.commit()
         return new_section
 
-    def getInstructorWithPriority(course_id):
-        course_preferences = CoursePreference.query.filter((CoursePreference.course_id == course_id),(CoursePreference.fulfilled == 0)).all()
-        arr_instructors = []
-        for pref in course_preferences:
-            instructor = pref.instructor
-            instructor_priority = instructor.priority
-            tuple_item = (instructor, instructor_priority)
-            arr_instructors.append(tuple_item)
-        sorted_array = sorted(arr_instructors, key=lambda x: x[1])
-        # Highest priority professor is returned
-        return sorted_array[0][0]
-
 
 class Section(db.Model):
     __tablename__ = 'section'
@@ -111,14 +99,6 @@ class Section(db.Model):
         else:
             print("Period: Not assigned")
         print(f"Section Number: {self.section_no}")
-
-    def findCoursePreference(self):
-        selected_instructor_preferences = self.instructor.course_preferences
-        course = self.course
-        for preference in selected_instructor_preferences:
-            if preference.course_id == course.id:
-                return preference
-        return None
     
     def getCoursePreferences(self):
         return self.instructor.course_preferences

@@ -28,11 +28,12 @@ with app.app_context():
             # Gather course information
             section_course_id = section.course_id
             section_course_preferences = section.course.preferences
+            scheduler.getInstructorsWithNoPref(section_course_id)
 
             # a list of all preferences for the course
-            course_preferences = Scheduler.getUnfulfilledPreferences(section_course_preferences)
+            instructors = scheduler.getInstructorsWithCoursePref(section_course_id)
 
-            if not course_preferences:
+            if not instructors:
                 # There are no professors with a preference for this course
                 # Assign section to instructor from instructors who have no preferance or have already met their preference
                 available_instructor = scheduler.getNextAvailableInstructor()
@@ -43,35 +44,33 @@ with app.app_context():
             else:
                 # There exists professor(s) with a preference for this course
                 # Assign Instructor from Instructors who do have preference for the specific course - based on priority
-                selected_instructor = Scheduler.getInstructorWithPriority(section_course_id)
+                selected_instructor = scheduler.getNextSelectedInstructor(instructors)
                 section.setInstructorByID(selected_instructor)
 
                 # Update preferences
-                pref = section.findCoursePreference()
-                pref.prefFulfilled()
+                scheduler.updateCoursePreferences(section_course_id, selected_instructor)
 
                 # Change to assigned_Instructor for the time assignment
                 assigned_instructor = selected_instructor
 
-            # Check if Instructor has any time preferences
+            # AT THIS POINT, THE SECTION HAS BEEN ASSIGNED AN INSTRUCTOR
+
+            # Check if Instructor has any time preferences - Create order periods array based on period preferences
             period_preferences = section.getPeriodPreferences()
             order_periods = scheduler.createOrderPeriods(period_preferences)
             
             for period in order_periods:
                 instructor_period_availability = scheduler.findInstructorAvailability(period)
                 period_room_availabilty = scheduler.findRoomAvailability(period)
-                if instructor_period_availability and assigned_instructor in instructor_period_availability:
-                    for room in period_room_availabilty:
-                        if room is not None:
-                            # room is available at period
-                            i = 0
-                            section.setRoomByID(room)
-                            scheduler.updateCourseEnrollment(section.course_id, room)
-                            scheduler.updateRoomAvailability(period, room)
-                            break
-                    scheduler.updateInstructorAvailability(period, assigned_instructor)
-                    section.setPeriodByID(period)
-                    break
+                section.setPeriodByID(period)
+                scheduler.updateInstructorAvailability(period, assigned_instructor)
+                break
+
+            for room in period_room_availabilty:
+                section.setRoomByID(room)
+                scheduler.updateCourseEnrollment(section.course_id, room)
+                scheduler.updateRoomAvailability(period, room)
+                break      
 
             # Some printing for testing
             section.printInfo()

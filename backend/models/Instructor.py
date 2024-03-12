@@ -43,20 +43,7 @@ class Instructor(db.Model):
             arr_pref.append(preference)
         return arr_pref
     
-    def checkPreferences(self):
-        if self.course_preferences:
-            for course_pref in self.course_preferences:
-                fulfilled = course_pref.fulfilled
-                if fulfilled == 0:
-                    # unfulilled preference still exists
-                    return True
-        if self.period_preferences:
-            for period_pref in self.period_preferences:
-                fulfilled = period_pref.fulfilled
-                if fulfilled == 0:
-                    # unfulilled preference still exists
-                    return True
-        return False
+
     
 
 

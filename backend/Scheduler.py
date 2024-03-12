@@ -10,18 +10,21 @@ class Scheduler:
     # Courses, Enrollment, Fulfillment
     courses_and_enrollment = []
 
-    # Time, [Room IDs]
+    # Period ID, [Room IDs]
     room_availability = []
 
-    # Room, Max Occupancy
+    # Room ID, Max Occupancy
     room_occupancy = []
 
-    # Instructor, [Period IDs]
+    # Instructor ID, [Period IDs]
     instructor_availability = []
+    
+    # Course ID, [Instructor IDs]
+    course_preferences = []
 
     # ----- Arrays ------
     instructors_with_no_preferences = []
-    instructors_with_course_preference = []
+    
     sections = []
     
     # ----- Other Attributes ------
@@ -34,7 +37,7 @@ class Scheduler:
         self.getRoomsAndAvailability()
         self.getRoomsAndOccupancy()
         self.getInstructorAvailability()
-        self.getInstructorsWithNoPref()
+        self.getCoursePreferences()
 
 
     # Constructor Functions ------
@@ -76,13 +79,27 @@ class Scheduler:
             tuple_item = (pull_insturctor, period_ids)
             self.instructor_availability.append(tuple_item)
 
-    def getInstructorsWithNoPref(self):
+    def getInstructorsWithNoPref(self, course_id):
         # Just an array of instructors with no preferences - sorted by priority
         instructors = Instructor.query.order_by(Instructor.priority).all()
         for instructor in instructors:
-            if instructor.checkPreferences() == False:
+            if self.hasCoursePreferences(instructor.id, course_id) == False:
                 self.instructors_with_no_preferences.append(instructor.id)
 
+    def getCoursePreferences(self):
+        # Creates a tuple of course preferences for each course
+        courses = Course.query.all()
+        for course in courses:
+            course_id = course.id
+            course_preferences = course.preferences
+            sorted_array = []
+            for course_pref in course_preferences:
+                instructor = course_pref.instructor_id
+                priority = course_pref.instructor.priority
+                self.sortedInsert(sorted_array, instructor, priority)
+            tuple_item = (course_id, sorted_array)
+            self.course_preferences.append(tuple_item)
+        
 
     # Update Functions -----
 
@@ -109,7 +126,7 @@ class Scheduler:
                 availability_array = instructor[1]
                 if period_id in availability_array:
                     instructor_index = availability_array.index(period_id)
-                    availability_array[instructor_index] = None
+                    del availability_array[instructor_index]
                 return  # No need to continue after updating
         # Period ID not found, or room_id not found in the availability array
         print("Period ID or Instructor ID not found.")    
@@ -120,10 +137,22 @@ class Scheduler:
                 availability_array = room[1]
                 if room_id in availability_array:
                     room_index = availability_array.index(room_id)
-                    availability_array[room_index] = None
+                    del availability_array[room_index]
                 return  # No need to continue after updating
         # Period ID not found, or room_id not found in the availability array
         print("Period ID or Room ID not found.")
+
+    def updateCoursePreferences(self, course_id, instructor_id):
+        for course in self.course_preferences:
+            if course[0] == course_id:
+                instructor_ids = course[1]
+                if instructor_id in instructor_ids:
+                    instructor_index = instructor_ids.index(instructor_id)
+                    del instructor_ids[instructor_index]
+                return
+        
+
+                        
 
 
     # Find Functions ----
@@ -132,20 +161,20 @@ class Scheduler:
         for room in self.room_availability:
             if room[0] == period_id:
                 return room[1]  # Return the availability array if period_id matches
-        return None  # Return None if period_id is not found
+        return None
 
     def findInstructorAvailability(self, period_id):
         for instructor in self.instructor_availability:
             if instructor[0] == period_id:
                 return instructor[1]
-            return None
+        return None
         
     # OTHER
         
     def prepareForMoreSections(self):
         self.sections = []
         self.section_counter += 1
-        self.getInstructorsWithNoPref()
+        self.instructors_with_no_preferences_pos = 0
         return
         
     def checkCoursesFulfillment(self):
@@ -207,17 +236,11 @@ class Scheduler:
         self.instructors_with_no_preferences_pos = (self.instructors_with_no_preferences_pos + 1) % len(self.instructors_with_no_preferences)
         return available_instructor
     
-    def getInstructorWithPriority(course_id):
-        course_preferences = CoursePreference.query.filter((CoursePreference.course_id == course_id),(CoursePreference.fulfilled == 0)).all()
-        arr_instructors = []
-        for pref in course_preferences:
-            instructor = pref.instructor
-            instructor_priority = instructor.priority
-            tuple_item = (instructor.id, instructor_priority)
-            arr_instructors.append(tuple_item)
-        sorted_array = sorted(arr_instructors, key=lambda x: x[1])
-        # Highest priority professor is returned
-        return sorted_array[0][0]
+    def getNextSelectedInstructor(self, instructors_list):
+        for instructor in instructors_list:
+            if instructor != None:
+                return instructor
+        return None
     
     def createOrderPeriods(self, period_preferences):
     # order check_periods_room based on whether instructor has preference or not
@@ -225,7 +248,7 @@ class Scheduler:
         if period_preferences:
             order_periods = [period_pref.period_id for period_pref in period_preferences]
             for period in self.room_availability:
-                if period[0] not in order_periods:
+                if (period[0] not in order_periods):
                     order_periods.append(period[0])
         else:
             # Instructor has no preference - this could be used to change the order of which periods are checked first/last
@@ -233,6 +256,30 @@ class Scheduler:
                 if period[0] not in order_periods:
                     order_periods.append(period[0])
         return order_periods
+    
+    def getInstructorsWithCoursePref(self, course_id):
+        for course in self.course_preferences:
+            if course[0] == course_id:
+                return course[1]
+        return None
+
+    def sortedInsert(self, lst, id, priority):
+        index = 0
+        while index < len(lst) and lst[index] < priority:
+            index += 1
+        lst.insert(index, id)
+
+    def hasCoursePreferences(self, instructor_id, course_id):
+        for course in self.course_preferences:
+            if course[0] == course_id:
+                instructor_ids = course[1]
+                if instructor_id in instructor_ids:
+                    return True
+                else:
+                    return False
+           
+
+
     
      
 
