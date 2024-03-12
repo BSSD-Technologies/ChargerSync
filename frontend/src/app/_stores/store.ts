@@ -13,7 +13,7 @@ interface GlobalCourseListState {
   /** Boolean stack of whether or not there are errors in the course list */
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
-  getHasErrors: () => void;
+  getHasErrors: () => boolean;
 }
 
 export const useGlobalCourseListStore = create<GlobalCourseListState>()(

@@ -106,6 +106,7 @@ function CourseTableRow(props: { row: Course }) {
       max_enrollment: maxEnrollment,
       prelim_enrollment: prelimEnrollment,
     });
+    console.log(hasErrors);
   }, [
     courseNum,
     department,
@@ -113,6 +114,7 @@ function CourseTableRow(props: { row: Course }) {
     prelimEnrollment,
     uuid,
     updateCourseList,
+    hasErrors,
   ]);
 
   /** Update prelim enrollment based on max enrollment */
@@ -256,12 +258,19 @@ function CourseTableRow(props: { row: Course }) {
   );
 }
 
-export default function CourseInput() {
+export default function CourseInput(props: {
+  handleErrors: (value: boolean) => void;
+}) {
   /** Course list */
-  const [courseList, addCourseList] = [
+  const [courseList, addCourseList, getHasErrors] = [
     useGlobalCourseListStore((state) => state.courseList),
     useGlobalCourseListStore((state) => state.addCourseList),
+    useGlobalCourseListStore((state) => state.getHasErrors),
   ];
+
+  useEffect(() => {
+    props.handleErrors(getHasErrors());
+  });
 
   return (
     <Box

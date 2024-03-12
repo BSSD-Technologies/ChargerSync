@@ -14,39 +14,23 @@ import {
 } from "@mui/material";
 import CourseInput from "./input-sections/course-input";
 import RoomInput from "./input-sections/room-input";
-import TimeInput from "./input-sections/time-input";
+import PeriodInput from "./input-sections/period-input";
 import InstructorInput from "./input-sections/instructor-input";
 import UploadInput from "./input-sections/upload-input";
 import SubmitInput from "./input-sections/submit-input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PreferenceInput from "./input-sections/preference-input";
-
-const steps = [
-  {
-    label: "List of Courses",
-    component: <CourseInput />,
-  },
-  {
-    label: "List of Rooms",
-    component: <RoomInput />,
-  },
-  {
-    label: "List of Time Blocks",
-    component: <TimeInput />,
-  },
-  {
-    label: "List of Instructors",
-    component: <InstructorInput />,
-  },
-  {
-    label: "Instructor Preferences",
-    component: <PreferenceInput />,
-  },
-];
+import { useGlobalCourseListStore } from "../_stores/store";
 
 export default function InputData() {
   /** Stepper state */
   const [activeStep, setActiveStep] = useState(0);
+
+  const [hasCourseErrors, setHasCourseErrors] = useState(true);
+
+  const courseErrors = (value: boolean) => {
+    setHasCourseErrors(value);
+  };
 
   return (
     <Container
@@ -67,38 +51,128 @@ export default function InputData() {
       <br />
       <Box>
         <Stepper activeStep={activeStep} orientation="vertical">
-          {steps.map((step, index) => (
-            <Step key={step.label}>
-              <StepLabel>{step.label}</StepLabel>
-              <StepContent TransitionProps={{ unmountOnExit: false }}>
-                {step.component}
-                <Box sx={{ mb: 2 }}>
-                  <div>
-                    <Button
-                      variant="contained"
-                      onClick={() => {
-                        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-                      }}
-                      sx={{ mt: 1, mr: 1 }}
-                    >
-                      {index === steps.length - 1 ? "Finish" : "Continue"}
-                    </Button>
-                    <Button
-                      disabled={index === 0}
-                      onClick={() => {
-                        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-                      }}
-                      sx={{ mt: 1, mr: 1 }}
-                    >
-                      Back
-                    </Button>
-                  </div>
-                </Box>
-              </StepContent>
-            </Step>
-          ))}
+          <Step key={0}>
+            <StepLabel>List of Courses</StepLabel>
+            <StepContent TransitionProps={{ unmountOnExit: false }}>
+              <CourseInput handleErrors={courseErrors} />
+              <Box sx={{ mb: 2 }}>
+                <div>
+                  <Button
+                    variant="contained"
+                    disabled={hasCourseErrors}
+                    onClick={() => {
+                      setActiveStep(activeStep + 1);
+                    }}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Continue
+                  </Button>
+                </div>
+              </Box>
+            </StepContent>
+          </Step>
+          <Step key={1}>
+            <StepLabel>List of Rooms</StepLabel>
+            <StepContent TransitionProps={{ unmountOnExit: false }}>
+              <RoomInput />
+              <Box sx={{ mb: 2 }}>
+                <div>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setActiveStep(activeStep + 1);
+                    }}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Continue
+                  </Button>
+                  <Button
+                    onClick={() => setActiveStep(activeStep - 1)}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </Box>
+            </StepContent>
+          </Step>
+          <Step key={2}>
+            <StepLabel>List of Periods</StepLabel>
+            <StepContent TransitionProps={{ unmountOnExit: false }}>
+              <PeriodInput />
+              <Box sx={{ mb: 2 }}>
+                <div>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setActiveStep(activeStep + 1);
+                    }}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Continue
+                  </Button>
+                  <Button
+                    onClick={() => setActiveStep(activeStep - 1)}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </Box>
+            </StepContent>
+          </Step>
+          <Step key={3}>
+            <StepLabel>List of Instructors</StepLabel>
+            <StepContent TransitionProps={{ unmountOnExit: false }}>
+              <InstructorInput />
+              <Box sx={{ mb: 2 }}>
+                <div>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setActiveStep(activeStep + 1);
+                    }}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Continue
+                  </Button>
+                  <Button
+                    onClick={() => setActiveStep(activeStep - 1)}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </Box>
+            </StepContent>
+          </Step>
+          <Step key={4}>
+            <StepLabel>Instructor Preferences</StepLabel>
+            <StepContent TransitionProps={{ unmountOnExit: false }}>
+              <PreferenceInput />
+              <Box sx={{ mb: 2 }}>
+                <div>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setActiveStep(activeStep + 1);
+                    }}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Finish
+                  </Button>
+                  <Button
+                    onClick={() => setActiveStep(activeStep - 1)}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </Box>
+            </StepContent>
+          </Step>
         </Stepper>
-        {activeStep === steps.length && (
+        {activeStep === 5 && (
           <Paper square elevation={0} sx={{ p: 3 }}>
             <Typography>All steps completed - you&apos;re finished</Typography>
             <Button
