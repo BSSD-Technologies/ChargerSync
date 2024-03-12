@@ -26,8 +26,10 @@ export default function InputData() {
   /** Stepper state */
   const [activeStep, setActiveStep] = useState(0);
 
+  /** Error states */
   const [hasCourseErrors, setHasCourseErrors] = useState(true);
 
+  /** Error handling */
   const courseErrors = (value: boolean) => {
     setHasCourseErrors(value);
   };
