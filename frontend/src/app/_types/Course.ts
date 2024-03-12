@@ -13,3 +13,9 @@ export type Course = {
   max_enrollment: number;
   prelim_enrollment?: number;
 };
+
+export const defaultCourse = {
+  department: "",
+  course_num: "",
+  max_enrollment: NaN,
+};

@@ -9,3 +9,8 @@ export type CoursePreference = {
   instructor_uuid: string;
   course_uuid: string;
 };
+
+export const defaultCoursePreference = {
+  instructor_uuid: "",
+  course_uuid: "",
+};

@@ -9,3 +9,8 @@ export type PeriodPreference = {
   instructor_uuid: string;
   period_uuid: string;
 };
+
+export const defaultPeriodPreference = {
+  instructor_uuid: "",
+  period_uuid: "",
+};

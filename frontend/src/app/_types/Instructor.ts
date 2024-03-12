@@ -11,3 +11,9 @@ export type Instructor = {
   lname: string;
   priority: number | 0;
 }
+
+export const defaultInstructor = {
+  fname: "",
+  lname: "",
+  priority: 0,
+}

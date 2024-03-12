@@ -9,3 +9,8 @@ export type Room = {
   room_id: string;
   max_capacity: string;
 };
+
+export const defaultRoom = {
+  room_id: "",
+  max_capacity: "",
+};
