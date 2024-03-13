@@ -68,28 +68,28 @@ function CourseTableRow(props: { row: Course }) {
     deleteCourseList(uuid);
   };
 
-  // Validation and error handling for department
+  /** Validation and error handling for department */
   const {
     hasError: deptError,
     errorText: deptErrorText,
     validateString: validateDept,
   } = useValidateString();
 
-  // Validation and error handling for course number
+  /** Validation and error handling for course number */
   const {
     hasError: courseNumError,
     errorText: courseNumErrorText,
     validateString: validateCourseNum,
   } = useValidateString();
 
-  // Validation and error handling for max enrollment
+  /** Validation and error handling for max enrollment */
   const {
     hasError: maxEnrollError,
     errorText: maxEnrollErrorText,
     validateInt: validateMaxEnroll,
   } = useValidateInt();
 
-  // Validation and error handling for prelim enrollment
+  /** Validation and error handling for prelim enrollment */
   const {
     hasError: prelimEnrollError,
     errorText: prelimEnrollErrorText,
@@ -106,7 +106,6 @@ function CourseTableRow(props: { row: Course }) {
       max_enrollment: maxEnrollment,
       prelim_enrollment: prelimEnrollment,
     });
-    console.log(hasErrors);
   }, [
     courseNum,
     department,
@@ -114,7 +113,6 @@ function CourseTableRow(props: { row: Course }) {
     prelimEnrollment,
     uuid,
     updateCourseList,
-    hasErrors,
   ]);
 
   /** Update prelim enrollment based on max enrollment */
