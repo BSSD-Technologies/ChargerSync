@@ -61,14 +61,20 @@ with app.app_context():
             
             # Assigning section to period and section to a room
             if order_periods:
+                # Instructor has free time - assign section to a period that is available to the instructor
                 section.setPeriodByID(order_periods[0])  
                 scheduler.updateInstructorAvailability(order_periods[0], assigned_instructor)
+    
                 for period in order_periods:
+                    # get available rooms for period
                     available_rooms = scheduler.findRoomAvailability(period)
                     if available_rooms:
+                        # set room to a room that is available during that period
                         section.setRoomByID(available_rooms[0])
+
+                        # Update enrollment numbers
                         scheduler.updateCourseEnrollment(section_course_id, available_rooms[0])
-                        scheduler.updateRoomAvailability(order_periods[0], available_rooms[0])
+                        scheduler.updateRoomAvailability(period, available_rooms[0])
                         break
                     
             # Some printing for testing

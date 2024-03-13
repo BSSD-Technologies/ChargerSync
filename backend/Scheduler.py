@@ -2,7 +2,6 @@ from models.Course import Course
 from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
-from models.Preferences import CoursePreference
 
 class Scheduler:
     # ----- Tuple Arrays ------
@@ -280,46 +279,3 @@ class Scheduler:
                 else:
                     return False
            
-
-
-    
-     
-
-
-
-'''For each instructor by priority rank
-
-    Creating lists for each course
-        Get list of classes, store length in a variable.
-        Create dictionary to store list of course names, read in from input.
-        For each course
-            Deques[coursenames[i]] = deque()
-        Return deques
-
-    Sorting instructors into Course Lists.
-        For each instructor
-            For each course preference
-                Add instructor name into the respective course list.
-
-Courses start with 1 section
-
-For each course (sorted by current enrollment):
-
-	Assign a section to a instructor at a time (check list of profs for each class first, then go to highest priority first at first available time)
-	Assign a section to a classroom closest in size to Current enrollment if possible (only on first loop, add classrooms closest in size to first classroom assigned later)
-	Subtract max occupancy of the classroom from Max Enrollment
-	If Max Enrollment >0, add another section and repeat.
-
-Rebalance Class sizes (TBD)
-'''
-
-'''
-Section-instructor-Time Assignments
-For each course
-	Create an object and populate w/ course name + section number
-	Details to be filled in here.
-
-Section-Room Assignments
-
-
-'''
