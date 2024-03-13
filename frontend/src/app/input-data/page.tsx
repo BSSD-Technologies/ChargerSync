@@ -18,9 +18,8 @@ import PeriodInput from "./input-sections/period-input";
 import InstructorInput from "./input-sections/instructor-input";
 import UploadInput from "./input-sections/upload-input";
 import SubmitInput from "./input-sections/submit-input";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PreferenceInput from "./input-sections/preference-input";
-import { useGlobalCourseListStore } from "../_stores/store";
 
 export default function InputData() {
   /** Stepper state */
@@ -28,10 +27,16 @@ export default function InputData() {
 
   /** Error states */
   const [hasCourseErrors, setHasCourseErrors] = useState(true);
+  const [hasRoomErrors, setHasRoomErrors] = useState(true);
 
-  /** Error handling */
+  /** Course error handling */
   const courseErrors = (value: boolean) => {
     setHasCourseErrors(value);
+  };
+
+  /** Room error handling */
+  const roomErrors = (value: boolean) => {
+    setHasRoomErrors(value);
   };
 
   return (
@@ -76,11 +81,12 @@ export default function InputData() {
           <Step key={1}>
             <StepLabel>List of Rooms</StepLabel>
             <StepContent TransitionProps={{ unmountOnExit: false }}>
-              <RoomInput />
+              <RoomInput handleErrors={roomErrors} />
               <Box sx={{ mb: 2 }}>
                 <div>
                   <Button
                     variant="contained"
+                    disabled={hasRoomErrors}
                     onClick={() => {
                       setActiveStep(activeStep + 1);
                     }}

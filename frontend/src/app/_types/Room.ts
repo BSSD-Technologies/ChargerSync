@@ -7,10 +7,10 @@
 export type Room = {
   uuid: string;
   room_id: string;
-  max_capacity: string;
+  max_capacity: number;
 };
 
 export const defaultRoom = {
   room_id: "",
-  max_capacity: "",
+  max_capacity: NaN,
 };
