@@ -4,6 +4,7 @@ from extensions import db
 from models.Course import Section, Course
 import DataGenerator
 from Scheduler import Scheduler
+from output import formatForOutput
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
@@ -93,6 +94,10 @@ with app.app_context():
 
     scheduler.sections = Section.query.all()
     print(scheduler.sections)
+
+    print("TEST OF JSON OUTPUT BELOW")
+
+    formatForOutput(scheduler)
 
     #print(Course.query.all())
     #print(Instructor.query.all())

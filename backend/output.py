@@ -23,6 +23,16 @@ def getLastPart(name):
 def formatForOutput(scheduler):
     for section in scheduler.sections:
         
+        try:   
+            a = section.period.start_time
+        except:
+            a = "No Period Assigned"
+        
+        try:   
+            b = section.period.day
+        except:
+            b = "No Period Assigned"
+
         # Create an empty dictionary to hold the course information
         course_info = {}
 
@@ -51,9 +61,9 @@ def formatForOutput(scheduler):
 
         # Fill in period information
         course_info["period"] = {
-            "start_time": section.period.start_time,
+            "start_time": a,
             "end_time": "end_time_of_period", #To Do, write querying logic
-            "day": section.period.day
+            "day": b
         }
 
         #To Do: replace with funciton to pass to front-end
