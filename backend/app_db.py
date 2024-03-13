@@ -57,35 +57,39 @@ with app.app_context():
 
             # Check if Instructor has any time preferences - Create order periods array based on period preferences
             period_preferences = section.getPeriodPreferences()
-            order_periods = scheduler.createOrderPeriods(period_preferences)
+            order_periods = scheduler.createOrderPeriods(period_preferences, assigned_instructor)
             
-            for period in order_periods:
-                instructor_period_availability = scheduler.findInstructorAvailability(period)
-                period_room_availabilty = scheduler.findRoomAvailability(period)
-                section.setPeriodByID(period)
-                scheduler.updateInstructorAvailability(period, assigned_instructor)
-                break
+            # Assigning section to period and section to a room
+            if order_periods:
+                # Instructor has free time - assign section to a period that is available to the instructor
+                section.setPeriodByID(order_periods[0])  
+                scheduler.updateInstructorAvailability(order_periods[0], assigned_instructor)
+    
+                for period in order_periods:
+                    # get available rooms for period
+                    available_rooms = scheduler.findRoomAvailability(period)
+                    if available_rooms:
+                        # set room to a room that is available during that period
+                        section.setRoomByID(available_rooms[0])
 
-            for room in period_room_availabilty:
-                section.setRoomByID(room)
-                scheduler.updateCourseEnrollment(section.course_id, room)
-                scheduler.updateRoomAvailability(period, room)
-                break      
-
+                        # Update enrollment numbers
+                        scheduler.updateCourseEnrollment(section_course_id, available_rooms[0])
+                        scheduler.updateRoomAvailability(period, available_rooms[0])
+                        break
+                    
             # Some printing for testing
             section.printInfo()
-
             print("\n")
+
+            # Commit changes to database
             db.session.commit()
+
+            # If all courses are fulfilled - end loop
             if scheduler.checkCoursesFulfillment() == True:
                 break
 
         scheduler.instructors_with_no_preferences = []
 
-    
-
-             
-    
 
     scheduler.sections = Section.query.all()
     print(scheduler.sections)
