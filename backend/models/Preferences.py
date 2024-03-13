@@ -14,9 +14,6 @@ class CoursePreference(db.Model):
     def __repr__(self):
         return '<Instructor %r, Course Preference %r >' % (self.instructor_id, self.course_id)
     
-
-
-
         
     
 class PeriodPreference(db.Model):
@@ -30,10 +27,6 @@ class PeriodPreference(db.Model):
 
     def __repr__(self):
         return '<Instructor %r, Period Preference %r >' % (self.instructor_id, self.period_id)
-    
-    def prefFulfilled(self):
-        self.fulfilled = 1
-        db.session.commit()
     
 
     

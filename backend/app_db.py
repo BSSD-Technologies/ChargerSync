@@ -59,6 +59,7 @@ with app.app_context():
             period_preferences = section.getPeriodPreferences()
             order_periods = scheduler.createOrderPeriods(period_preferences, assigned_instructor)
             
+            # Assigning section to period and section to a room
             if order_periods:
                 section.setPeriodByID(order_periods[0])  
                 scheduler.updateInstructorAvailability(order_periods[0], assigned_instructor)
@@ -72,9 +73,12 @@ with app.app_context():
                     
             # Some printing for testing
             section.printInfo()
-
             print("\n")
+
+            # Commit changes to database
             db.session.commit()
+
+            # If all courses are fulfilled - end loop
             if scheduler.checkCoursesFulfillment() == True:
                 break
 
