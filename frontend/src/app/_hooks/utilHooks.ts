@@ -81,12 +81,13 @@ export function useValidateInt(hasErrorDefault = false): UseValidateInt {
     else if (value.includes("-")) {
       setHasError(true);
       setErrorText("Negative values are not allowed.");
-    }
-    // Check if value has a decimal
-    else if (value.includes(".")) {
+    } 
+    // Check if int value is greater than 0
+    else if (parseInt(value) == 0) {
       setHasError(true);
-      setErrorText("Please enter a whole number.");
-    } else {
+      setErrorText("Value must be at least 1.");
+    }
+    else {
       setHasError(false);
       setErrorText(" ");
     }
@@ -114,10 +115,10 @@ export function useValidateIntNR(hasErrorDefault = false): UseValidateInt {
       setHasError(true);
       setErrorText("Negative values are not allowed.");
     }
-    // Check if value has a decimal
-    else if (value.includes(".")) {
+    // Check if int value is greater than 0
+    else if (parseInt(value) == 0) {
       setHasError(true);
-      setErrorText("Please enter a whole number.");
+      setErrorText("Value must be at least 1.");
     }
     // Check if value exceeds maximum value
     else if (max && parseInt(value) > max) {
