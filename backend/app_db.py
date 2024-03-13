@@ -57,21 +57,19 @@ with app.app_context():
 
             # Check if Instructor has any time preferences - Create order periods array based on period preferences
             period_preferences = section.getPeriodPreferences()
-            order_periods = scheduler.createOrderPeriods(period_preferences)
+            order_periods = scheduler.createOrderPeriods(period_preferences, assigned_instructor)
             
-            for period in order_periods:
-                instructor_period_availability = scheduler.findInstructorAvailability(period)
-                period_room_availabilty = scheduler.findRoomAvailability(period)
-                section.setPeriodByID(period)
-                scheduler.updateInstructorAvailability(period, assigned_instructor)
-                break
-
-            for room in period_room_availabilty:
-                section.setRoomByID(room)
-                scheduler.updateCourseEnrollment(section.course_id, room)
-                scheduler.updateRoomAvailability(period, room)
-                break      
-
+            if order_periods:
+                section.setPeriodByID(order_periods[0])  
+                scheduler.updateInstructorAvailability(order_periods[0], assigned_instructor)
+                for period in order_periods:
+                    available_rooms = scheduler.findRoomAvailability(period)
+                    if available_rooms:
+                        section.setRoomByID(available_rooms[0])
+                        scheduler.updateCourseEnrollment(section_course_id, available_rooms[0])
+                        scheduler.updateRoomAvailability(order_periods[0], available_rooms[0])
+                        break
+                    
             # Some printing for testing
             section.printInfo()
 
@@ -82,10 +80,6 @@ with app.app_context():
 
         scheduler.instructors_with_no_preferences = []
 
-    
-
-             
-    
 
     scheduler.sections = Section.query.all()
     print(scheduler.sections)

@@ -152,21 +152,18 @@ class Scheduler:
                 return
         
 
-                        
-
-
     # Find Functions ----
 
     def findRoomAvailability(self, period_id):
         for room in self.room_availability:
             if room[0] == period_id:
-                return room[1]  # Return the availability array if period_id matches
+                return room[1]  # Return array of rooms available during period
         return None
 
-    def findInstructorAvailability(self, period_id):
+    def findInstructorAvailability(self, instructor_id):
         for instructor in self.instructor_availability:
-            if instructor[0] == period_id:
-                return instructor[1]
+            if instructor[0] == instructor_id:
+                return instructor[1]    # return array of periods instructor is available
         return None
         
     # OTHER
@@ -242,18 +239,21 @@ class Scheduler:
                 return instructor
         return None
     
-    def createOrderPeriods(self, period_preferences):
+    def createOrderPeriods(self, period_preferences, instructor_id):
     # order check_periods_room based on whether instructor has preference or not
         order_periods = []
+        instructor_availablity = self.findInstructorAvailability(instructor_id)
         if period_preferences:
-            order_periods = [period_pref.period_id for period_pref in period_preferences]
+            for period_pref in period_preferences:
+                if period_pref in instructor_availablity:
+                    order_periods.append(period_pref.period_id)
             for period in self.room_availability:
-                if (period[0] not in order_periods):
+                if ((period[0] not in order_periods) and (period[0] in instructor_availablity)):
                     order_periods.append(period[0])
         else:
             # Instructor has no preference - this could be used to change the order of which periods are checked first/last
             for period in self.room_availability:
-                if period[0] not in order_periods:
+                if ((period[0] not in order_periods) and (period[0] in instructor_availablity)):
                     order_periods.append(period[0])
         return order_periods
     
