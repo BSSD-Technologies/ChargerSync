@@ -132,3 +132,45 @@ export function useValidateIntNR(hasErrorDefault = false): UseValidateInt {
 
   return { hasError, errorText, validateInt, setError };
 }
+
+interface UseValidateTime {
+  /** Whether the time string is valid */
+  hasError: boolean;
+  /** Helper text message for error */
+  errorText: string;
+  /** Check if a string is valid or not */
+  validateTime: (value: string, min?: string) => void;
+  /** Set the value for hasError manually */
+  setError: (value: boolean) => void;
+}
+
+/**
+ * Validate time string input, and deal with error handling
+ * @param hasErrorDefault = false
+ * @returns hasError, errorText, validateTime
+ */
+export function useValidateTime(hasErrorDefault = false): UseValidateTime {
+  const [hasError, setHasError] = useState(hasErrorDefault);
+  const [errorText, setErrorText] = useState(" ");
+
+  const setError = useCallback((value: boolean) => {
+    setHasError(value);
+  }, []);
+
+  const validateTime = useCallback((value: string, min?: string) => {
+    // Check if empty string
+    if (!value || value.length <= 0) {
+      setHasError(true);
+      setErrorText("Please enter a time.");
+    } // Check if value is below minimum value
+    else if (min && value < min) {
+      setHasError(true);
+      setErrorText("End time must come after start time.");
+    } else {
+      setHasError(false);
+      setErrorText(" ");
+    }
+  }, []);
+
+  return { hasError, errorText, validateTime, setError };
+}

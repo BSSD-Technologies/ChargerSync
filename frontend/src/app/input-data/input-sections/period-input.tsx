@@ -17,55 +17,155 @@ import {
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import { Period, defaultPeriod } from "@/app/_types/Period";
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { useFirstRender, useValidateTime } from "@/app/_hooks/utilHooks";
+import { useGlobalPeriodListStore } from "@/app/_stores/store";
 
-function TimeTable() {
+function PeriodTableRow(props: { row: Period }) {
+  /** States for course row inputs */
+  const uuid = props?.row.uuid;
+  const day = props?.row.day;
+  const [startTime, setStartTime] = useState(props?.row.start_time);
+  const [endTime, setEndTime] = useState(props?.row.end_time);
+  const [endTimeDisabled, setEndTimeDisabled] = useState<boolean>(true); // Disabled state for end time input
+  const isFirstRender = useFirstRender(); // Used for first render functions
+
+  /** States for updating period list for current row, or deleting from list */
+  const [updatePeriodList, deletePeriodList, hasErrors] = [
+    useGlobalPeriodListStore((state) => state.updatePeriodList),
+    useGlobalPeriodListStore((state) => state.deletePeriodList),
+    useGlobalPeriodListStore((state) => state.hasErrors),
+  ];
+
+  /** Handle start & end time dependency validation */
+  const handleStartTime = (value: string) => {
+    validateStartTime(value);
+    setStartTime(value);
+    if (value.length <= 0 && endTime) {
+      setEndTimeDisabled(true);
+      setEndTime("");
+      setEndTimeError(false);
+    } else setEndTimeDisabled(false);
+  };
+
+  /** Handle row deletion and error handling */
+  const handleDelete = () => {
+    if (startTimeError) hasErrors.pop();
+    if (endTimeError) hasErrors.pop();
+    deletePeriodList(uuid);
+  };
+
+  /** Validation and error handling for start time */
+  const {
+    hasError: startTimeError,
+    errorText: startTimeErrorText,
+    validateTime: validateStartTime,
+  } = useValidateTime();
+
+  /** Validation and error handling for end time */
+  const {
+    hasError: endTimeError,
+    errorText: endTimeErrorText,
+    validateTime: validateEndTime,
+    setError: setEndTimeError,
+  } = useValidateTime();
+
+  /** Update periodList on change */
+  useEffect(() => {
+    updatePeriodList({
+      uuid: uuid,
+      start_time: startTime,
+      end_time: endTime,
+      day: day,
+    });
+  }, [day, endTime, startTime, updatePeriodList, uuid]);
+
+  /** Update endTime based on startTime */
+  useEffect(() => {
+    if (startTime) setEndTimeDisabled(false);
+    else setEndTimeDisabled(true);
+  }, [startTime]);
+
+  /** Update hasErrors for start time */
+  useEffect(() => {
+    if (startTimeError) hasErrors.push(true);
+    else hasErrors.pop();
+  }, [startTimeError, hasErrors]);
+
+  /** Update hasErrors for end time */
+  useEffect(() => {
+    if (endTimeError) hasErrors.push(true);
+    else hasErrors.pop();
+  }, [endTimeError, hasErrors]);
+
+  /** First render validation */
+  useEffect(() => {
+    if (isFirstRender) {
+      validateStartTime(startTime);
+      validateEndTime(endTime);
+    }
+  }, [endTime, isFirstRender, startTime, validateEndTime, validateStartTime]);
+
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Start Time *</TableCell>
-            <TableCell>End Time *</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          <TableRow>
-            <TableCell>
-              <TextField
-                fullWidth
-                required
-                id="start-time"
-                variant="filled"
-                type="time"
-              />
-            </TableCell>
-            <TableCell>
-              <TextField
-                fullWidth
-                required
-                id="end-time"
-                variant="filled"
-                type="time"
-              />
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-      <Box sx={{ paddingTop: "2%" }}>
-        <Button
-          variant="outlined"
-          color="info"
+    <TableRow key={uuid}>
+      <TableCell>
+        <TextField
           fullWidth
-          startIcon={<AddCircleRoundedIcon />}
-        >
-          Add a time block
+          required
+          id="start-time"
+          variant="filled"
+          type="time"
+          value={startTime}
+          onChange={(e) => {
+            handleStartTime(e.target.value);
+          }}
+          error={startTimeError}
+          helperText={startTimeErrorText}
+        />
+      </TableCell>
+      <TableCell>
+        <TextField
+          fullWidth
+          disabled={endTimeDisabled}
+          required
+          id="end-time"
+          variant="filled"
+          type="time"
+          value={endTime}
+          onChange={(e) => {
+            validateEndTime(e.target.value, startTime);
+            setEndTime(e.target.value);
+          }}
+          error={endTimeError}
+          helperText={endTimeErrorText}
+        />
+      </TableCell>
+      <TableCell>
+        <Button variant="text" color="info" fullWidth onClick={handleDelete}>
+          <ClearRoundedIcon />
         </Button>
-      </Box>
-    </TableContainer>
+      </TableCell>
+    </TableRow>
   );
 }
 
-export default function TimeInput() {
+export default function PeriodInput(props: {
+  handleErrors: (value: boolean) => void;
+}) {
+  /** Period list */
+  const [periodList, addPeriodList, getHasErrors] = [
+    useGlobalPeriodListStore((state) => state.periodList),
+    useGlobalPeriodListStore((state) => state.addPeriodList),
+    useGlobalPeriodListStore((state) => state.getHasErrors),
+  ];
+
+  useEffect(() => {
+    props.handleErrors(getHasErrors());
+  });
+
   return (
     <Box
       sx={{
@@ -89,7 +189,36 @@ export default function TimeInput() {
         />
       </Grid>
       <br />
-      <TimeTable />
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Start Time *</TableCell>
+              <TableCell>End Time *</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {periodList.map((row) => (
+              <PeriodTableRow key={row.uuid} row={row} />
+            ))}
+          </TableBody>
+        </Table>
+        <Box sx={{ paddingTop: "2%" }}>
+          <Button
+            variant="outlined"
+            color="info"
+            fullWidth
+            startIcon={<AddCircleRoundedIcon />}
+            onClick={() => {
+              const newPeriod = { ...defaultPeriod, uuid: uuidv4() };
+              addPeriodList(newPeriod);
+            }}
+          >
+            Add a time block
+          </Button>
+        </Box>
+      </TableContainer>
     </Box>
   );
 }
