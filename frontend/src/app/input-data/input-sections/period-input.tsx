@@ -44,13 +44,15 @@ function PeriodTableRow(props: { row: Period }) {
   /** Handle start & end time dependency validation */
   const handleStartTime = (value: string) => {
     validateStartTime(value, periodList);
-    validateEndTime(endTime, periodList);
     setStartTime(value);
     if (value.length <= 0 && endTime) {
       setEndTimeDisabled(true);
       setEndTime("");
       setEndTimeError(false);
-    } else setEndTimeDisabled(false);
+    } else {
+      setEndTimeDisabled(false)
+      validateEndTime(endTime, periodList)
+    }
   };
 
   /** Handle row deletion and error handling */
