@@ -25,5 +25,5 @@ export enum Day {
 export const defaultPeriod = {
   start_time: "",
   end_time: "",
-  day: "MW",
+  day: Day["MW"],
 };

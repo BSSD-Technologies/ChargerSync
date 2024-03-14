@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { Course } from "../_types/Course";
 import { Room } from "../_types/Room";
+import { Period } from "../_types/Period";
 
 /** COURSE STORE */
 interface GlobalCourseListState {
@@ -98,6 +99,60 @@ export const useGlobalRoomListStore = create<GlobalRoomListState>()(
     getHasErrors: () => {
       // If array (table) is empty, error
       if (get().roomList.length == 0) {
+        return true;
+      }
+      // If errors exist in stack
+      else if (get().hasErrors.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  })
+);
+
+/** PERIOD STORE */
+interface GlobalPeriodListState {
+  /** Array of period blocks */
+  periodList: Period[];
+  /** Update existing period */
+  updatePeriodList: (period: Period) => void;
+  /** Add a period to list */
+  addPeriodList: (period: Period) => void;
+  /** Delete a period by id */
+  deletePeriodList: (id: string) => void;
+  /** Boolean stack of whether or not there are errors in the period list */
+  hasErrors: boolean[];
+  /** Custom getter for hasErrors */
+  getHasErrors: () => boolean;
+}
+
+export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
+  (set, get) => ({
+    periodList: [],
+    updatePeriodList: (period: Period) =>
+      set((state) => ({
+        periodList: state.periodList.map((p) =>
+          // Find matching period object, update
+          p.uuid === period.uuid ? { ...period } : p
+        ),
+      })),
+    addPeriodList: (period: Period) => {
+      set((state) => ({
+        periodList: [...state.periodList, period],
+      }));
+    },
+    deletePeriodList: (id: string) =>
+      set((state) => ({
+        periodList: [
+          // Filter out period with matching id
+          ...state.periodList.filter((period) => period.uuid !== id),
+        ],
+      })),
+    hasErrors: [],
+    getHasErrors: () => {
+      // If array (table) is empty, error
+      if (get().periodList.length == 0) {
         return true;
       }
       // If errors exist in stack

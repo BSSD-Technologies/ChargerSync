@@ -28,6 +28,7 @@ export default function InputData() {
   /** Error states */
   const [hasCourseErrors, setHasCourseErrors] = useState(true);
   const [hasRoomErrors, setHasRoomErrors] = useState(true);
+  const [hasPeriodErrors, setHasPeriodErrors] = useState(true);
 
   /** Course error handling */
   const courseErrors = (value: boolean) => {
@@ -37,6 +38,11 @@ export default function InputData() {
   /** Room error handling */
   const roomErrors = (value: boolean) => {
     setHasRoomErrors(value);
+  };
+
+  /** Period error handling */
+  const periodErrors = (value: boolean) => {
+    setHasPeriodErrors(value);
   };
 
   return (
@@ -107,11 +113,12 @@ export default function InputData() {
           <Step key={2}>
             <StepLabel>List of Periods</StepLabel>
             <StepContent TransitionProps={{ unmountOnExit: false }}>
-              <PeriodInput />
+              <PeriodInput handleErrors={periodErrors} />
               <Box sx={{ mb: 2 }}>
                 <div>
                   <Button
                     variant="contained"
+                    disabled={hasPeriodErrors}
                     onClick={() => {
                       setActiveStep(activeStep + 1);
                     }}
