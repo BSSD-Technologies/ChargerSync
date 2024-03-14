@@ -34,7 +34,8 @@ function PeriodTableRow(props: { row: Period }) {
   const isFirstRender = useFirstRender(); // Used for first render functions
 
   /** States for updating period list for current row, or deleting from list */
-  const [updatePeriodList, deletePeriodList, hasErrors] = [
+  const [periodList, updatePeriodList, deletePeriodList, hasErrors] = [
+    useGlobalPeriodListStore((state) => state.periodList),
     useGlobalPeriodListStore((state) => state.updatePeriodList),
     useGlobalPeriodListStore((state) => state.deletePeriodList),
     useGlobalPeriodListStore((state) => state.hasErrors),
@@ -42,7 +43,8 @@ function PeriodTableRow(props: { row: Period }) {
 
   /** Handle start & end time dependency validation */
   const handleStartTime = (value: string) => {
-    validateStartTime(value);
+    validateStartTime(value, periodList);
+    validateEndTime(endTime, periodList);
     setStartTime(value);
     if (value.length <= 0 && endTime) {
       setEndTimeDisabled(true);
@@ -104,10 +106,17 @@ function PeriodTableRow(props: { row: Period }) {
   /** First render validation */
   useEffect(() => {
     if (isFirstRender) {
-      validateStartTime(startTime);
-      validateEndTime(endTime);
+      validateStartTime(startTime, periodList);
+      validateEndTime(endTime, periodList);
     }
-  }, [endTime, isFirstRender, startTime, validateEndTime, validateStartTime]);
+  }, [
+    endTime,
+    isFirstRender,
+    periodList,
+    startTime,
+    validateEndTime,
+    validateStartTime,
+  ]);
 
   return (
     <TableRow key={uuid}>
@@ -136,7 +145,7 @@ function PeriodTableRow(props: { row: Period }) {
           type="time"
           value={endTime}
           onChange={(e) => {
-            validateEndTime(e.target.value, startTime);
+            validateEndTime(e.target.value, periodList, startTime);
             setEndTime(e.target.value);
           }}
           error={endTimeError}

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Period } from "../_types/Period";
 
 /**
  * Detect first render of a component
@@ -139,7 +140,7 @@ interface UseValidateTime {
   /** Helper text message for error */
   errorText: string;
   /** Check if a string is valid or not */
-  validateTime: (value: string, min?: string) => void;
+  validateTime: (value: string, periodList: Period[], min?: string) => void;
   /** Set the value for hasError manually */
   setError: (value: boolean) => void;
 }
@@ -157,16 +158,27 @@ export function useValidateTime(hasErrorDefault = false): UseValidateTime {
     setHasError(value);
   }, []);
 
-  const validateTime = useCallback((value: string, min?: string) => {
+  const validateTime = useCallback((value: string, periodList: Period[], min?: string) => {
     // Check if empty string
     if (!value || value.length <= 0) {
       setHasError(true);
       setErrorText("Please enter a time.");
-    } // Check if value is below minimum value
-    else if (min && value < min) {
+      return;
+    }
+    // Check for time range overlaps
+    for (const range of periodList) {
+      if (value >= range.start_time && value <= range.end_time) {
+        setHasError(true);
+        setErrorText("This time overlaps with an existing period block.");
+        return;
+      }
+    }
+    // Check if value is below minimum value
+    if (min && value < min) {
       setHasError(true);
       setErrorText("End time must come after start time.");
-    } else {
+    }
+    else {
       setHasError(false);
       setErrorText(" ");
     }
