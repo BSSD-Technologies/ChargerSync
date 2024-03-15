@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Course } from "../_types/Course";
 import { Room } from "../_types/Room";
 import { Period } from "../_types/Period";
+import { Instructor } from "../_types/Instructor";
 
 /** COURSE STORE */
 interface GlobalCourseListState {
@@ -153,6 +154,60 @@ export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
     getHasErrors: () => {
       // If array (table) is empty, error
       if (get().periodList.length == 0) {
+        return true;
+      }
+      // If errors exist in stack
+      else if (get().hasErrors.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  })
+);
+
+/** INSTRUCTOR STORE */
+interface GlobalInstructorListState {
+  /** Array of instructors */
+  instructorList: Instructor[];
+  /** Update existing instructor */
+  updateInstructorList: (instructor: Instructor) => void;
+  /** Add an instructor to list */
+  addInstructorList: (instructor: Instructor) => void;
+  /** Delete an instructor by id */
+  deleteInstructorList: (id: string) => void;
+  /** Boolean stack of whether or not there are errors in the instructor list */
+  hasErrors: boolean[];
+  /** Custom getter for hasErrors */
+  getHasErrors: () => boolean;
+}
+
+export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
+  (set, get) => ({
+    instructorList: [],
+    updateInstructorList: (instructor: Instructor) =>
+      set((state) => ({
+        instructorList: state.instructorList.map((i) =>
+          // Find matching instructor object, update
+          i.uuid === instructor.uuid ? { ...instructor } : i
+        ),
+      })),
+    addInstructorList: (instructor: Instructor) => {
+      set((state) => ({
+        instructorList: [...state.instructorList, instructor],
+      }));
+    },
+    deleteInstructorList: (id: string) =>
+      set((state) => ({
+        instructorList: [
+          // Filter out period with matching id
+          ...state.instructorList.filter((instructor) => instructor.uuid !== id),
+        ],
+      })),
+    hasErrors: [],
+    getHasErrors: () => {
+      // If array (table) is empty, error
+      if (get().instructorList.length == 0) {
         return true;
       }
       // If errors exist in stack

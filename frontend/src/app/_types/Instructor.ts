@@ -9,11 +9,11 @@ export type Instructor = {
   uuid: string;
   fname: string;
   lname: string;
-  priority: number | 0;
+  priority: number;
 }
 
 export const defaultInstructor = {
   fname: "",
   lname: "",
-  priority: 0,
+  priority: NaN,
 }
