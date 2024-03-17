@@ -1,11 +1,33 @@
-#To Do: Remove unused imports, copied all from app_db
-from flask import Flask
-from datetime import time
-from extensions import db
-from models.Course import Section, Course
-import DataGenerator
-from Scheduler import Scheduler
-import json
+##############################################################
+# Output.py
+# Purpose: Format the results of the scheduler into JSON objects
+#Format of the JSON object for each class
+#{
+#  "uuid": "string",
+#  "section_id": "string",
+#  "instructor":
+#      {
+#       "fname": "string",
+#       "lname": "string"
+#      },
+#   "course":
+#      {
+#       "department": "string",
+#       "couse_num": "string"
+#      },
+#  "room":
+#      {
+#       "id": "string",
+#       "max_capacity": "string"
+#      },
+#  "period": 
+#      {
+#        "start_time": "string",
+#        "end_time": "string",
+#        "day": "enum"
+#      }
+#}
+#################################################################
 
 def getFirstPart(name):
     names = name.split()
@@ -33,6 +55,16 @@ def formatForOutput(scheduler):
         except:
             b = "No Period Assigned"
 
+        try:
+            c = section.room.max_occupancy
+        except:
+            c = "No Room Assigned"
+
+        try:   
+            d = section.period.end_time
+        except:
+            d = "No Period Assigned"   
+
         # Create an empty dictionary to hold the course information
         course_info = {}
 
@@ -56,45 +88,15 @@ def formatForOutput(scheduler):
         # Fill in room information
         course_info["room"] = {
             "id": section.room,
-            "max_capacity": "max_capacity_of_room" #To Do, write querying logic
+            "max_capacity": c
         }
 
         # Fill in period information
         course_info["period"] = {
             "start_time": a,
-            "end_time": "end_time_of_period", #To Do, write querying logic
+            "end_time": d,
             "day": b
         }
 
         #To Do: replace with funciton to pass to front-end
         print(course_info)
-
-
-
-
-#Format of the JSON object for each class
-#{
-#  "uuid": "string",
-#  "section_id": "string",
-#  "instructor":
-#      {
-#       "fname": "string",
-#       "lname": "string"
-#      },
-#   "course":
-#      {
-#       "department": "string",
-#       "couse_num": "string"
-#      },
-#  "room":
-#      {
-#       "id": "string",
-#       "max_capacity": "string"
-#      },
-#  "period": 
-#      {
-#        "start_time": "string",
-#        "end_time": "string",
-#        "day": "enum"
-#      }
-#}
