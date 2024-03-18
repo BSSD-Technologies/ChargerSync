@@ -38,10 +38,6 @@ def getLastPart(name):
     return names[1]
 
 
-#Check course.py to confirm placements
-#To Do: Write getter for the scheduler object in app_db.py
-#scheduler = Scheduler() #Temporary, just to make the highlighting pretty
-
 def formatForOutput(scheduler):
     for section in scheduler.sections:
         
@@ -73,7 +69,6 @@ def formatForOutput(scheduler):
         course_info["section_id"] = section.course_id
 
         # Fill in instructor information
-        #instructor = assigned_instructor
         course_info["instructor"] = {
             "fname": section.instructor.fname,
             "name": section.instructor.lname
