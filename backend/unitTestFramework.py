@@ -51,7 +51,7 @@ room_list = [
 course_list = [
     # Course name, max, preliminary
     ('CS 101', 200, 100),
-    ('CS 221', 100, 0),
+    ('CS 221', 100, 0), 
     ('CS 453', 20, 50),
     ('CS 200', 90, 0),
     ('CS 390', 90, 25),
@@ -61,14 +61,12 @@ course_preference_list = [
     # fname, lname, preference in array
     ('Beth', 'Allen', ['CS 101', 'CS 221']),
     ('Robert', 'Preston', ['CS 390']),
-    ('Super', 'Man', ['CS 200']),
 ]
 
 period_preference_list = [
     # fname, lname, preference in array
     ('Beth', 'Allen', [1, 2, 3]),
     ('Robert', 'Preston', [4, 5]),
-    ('Super', 'Man', [3]),
 ]
 
 def loadData():

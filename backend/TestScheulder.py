@@ -30,17 +30,18 @@ def test_updateCourseEnrollment_fullfillment_occurs():
         buildDatabase(db)        
         test = Scheduler()
         test.updateCourseEnrollment(2,1)
-        assert (test.courses_and_enrollment[2] == (2, 0, 1))
+        assert (test.courses_and_enrollment[1] == (2, 0, 1))
 
 def test_updateCourseEnrollmentfulfillment_does_not_occur():
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
     db.init_app(app)
     with app.app_context():
-        buildDatabase(db)        
+        buildDatabase(db) 
+
         test = Scheduler()
-        test.updateCourseEnrollment(4,5)
-        assert(test.courses_and_enrollment[4] == (4, 80, 0))
+        test.updateCourseEnrollment(4,4)
+        assert(test.courses_and_enrollment[3] == (4, 80, 0))
 
 def test_updateInstructorAvailability_updating_claimed_slot():
     #Initializing Database
