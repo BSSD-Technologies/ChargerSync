@@ -1,11 +1,21 @@
 /**
  * Course
- * @id - course ID
- * @maxEnroll - maximum students allowed to enroll in the course
- * @prelimEnroll (optional) - current number of students enrolled in the course
+ * @uuid Unique ID for course object;
+ * @department Course department code;
+ * @course_num Course number;
+ * @max_enrollment Maximum enrollment for course;
+ * @prelim_enrollment Preliminary enrollment for course; OPTIONAL
  */
 export type Course = {
-  id: string;
-  maxEnroll: number;
-  prelimEnroll?: number;
+  uuid: string;
+  department: string;
+  course_num: string;
+  max_enrollment: number;
+  prelim_enrollment?: number;
+};
+
+export const defaultCourse = {
+  department: "",
+  course_num: "",
+  max_enrollment: NaN,
 };

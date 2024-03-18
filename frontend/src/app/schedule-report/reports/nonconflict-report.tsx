@@ -1,4 +1,6 @@
+import { LoadingButton } from "@mui/lab";
 import { Container, Typography } from "@mui/material";
+import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 
 export default function NonConflictReport() {
   return (
@@ -17,6 +19,18 @@ export default function NonConflictReport() {
         <li>Non-Conflict 2</li>
         <li>Non-Conflict 3</li>
       </ul>
+      <LoadingButton
+        variant="contained"
+        color="success"
+        loading={false}
+        fullWidth
+        startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+        sx={{
+          paddingLeft: "15px",
+        }}
+      >
+        <span>Export Non-Conflicts</span>
+      </LoadingButton>
     </Container>
   );
 }

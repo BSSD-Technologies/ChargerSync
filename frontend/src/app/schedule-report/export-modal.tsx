@@ -5,7 +5,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FilledInput,
   FormControl,
   FormControlLabel,
   InputLabel,
@@ -223,21 +222,21 @@ export default function ExportModal(props: ExportModalProps) {
       </DialogTitle>
       <DialogContent>
         <FormControl>
-          <RadioGroup defaultValue="full">
+          <RadioGroup defaultValue="full" onChange={(e: any) => handleSelect(e.target.value)}>
             <FormControlLabel
               value="full"
-              control={<Radio checked={checkedFull} onChange={(e: any) => handleSelect(e.target.value)} />}
+              control={<Radio />}
               label="Export Full Schedule"
             />
             <FormControlLabel
               value="department"
-              control={<Radio checked={checkedDepartment} onChange={(e: any) => handleSelect(e.target.value)} />}
+              control={<Radio />}
               label="Filter by Department"
             />
             {checkedDepartment && <SelectDepartment />}
             <FormControlLabel
               value="room"
-              control={<Radio checked={checkedRoom} onChange={(e: any) => handleSelect(e.target.value)} />}
+              control={<Radio />}
               label="Filter by Room"
             />
             {checkedRoom && <SelectRoom />}
