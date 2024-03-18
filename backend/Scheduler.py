@@ -128,9 +128,8 @@ class Scheduler:
                 updated_course = (course[0], new_occupancy, fulfilled)
                 index = self.courses_and_enrollment.index(course)
                 self.courses_and_enrollment[index] = updated_course
-                if course[1] <= 0:
-                    course
-                return 
+                return
+        
             
     # Input: self, period_id(int), instructor_id(int)
     # Output: n/a - updates values in self
