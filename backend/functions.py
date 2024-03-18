@@ -22,7 +22,6 @@ def csv_to_list(csv_file):
 
     return list_data
 
-
 import pandas as pd
 
 def csv_to_json(csv_file):
@@ -74,28 +73,6 @@ def process_time(time_str):
     except ValueError:
         return f"Error: Invalid time format - {time_str}"
     
-# def convert_time_format(time_json):
-#     """
-#     Convert time format in JSON data.
-
-#     Args:
-#     - time_json (str): JSON formatted string containing time data.
-
-#     Returns:
-#     - str: JSON formatted string with time data converted to a different format.
-#     """
-#     # Parse JSON string into Python object
-#     time_data = json.loads(time_json)
-
-#     # Process time strings
-#     for item in time_data:
-#         item['start_time'] = process_time(item['start_time'])
-#         item['end_time'] = process_time(item['end_time'])
-
-#     # Convert Python object back to JSON string
-#     updated_time_json = json.dumps(time_data)
-
-#     return updated_time_json
 def convert_time_format(time_json):
     """
     Convert time format in JSON data and assign time slot IDs.
