@@ -203,6 +203,6 @@ export function readCourses(rawData: RawCourseData[]) {
     department: course.department,
     course_num: course.course_number.toString(),
     max_enrollment: course.max_enrollment,
-    prelim_enrollment: course.preliminary_enrollment !== undefined ? course.preliminary_enrollment : undefined,
+    prelim_enrollment: course.preliminary_enrollment !== undefined ? course.preliminary_enrollment : NaN,
   }));
 }

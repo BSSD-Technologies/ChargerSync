@@ -275,7 +275,7 @@ export default function CourseInput(props: {
     if (!event.target.files || event.target.files.length < 0) return;
     else {
       const data = await UseUploadCourses(event.target.files[0]);
-      console.log(data);
+      data?.map((course) => addCourseList(course));
     }
   };
 
