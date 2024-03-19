@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme, useMediaQuery } from "@mui/material";
 import { ReactNode, useMemo } from "react";
 import CssBaseline from '@mui/material/CssBaseline';
 
+import { CustomToaster } from "@/app/_components/custom-toaster";
 import { getTheme } from "@/style/theme";
 
 export default function Providers({ children }: { children: ReactNode }) {
@@ -21,6 +22,7 @@ export default function Providers({ children }: { children: ReactNode }) {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       {children}
+      <CustomToaster />
     </ThemeProvider>
   );
 }
