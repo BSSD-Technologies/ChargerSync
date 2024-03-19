@@ -20,7 +20,6 @@ import UploadInput from "./input-sections/upload-input";
 import SubmitInput from "./input-sections/submit-input";
 import { useState } from "react";
 import PreferenceInput from "./input-sections/preference-input";
-import UploadFileComponent from "./input-sections/test-component";
 
 export default function InputData() {
   /** Stepper state */
@@ -64,7 +63,6 @@ export default function InputData() {
         Insert a description of the input process. Let people know that they can
         upload data or they can manually input it.
       </Typography>
-      <UploadFileComponent />
       <br />
       <Divider />
       <UploadInput />

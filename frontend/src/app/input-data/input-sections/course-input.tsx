@@ -28,6 +28,7 @@ import {
   useValidateString,
 } from "@/app/_hooks/utilHooks";
 import { useGlobalCourseListStore } from "@/app/_stores/store";
+import { UseUploadCourses } from "@/app/_hooks/apiHooks";
 
 function CourseTableRow(props: { row: Course }) {
   /** States for course row inputs */
@@ -270,6 +271,14 @@ export default function CourseInput(props: {
     props.handleErrors(getHasErrors());
   });
 
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files || event.target.files.length < 0) return;
+    else {
+      const data = await UseUploadCourses(event.target.files[0]);
+      console.log(data);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -290,6 +299,7 @@ export default function CourseInput(props: {
           sx={{
             width: "20%",
           }}
+          onChange={handleUpload}
         />
       </Grid>
       <br />
