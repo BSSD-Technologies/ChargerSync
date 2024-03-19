@@ -2,6 +2,14 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { readCourses } from "./utilHooks";
 
+/**
+ * UseUploadCourses
+ * For an uploaded CSV file of course data, send to backend to be
+ * processed and receive JSON object of data
+ * 
+ * @param file CSV template
+ * @returns JSON object
+ */
 export const UseUploadCourses = async (file: File) => {
   // Format file as form data object
   const formData = new FormData();

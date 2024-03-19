@@ -267,14 +267,19 @@ export default function CourseInput(props: {
     useGlobalCourseListStore((state) => state.getHasErrors),
   ];
 
+  /** Check for errors regularly */
   useEffect(() => {
     props.handleErrors(getHasErrors());
   });
 
+  /** On uploaded file, make API request and receive JSON output or error */
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Must be a valid file
     if (!event.target.files || event.target.files.length < 0) return;
     else {
+      // Await JSON output data
       const data = await UseUploadCourses(event.target.files[0]);
+      // Add JSON output to course list
       data?.map((course) => addCourseList(course));
     }
   };
