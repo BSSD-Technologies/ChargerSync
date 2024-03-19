@@ -3,4 +3,5 @@ runDocker.bat
 .DS_Store
 runBackendSH.bat
 backend/__pycache__
+backend/models/__pycache__
 

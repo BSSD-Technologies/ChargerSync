@@ -24,16 +24,12 @@ with app.app_context():
 
         scheduler.prepareForMoreSections()
         scheduler.createNewSections()
-
         scheduler.scheduleSections()
+    
 
+    print("TEST OF JSON OUTPUT BELOW")
 
-    scheduler.sections = Section.query.all()
-    print(scheduler.sections)
-
-    #print("TEST OF JSON OUTPUT BELOW")
-
-    #formatForOutput(scheduler)
+    formatForOutput(scheduler)
 
     #print(Course.query.all())
     #print(Instructor.query.all())

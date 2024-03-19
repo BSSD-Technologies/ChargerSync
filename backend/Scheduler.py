@@ -1,4 +1,4 @@
-from models.Course import Course
+from models.Course import Course, Section
 from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
@@ -23,7 +23,7 @@ class Scheduler:
 
     # ----- Arrays ------
     instructors_with_no_preferences = []
-    
+    schedule = []
     sections = []
     
     # ----- Other Attributes ------
@@ -168,6 +168,7 @@ class Scheduler:
                     instructor_index = instructor_ids.index(instructor_id)
                     del instructor_ids[instructor_index]
                 return
+
         
 
     # Find Functions ----
@@ -279,6 +280,11 @@ class Scheduler:
                 else:
                     return False
                 
+    # ALGO
+    
+
+    # Input: self
+    # Output: n/a - creates a schedule in the scheduler class
     def scheduleSections(self):
         for section in self.sections:
             # Gather course information
@@ -308,8 +314,12 @@ class Scheduler:
 
             # If all courses are fulfilled - end loop
             if self.checkCoursesFulfillment() == True:
+                self.updateSchedule()
                 break
+        self.updateSchedule()
 
+    # Input: self, section
+    # Output: n/a - alters section's row in DB
     def assignInstructor(self, section):
         # a list of all preferences for the course
         instructors = self.getInstructorsWithCoursePref(section.course_id)
@@ -328,10 +338,14 @@ class Scheduler:
             # Update preferences
             self.updateCoursePreferences(section.course_id, selected_instructor)
 
+    # Input: self, section, period_id
+    # Output: n/a - alters section's row in DB
     def assignPeriod(self, section, period_id):
         section.setPeriodByID(period_id)  
         self.updateInstructorAvailability(period_id, section.instructor_id)
 
+    # Input: self, section, sorted instructor availability array
+    # Output: n/a - alters section's row in DB
     def assignRoomDuringInstructorAvailability(self, section, sorted_instructor_availability):
         for period in sorted_instructor_availability:
             # get available rooms for period
@@ -344,3 +358,8 @@ class Scheduler:
                 self.updateCourseEnrollment(section.course_id, available_rooms[0])
                 self.updateRoomAvailability(period, available_rooms[0])
                 break
+
+    # Input: self
+    # Output: n/a - puts all sections in one array
+    def updateSchedule(self):
+        self.schedule = Section.query.all()
