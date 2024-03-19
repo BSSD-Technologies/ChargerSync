@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Period } from "../_types/Period";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Detect first render of a component
@@ -185,4 +186,23 @@ export function useValidateTime(hasErrorDefault = false): UseValidateTime {
   }, []);
 
   return { hasError, errorText, validateTime, setError };
+}
+
+/** Type for raw imported course data */
+type RawCourseData = {
+  department: string;
+  course_number: number;
+  max_enrollment: number;
+  preliminary_enrollment?: number;
+};
+
+/** Parse raw imported course data into Course object array */
+export function readCourses(rawData: RawCourseData[]) {
+  return rawData.map((course) => ({
+    uuid: uuidv4(),
+    department: course.department,
+    course_num: course.course_number.toString(),
+    max_enrollment: course.max_enrollment,
+    prelim_enrollment: course.preliminary_enrollment !== undefined ? course.preliminary_enrollment : NaN,
+  }));
 }

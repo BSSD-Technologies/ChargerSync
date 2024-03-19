@@ -28,6 +28,7 @@ import {
   useValidateString,
 } from "@/app/_hooks/utilHooks";
 import { useGlobalCourseListStore } from "@/app/_stores/store";
+import { UseUploadCourses } from "@/app/_hooks/apiHooks";
 
 function CourseTableRow(props: { row: Course }) {
   /** States for course row inputs */
@@ -266,9 +267,22 @@ export default function CourseInput(props: {
     useGlobalCourseListStore((state) => state.getHasErrors),
   ];
 
+  /** Check for errors regularly */
   useEffect(() => {
     props.handleErrors(getHasErrors());
   });
+
+  /** On uploaded file, make API request and receive JSON output or error */
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Must be a valid file
+    if (!event.target.files || event.target.files.length < 0) return;
+    else {
+      // Await JSON output data
+      const data = await UseUploadCourses(event.target.files[0]);
+      // Add JSON output to course list
+      data?.map((course) => addCourseList(course));
+    }
+  };
 
   return (
     <Box
@@ -290,6 +304,7 @@ export default function CourseInput(props: {
           sx={{
             width: "20%",
           }}
+          onChange={handleUpload}
         />
       </Grid>
       <br />
