@@ -27,6 +27,7 @@ import {
   useValidateString,
 } from "@/app/_hooks/utilHooks";
 import { useGlobalRoomListStore } from "@/app/_stores/store";
+import { UseUploadRooms } from "@/app/_hooks/apiHooks";
 
 function RoomTableRow(props: { row: Room }) {
   /** States for room inputs */
@@ -153,9 +154,22 @@ export default function RoomInput(props: {
     useGlobalRoomListStore((state) => state.getHasErrors),
   ];
 
+  /** Check for errors regularly */
   useEffect(() => {
     props.handleErrors(getHasErrors());
   });
+
+  /** On uploaded file, make API request and receive JSON output or error */
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Must be a valid file
+    if (!event.target.files || event.target.files.length < 0) return;
+    else {
+      // Await JSON output data
+      const data = await UseUploadRooms(event.target.files[0]);
+      // Add JSON output to room list
+      data?.map((room) => addRoomList(room));
+    }
+  };
 
   return (
     <Box
@@ -177,6 +191,7 @@ export default function RoomInput(props: {
           sx={{
             width: "20%",
           }}
+          onChange={handleUpload}
         />
       </Grid>
       <br />

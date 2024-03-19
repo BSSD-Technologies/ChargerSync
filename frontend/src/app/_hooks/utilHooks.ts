@@ -191,7 +191,7 @@ export function useValidateTime(hasErrorDefault = false): UseValidateTime {
 /** Type for raw imported course data */
 type RawCourseData = {
   department: string;
-  course_number: number;
+  course_number: string;
   max_enrollment: number;
   preliminary_enrollment?: number;
 };
@@ -204,5 +204,20 @@ export function readCourses(rawData: RawCourseData[]) {
     course_num: course.course_number.toString(),
     max_enrollment: course.max_enrollment,
     prelim_enrollment: course.preliminary_enrollment !== undefined ? course.preliminary_enrollment : NaN,
+  }));
+}
+
+/** Type for raw imported course data */
+type RawRoomData = {
+  room_id: string;
+  max_capacity: number;
+};
+
+/** Parse raw imported course data into Course object array */
+export function readRooms(rawData: RawRoomData[]) {
+  return rawData.map((room) => ({
+    uuid: uuidv4(),
+    room_id: room.room_id.toString(),
+    max_capacity: room.max_capacity,
   }));
 }
