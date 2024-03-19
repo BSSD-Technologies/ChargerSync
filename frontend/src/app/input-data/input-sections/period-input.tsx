@@ -19,10 +19,11 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { Period, defaultPeriod } from "@/app/_types/Period";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useFirstRender, useValidateTime } from "@/app/_hooks/utilHooks";
 import { useGlobalPeriodListStore } from "@/app/_stores/store";
+import { UseUploadPeriods } from "@/app/_hooks/apiHooks";
 
 function PeriodTableRow(props: { row: Period }) {
   /** States for course row inputs */
@@ -43,7 +44,7 @@ function PeriodTableRow(props: { row: Period }) {
 
   /** Handle start & end time dependency validation */
   const handleStartTime = (value: string) => {
-    validateStartTime(value, periodList);
+    validateStartTime(value, uuid, periodList);
     setStartTime(value);
     if (value.length <= 0 && endTime) {
       setEndTimeDisabled(true);
@@ -51,7 +52,7 @@ function PeriodTableRow(props: { row: Period }) {
       setEndTimeError(false);
     } else {
       setEndTimeDisabled(false)
-      validateEndTime(endTime, periodList)
+      validateEndTime(endTime, uuid, periodList)
     }
   };
 
@@ -108,17 +109,10 @@ function PeriodTableRow(props: { row: Period }) {
   /** First render validation */
   useEffect(() => {
     if (isFirstRender) {
-      validateStartTime(startTime, periodList);
-      validateEndTime(endTime, periodList);
+      validateStartTime(startTime, uuid, periodList);
+      validateEndTime(endTime, uuid, periodList);
     }
-  }, [
-    endTime,
-    isFirstRender,
-    periodList,
-    startTime,
-    validateEndTime,
-    validateStartTime,
-  ]);
+  }, [endTime, isFirstRender, periodList, startTime, uuid, validateEndTime, validateStartTime]);
 
   return (
     <TableRow key={uuid}>
@@ -147,8 +141,8 @@ function PeriodTableRow(props: { row: Period }) {
           type="time"
           value={endTime}
           onChange={(e) => {
-            validateEndTime(e.target.value, periodList, startTime);
             setEndTime(e.target.value);
+            validateEndTime(e.target.value, uuid, periodList, startTime);
           }}
           error={endTimeError}
           helperText={endTimeErrorText}
@@ -173,9 +167,22 @@ export default function PeriodInput(props: {
     useGlobalPeriodListStore((state) => state.getHasErrors),
   ];
 
+  /** Check for errors regularly */
   useEffect(() => {
     props.handleErrors(getHasErrors());
   });
+
+  /** On uploaded file, make API request and receive JSON output or error */
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Must be a valid file
+    if (!event.target.files || event.target.files.length < 0) return;
+    else {
+      // Await JSON output data
+      const data = await UseUploadPeriods(event.target.files[0]);
+      // Add JSON output to period list
+      data?.map((period) => addPeriodList(period));
+    }
+  };
 
   return (
     <Box
@@ -197,6 +204,7 @@ export default function PeriodInput(props: {
           sx={{
             width: "20%",
           }}
+          onChange={handleUpload}
         />
       </Grid>
       <br />

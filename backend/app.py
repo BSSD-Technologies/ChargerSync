@@ -84,7 +84,7 @@ Error Codes:
 412 - File does not match expected template
 """
 @app.route('/import/periods',  methods=['POST'])
-def process_rooms_csv():
+def process_periods_csv():
     # Check if a file is present in the request
     if 'file' not in request.files:
         return jsonify({'error': 'No file uploaded'}), 400
