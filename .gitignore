@@ -2,3 +2,4 @@
 runDocker.bat
 .DS_Store
 backend/.DS_Store
+runBackendSH.bat
