@@ -55,6 +55,7 @@ class Section(db.Model):
     # one to one relationship w/ Period
     period = db.relationship('Period', uselist=False, backref='section', lazy=True)
 
+    # one to one relationship w/ Intructor
     instructor = db.relationship('Instructor', uselist=False, backref='section', lazy=True)
 
     def __repr__(self):

@@ -1,9 +1,16 @@
 /**
  * Room
- * @id - room code
- * @maxCapacity - maximum students that can fit in the room
+ * @uuid Unique ID for course object;
+ * @room_id Room ID with building code and room number;
+ * @max_capacity Maximum number of students allowed in the room;
  */
 export type Room = {
-  id: string;
-  maxCapacity: number;
+  uuid: string;
+  room_id: string;
+  max_capacity: number;
+};
+
+export const defaultRoom = {
+  room_id: "",
+  max_capacity: NaN,
 };
