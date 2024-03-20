@@ -1,25 +1,8 @@
 from flask import Flask
 from extensions import db
 from unitTestFramework import buildDatabase
-from app_db import Scheduler
+from Scheduler import Scheduler
 
-
-'''
-   def updateCourseEnrollment(self, course_id, room_id):
-        room = Room.query.filter_by(id=room_id).first()
-        room_occupancy = room.max_occupancy
-        for course in self.courses_and_enrollment:
-            if course[0] == course_id:
-                new_occupancy = course[1] - room_occupancy
-                if new_occupancy <= 0:
-                    fulfilled = 1
-                else:
-                    fulfilled = 0
-                updated_course = (course[0], new_occupancy, fulfilled)
-                index = self.courses_and_enrollment.index(course)
-                self.courses_and_enrollment[index] = updated_course
-                return
-'''
             
 def test_updateCourseEnrollment_fullfillment_occurs():
     app = Flask(__name__)
