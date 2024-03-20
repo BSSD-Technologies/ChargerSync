@@ -27,6 +27,7 @@ import {
   useValidateString,
 } from "@/app/_hooks/utilHooks";
 import { useGlobalInstructorListStore } from "@/app/_stores/store";
+import { UseUploadInstructors } from "@/app/_hooks/apiHooks";
 
 function InstructorTableRow(props: { row: Instructor }) {
   /** States for instructor row inputs */
@@ -194,10 +195,22 @@ export default function InstructorInput(props: {
     useGlobalInstructorListStore((state) => state.getHasErrors),
   ];
 
+  /** Check for errors regularly */
   useEffect(() => {
     props.handleErrors(getHasErrors());
   });
 
+  /** On uploaded file, make API request and receive JSON output or error */
+  const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Must be a valid file
+    if (!event.target.files || event.target.files.length < 0) return;
+    else {
+      // Await JSON output data
+      const data = await UseUploadInstructors(event.target.files[0]);
+      // Add JSON output to instructor list
+      data?.map((instructor) => addInstructorList(instructor));
+    }
+  };
   return (
     <Box
       sx={{
@@ -218,6 +231,7 @@ export default function InstructorInput(props: {
           sx={{
             width: "20%",
           }}
+          onChange={handleUpload}
         />
       </Grid>
       <br />
@@ -238,7 +252,7 @@ export default function InstructorInput(props: {
           </TableBody>
         </Table>
         <Box sx={{ paddingTop: "2%" }}>
-        <Button
+          <Button
             variant="outlined"
             color="info"
             fullWidth
