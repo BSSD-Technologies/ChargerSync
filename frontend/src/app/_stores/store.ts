@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import { Course } from "../_types/Course";
 import { Room } from "../_types/Room";
-import { Period } from "../_types/Period";
+import { Day, Period } from "../_types/Period";
 import { Instructor } from "../_types/Instructor";
+import { v4 as uuidv4 } from "uuid";
 
 /** COURSE STORE */
 interface GlobalCourseListState {
@@ -116,6 +117,8 @@ export const useGlobalRoomListStore = create<GlobalRoomListState>()(
 interface GlobalPeriodListState {
   /** Array of period blocks */
   periodList: Period[];
+  /** Array of FULL period blocks */
+  fullPeriodList: Period[];
   /** Update existing period */
   updatePeriodList: (period: Period) => void;
   /** Add a period to list */
@@ -126,11 +129,14 @@ interface GlobalPeriodListState {
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
   getHasErrors: () => boolean;
+  /** Populate FULL period list */
+  populateFullPeriodList: () => void;
 }
 
 export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
   (set, get) => ({
     periodList: [],
+    fullPeriodList: [],
     updatePeriodList: (period: Period) =>
       set((state) => ({
         periodList: state.periodList.map((p) =>
@@ -162,6 +168,19 @@ export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
       } else {
         return false;
       }
+    },
+    populateFullPeriodList: () => {
+      // Empty the fullPeriodList
+      set({ fullPeriodList: [] });
+
+      // Iterate through periodList, duplicate each period for TR days
+      const duplicatedPeriods: Period[] = [];
+      for (const period of get().periodList) {
+        duplicatedPeriods.push({...period, uuid: uuidv4(), day: Day["TR"]});
+      }
+
+      // Set fullPeriodList to the duplicated periods AND original
+      set({ fullPeriodList: [...get().periodList, ...duplicatedPeriods] });
     },
   })
 );

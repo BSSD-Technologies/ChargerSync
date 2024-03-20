@@ -201,7 +201,7 @@ export function useValidateTime(hasErrorDefault = false): UseValidateTime {
  * Convert 24-hr format time to 12-hr format
  * @returns
  */
-export function useConvertTime12(time: string): string {
+export function convertTime12(time: string): string {
   // Split time into hours and minutes
   const [hours, minutes] = time.split(":").map(Number);
 
@@ -222,7 +222,7 @@ export function useConvertTime12(time: string): string {
  * Convert 12-hr format time to 24-hr format
  * @returns
  */
-export function useConvertTime24(time: string): string {
+export function convertTime24(time: string): string {
   // Split time value from AM/PM
   const [timeStr, period] = time.split(" ");
   // Split time into hours and minutes
@@ -303,8 +303,8 @@ type RawPeriodData = {
 export function readPeriods(rawData: RawPeriodData[]) {
   return rawData.map((period) => ({
     uuid: uuidv4(),
-    start_time: useConvertTime24(period.start_time.toString()),
-    end_time: useConvertTime24(period.end_time.toString()),
+    start_time: convertTime24(period.start_time.toString()),
+    end_time: convertTime24(period.end_time.toString()),
     day: Day["MW"],
   }));
 }
