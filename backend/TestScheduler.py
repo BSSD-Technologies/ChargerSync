@@ -88,6 +88,18 @@ def test_updateRoomAvailability_nominal_case():
         test.updateRoomAvailability(1,1)
         assert(test.room_availability[0] == (1,[2,3]))
 
+def test_updateRoomAvailability_off_nominal_case():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+    db.init_app(app)
+    with app.app_context():   
+        buildDatabase(db)   
+        test = Scheduler()
+        test.room_availability = [(1,[1,2,3]),(2,[2,3,4]),(3,[3,4,5])]
+        test.updateRoomAvailability(1,4)
+        assert(test.room_availability[0] == (1,[1,2,3]))
+
+
 
 '''
   # Input: self, course_id(int), instructor_id(int)
@@ -112,7 +124,7 @@ def test_updateCoursePreferences_preference_fulfilled():
         buildDatabase(db)
         test = Scheduler()
         test.updateCoursePreferences(1,1)
-        assert(test.course_preferences[0] == (1,[]))
+        assert(test.course_preferences[0] == (1,[2]))
 
 def test_updateCoursePreferences_preference_unfulfilled():
     app = Flask(__name__)
@@ -121,8 +133,8 @@ def test_updateCoursePreferences_preference_unfulfilled():
     with app.app_context():   
         buildDatabase(db)
         test = Scheduler()
-        test.updateCoursePreferences(3,1)
-        assert(test.course_preferences[0] == (1,[1]))
+        test.updateCoursePreferences(1,3)
+        assert(test.course_preferences[0] == (1,[1,2]))
 
 def test_findRoomAvailability_room_findable():
     app = Flask(__name__)
@@ -142,14 +154,22 @@ def test_findRoomAvailability_not_findable():
         test = Scheduler()
         assert(test.findRoomAvailability(999) == None)
 
+def test_findInstructorAvailability_instructor_findable():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+    db.init_app(app)
+    with app.app_context():   
+        buildDatabase(db)   
+        test = Scheduler()
+        assert(test.findInstructorAvailability(1) == [1,2,3,4,5,6,7,8,9,10])
 
-'''
-# Input: self, instructor_id(int)
-    # Output: array or None
-    def findInstructorAvailability(self, instructor_id):
-        for instructor in self.instructor_availability:
-            if instructor[0] == instructor_id:
-                return instructor[1]    # return array of periods instructor is available
-        return None
-'''
+def test_findInstructorAvailability_not_findable():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+    db.init_app(app)
+    with app.app_context():   
+        buildDatabase(db)   
+        test = Scheduler()
+        assert(test.findInstructorAvailability(999) == None)
+
 

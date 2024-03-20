@@ -206,7 +206,7 @@ class Scheduler:
         for course in self.courses_and_enrollment:
             fulfilled = course[2]
             if fulfilled == 0:
-                return None
+                return False
         return True
     
     # Input: self
