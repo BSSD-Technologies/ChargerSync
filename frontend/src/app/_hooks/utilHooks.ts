@@ -308,3 +308,20 @@ export function readPeriods(rawData: RawPeriodData[]) {
     day: Day["MW"],
   }));
 }
+
+/** Type for raw imported instructor data */
+type RawInstructorData = {
+  first_name: string;
+  last_name: string;
+  priority: number;
+};
+
+/** Parse raw imported instructor data into Instructor object array */
+export function readInstructors(rawData: RawInstructorData[]) {
+  return rawData.map((instructor) => ({
+    uuid: uuidv4(),
+    fname: instructor.first_name.toString(),
+    lname: instructor.last_name.toString(),
+    priority: instructor.priority,
+  }));
+}
