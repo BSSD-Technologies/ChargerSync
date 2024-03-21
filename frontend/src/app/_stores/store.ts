@@ -4,6 +4,7 @@ import { Room } from "../_types/Room";
 import { Day, Period } from "../_types/Period";
 import { Instructor } from "../_types/Instructor";
 import { v4 as uuidv4 } from "uuid";
+import { CoursePreference } from "../_types/CoursePreference";
 
 /** COURSE STORE */
 interface GlobalCourseListState {
@@ -219,7 +220,7 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
     deleteInstructorList: (id: string) =>
       set((state) => ({
         instructorList: [
-          // Filter out period with matching id
+          // Filter out instructor with matching id
           ...state.instructorList.filter((instructor) => instructor.uuid !== id),
         ],
       })),
@@ -227,6 +228,51 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
     getHasErrors: () => {
       // If array (table) is empty, error
       if (get().instructorList.length == 0) {
+        return true;
+      }
+      // If errors exist in stack
+      else if (get().hasErrors.length > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  })
+);
+
+/** COURSE PREFERENCE STORE */
+interface GlobalCoursePreferenceListState {
+  /** Array of course preferences */
+  coursePrefList: CoursePreference[];
+  /** Add a course preference to list */
+  addCoursePrefList: (coursePref: CoursePreference) => void;
+  /** Delete a course preference by id */
+  deleteCoursePrefList: (id: string) => void;
+  /** Boolean stack of whether or not there are errors in the course preference list */
+  hasErrors: boolean[];
+  /** Custom getter for hasErrors */
+  getHasErrors: () => boolean;
+}
+
+export const useGlobalCoursePreferenceListStore = create<GlobalCoursePreferenceListState>()(
+  (set, get) => ({
+    coursePrefList: [],
+    addCoursePrefList: (coursePref: CoursePreference) => {
+      set((state) => ({
+        coursePrefList: [...state.coursePrefList, coursePref],
+      }));
+    },
+    deleteCoursePrefList: (id: string) =>
+      set((state) => ({
+        coursePrefList: [
+          // Filter out course preference with matching id
+          ...state.coursePrefList.filter((coursePref) => coursePref.uuid !== id),
+        ],
+      })),
+    hasErrors: [],
+    getHasErrors: () => {
+      // If array (table) is empty, error
+      if (get().coursePrefList.length == 0) {
         return true;
       }
       // If errors exist in stack

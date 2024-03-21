@@ -3,9 +3,11 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  Checkbox,
   Chip,
   FilledInput,
   FormControl,
+  FormControlLabel,
   Grid,
   InputLabel,
   MenuItem,
@@ -18,22 +20,51 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useEffect, useState } from "react";
-import { useGlobalCourseListStore, useGlobalInstructorListStore, useGlobalPeriodListStore } from "@/app/_stores/store";
+import {
+  useGlobalCourseListStore,
+  useGlobalCoursePreferenceListStore,
+  useGlobalInstructorListStore,
+  useGlobalPeriodListStore,
+} from "@/app/_stores/store";
 import { convertTime12, useFirstRender } from "@/app/_hooks/utilHooks";
-
+import { CheckBox } from "@mui/icons-material";
 
 function CoursePreferenceSelect() {
   const [selectList, setSelectList] = useState<string[]>([]);
 
   /** Course list */
-  const [courseList] = [
-    useGlobalCourseListStore((state) => state.courseList),
+  const [courseList] = [useGlobalCourseListStore((state) => state.courseList)];
+
+  /** Course Preference list */
+  const [addCoursePrefList, deleteCoursePrefList] = [
+    useGlobalCoursePreferenceListStore((state) => state.addCoursePrefList),
+    useGlobalCoursePreferenceListStore((state) => state.deleteCoursePrefList),
   ];
 
   const handleChange = (event: SelectChangeEvent<typeof selectList>) => {
     const {
       target: { value },
     } = event;
+
+    // Determine if a selection was made
+    const selectionMade =
+      typeof value === "string"
+        ? value.split(",").length > selectList.length
+        : value.length > selectList.length;
+
+    // If a selection was made, print the value of the selected MenuItem
+    if (selectionMade) {
+      // Get the last selected value
+      const selectedCourse = courseList.find(
+        (course) => course.uuid === value[value.length - 1]
+      );
+      console.log(selectedCourse);
+      if (selectedCourse) {
+        console.log("Selected Course:", selectedCourse);
+      }
+    }
+
+    // Update selectList state
     setSelectList(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
@@ -66,7 +97,10 @@ function CoursePreferenceSelect() {
         )}
       >
         {courseList.map((course) => (
-          <MenuItem key={course.uuid} value={`${course.department} ${course.course_num}`}>
+          <MenuItem
+            key={course.uuid}
+            value={`${course.department} ${course.course_num}`}
+          >
             {`${course.department} ${course.course_num}`}
           </MenuItem>
         ))}
@@ -97,7 +131,7 @@ function PeriodPreferenceSelect() {
 
   useEffect(() => {
     populateFullPeriodList();
-  }, [isFirstRender, populateFullPeriodList])
+  }, [isFirstRender, populateFullPeriodList]);
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -125,8 +159,15 @@ function PeriodPreferenceSelect() {
         )}
       >
         {fullPeriodList.map((period) => (
-          <MenuItem key={period.uuid} value={`${period.day} ${convertTime12(period.start_time)} - ${convertTime12(period.end_time)}`}>
-            {`${period.day} ${convertTime12(period.start_time)} - ${convertTime12(period.end_time)}`}
+          <MenuItem
+            key={period.uuid}
+            value={`${period.day} ${convertTime12(
+              period.start_time
+            )} - ${convertTime12(period.end_time)}`}
+          >
+            {`${period.day} ${convertTime12(
+              period.start_time
+            )} - ${convertTime12(period.end_time)}`}
           </MenuItem>
         ))}
       </Select>
@@ -139,7 +180,7 @@ function InstructorListAccordion() {
   const [instructorList] = [
     useGlobalInstructorListStore((state) => state.instructorList),
   ];
-  
+
   return (
     <div>
       {instructorList.map((instructor) => (
