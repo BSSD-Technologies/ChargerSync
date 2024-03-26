@@ -1,5 +1,5 @@
 Department,Course Number,Max Enrollment,Preliminary Enrollment
-CS,121,20,80
-FMA,320,25,100
-PHL,420,30,120
-MSC,288,15,50
+CS,121,100,20
+FMA,320,100,25
+PHL,420,120,98
+MSC,288,50,50
