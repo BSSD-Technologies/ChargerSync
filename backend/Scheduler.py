@@ -116,11 +116,9 @@ class Scheduler:
     # Input: self, course_id(int), room_id(int)
     # Output: n/a - updates values in self
     def updateCourseEnrollment(self, course_id, room_id):
-        print("Are you really showing me everything?")
         room = Room.query.filter_by(id=room_id).first()
         room_occupancy = room.max_occupancy
         for course in self.courses_and_enrollment:
-            print(course)
             if course[0] == course_id:
                 new_occupancy = course[1] - room_occupancy
                 if new_occupancy <= 0:
