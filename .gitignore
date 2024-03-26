@@ -1,5 +1,8 @@
 .vscode/settings.json
 runDocker.bat
 .DS_Store
+runBackendSH.bat
+backend/__pycache__
+backend/models/__pycache__
 backend/.DS_Store
 runBackendSH.bat

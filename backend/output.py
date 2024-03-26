@@ -39,7 +39,7 @@ def getLastPart(name):
 
 
 def formatForOutput(scheduler):
-    for section in scheduler.sections:
+    for section in scheduler.schedule:
         
         try:   
             a = section.period.start_time
