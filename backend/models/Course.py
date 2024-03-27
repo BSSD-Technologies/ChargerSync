@@ -101,11 +101,7 @@ class Section(db.Model):
             print("Period: Not assigned")
         print(f"Section Number: {self.section_no}")
     
-    def getCoursePreferences(self):
-        return self.instructor.course_preferences
-    
-    def getPeriodPreferences(self):
-        return self.instructor.period_preferences
+
 
     
     

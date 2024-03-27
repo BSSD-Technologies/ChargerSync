@@ -89,6 +89,7 @@ class Scheduler:
     # Output: n/a - changes values in self
     def getInstructorsWithNoPref(self, course_id):
         # Just an array of instructors with no preferences - sorted by priority
+        self.instructors_with_no_preferences = []
         instructors = Instructor.query.order_by(Instructor.priority).all()
         for instructor in instructors:
             if self.hasCoursePreferences(instructor.id, course_id) == False:
@@ -113,14 +114,28 @@ class Scheduler:
 
     # Update Functions -----
 
-    # Input: self, course_id(int), room_id(int)
+    # Input: self, course_id(int), room
     # Output: n/a - updates values in self
-    def updateCourseEnrollment(self, course_id, room_id):
-        room = Room.query.filter_by(id=room_id).first()
+    def updateCourseEnrollmentGivenRoom(self, course_id, room):
         room_occupancy = room.max_occupancy
         for course in self.courses_and_enrollment:
             if course[0] == course_id:
                 new_occupancy = course[1] - room_occupancy
+                if new_occupancy <= 0:
+                    fulfilled = 1
+                else:
+                    fulfilled = 0
+                updated_course = (course[0], new_occupancy, fulfilled)
+                index = self.courses_and_enrollment.index(course)
+                self.courses_and_enrollment[index] = updated_course
+                return
+            
+    # Input: self, course_id(int)
+    # Output: n/a - updates values in self
+    def updateCourseEnrollment(self, course_id):
+        for course in self.courses_and_enrollment:
+            if course[0] == course_id:
+                new_occupancy = course[1] - 50
                 if new_occupancy <= 0:
                     fulfilled = 1
                 else:
@@ -296,7 +311,7 @@ class Scheduler:
             assigned_instructor = section.instructor_id
 
             # Check if Instructor has any time preferences - Create order periods array based on period preferences
-            period_preferences = section.getPeriodPreferences()
+            period_preferences = section.instructor.period_preferences
             sorted_instructor_availability = self.createSortedAvailability(period_preferences, assigned_instructor)
             
             # Assigning section to period and section to a room
@@ -354,8 +369,11 @@ class Scheduler:
                 section.setRoomByID(available_rooms[0])
 
                 # Update enrollment numbers
-                self.updateCourseEnrollment(section.course_id, available_rooms[0])
+                self.updateCourseEnrollmentGivenRoom(section.course_id, section.room)
                 self.updateRoomAvailability(period, available_rooms[0])
+                break
+            else:
+                self.updateCourseEnrollment(section.course_id)
                 break
 
     # Input: self

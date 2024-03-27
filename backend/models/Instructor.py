@@ -37,11 +37,6 @@ class Instructor(db.Model):
         db.session.add(new_preference)
         db.session.commit()
     
-    def getPeriodPreferences(self):
-        arr_pref = []
-        for preference in self.period_preferences:
-            arr_pref.append(preference)
-        return arr_pref
     
 
     
