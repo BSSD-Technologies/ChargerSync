@@ -21,8 +21,8 @@ def test_updateCourseEnrollment_fullfillment_occurs():
 
         buildDatabase(db)        
         test = Scheduler()
-        test.updateCourseEnrollment(2,1)
-        assert (test.courses_and_enrollment[1] == (2, 0, 1))
+        test.updateCourseEnrollment(3)
+        assert (test.courses_and_enrollment[2] == (3, -30, 1))
 
 def test_updateCourseEnrollmentfulfillment_does_not_occur():
     app = Flask(__name__)
@@ -32,8 +32,8 @@ def test_updateCourseEnrollmentfulfillment_does_not_occur():
         buildDatabase(db) 
 
         test = Scheduler()
-        test.updateCourseEnrollment(4,4)
-        assert(test.courses_and_enrollment[3] == (4, 80, 0))
+        test.updateCourseEnrollment(2)
+        assert(test.courses_and_enrollment[1] == (2, 50, 0))
 
 def test_updateInstructorAvailability_updating_claimed_slot():
     #Initializing Database
@@ -116,15 +116,6 @@ def test_updateRoomAvailability_off_nominal_case():
     # Course ID, [Instructor IDs]
     course_preferences = []
 '''
-def test_updateCoursePreferences_preference_fulfilled():
-    app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-    db.init_app(app)
-    with app.app_context():   
-        buildDatabase(db)
-        test = Scheduler()
-        test.updateCoursePreferences(1,1)
-        assert(test.course_preferences[0] == (1,[2]))
 
 def test_updateCoursePreferences_preference_unfulfilled():
     app = Flask(__name__)
@@ -134,7 +125,17 @@ def test_updateCoursePreferences_preference_unfulfilled():
         buildDatabase(db)
         test = Scheduler()
         test.updateCoursePreferences(1,3)
-        assert(test.course_preferences[0] == (1,[1,2]))
+        assert(test.course_preferences[0] == (1,[1]))
+
+def test_updateCoursePreferences_preference_fulfilled():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+    db.init_app(app)
+    with app.app_context():   
+        buildDatabase(db)
+        test = Scheduler()
+        test.updateCoursePreferences(1,1)
+        assert(test.course_preferences[0] == (1,[2]))
 
 def test_findRoomAvailability_room_findable():
     app = Flask(__name__)
