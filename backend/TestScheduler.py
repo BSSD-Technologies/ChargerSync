@@ -45,7 +45,7 @@ def test_updateInstructorAvailability_updating_claimed_slot():
 
         buildDatabase(db)        
         test = Scheduler() 
-        test.instructor_availability = [(1,[1,2,3])]
+        test.instructor_availability = [(1, 3, [1,2,3])]
         test.updateInstructorAvailability(1, 1)
         assert (1,1) not in test.instructor_availability
 
@@ -57,7 +57,7 @@ def test_updateInstructorAvailability__updating_unclaimabile_slot():
         buildDatabase(db)     
         # Initialize your class here
         test = Scheduler() # The class that contains the method to be tested
-        test.instructor_availability = [(1,[1,2,3])]
+        test.instructor_availability = [(1, 3, [1,2,3])]
         # Test when the period does not exist for the instructor
         test.updateInstructorAvailability(2, 4)
         # Check if the period was not in the availability array to begin with
@@ -71,7 +71,7 @@ def test_updateInstructorAvailability_instructor_does_not_exist():
         buildDatabase(db)   
         # Initialize your class here
         test = Scheduler() # The class that contains the method to be tested
-        test.instructor_availability = [(1,[1,2,3]),(2,[1,2,3]),(3,[1,2,3])]
+        test.instructor_availability = [(1, 3, [1,2,3]),(2, 3, [1,2,3]),(3, 3, [1,2,3])]
         # Test when the instructor does not exist
         test.updateInstructorAvailability(4, 2)
         # Check if the instructor was not in the availability list to begin with
