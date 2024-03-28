@@ -6,7 +6,7 @@ from models.Period import Period
 class Scheduler:
     # ----- Tuple Arrays ------
 
-    # Courses, Enrollment, Fulfillment
+    # Course ID, Enrollment, Fulfillment
     courses_and_enrollment = []
 
     # Period ID, [Room IDs]
@@ -189,10 +189,10 @@ class Scheduler:
             
     # Input: self, period_id(int)
     # Output: array or None
-    def findRoomAvailability(self, room_id):
-        for room in self.room_availability:
-            if room[0] == room_id:
-                return room[1]  # Return array of rooms available during period
+    def findRoomAvailability(self, period_id):
+        for period in self.room_availability:
+            if period[0] == period_id:
+                return period[1]  # Return array of rooms available during period
         return None
 
     # Input: self, instructor_id(int)
@@ -249,21 +249,22 @@ class Scheduler:
     
     # Input: self, period_preferences (course preference ORM array), instructor_id (int)
     # Output: instructor's sorted availability - prefered times first (int array)
-    def createSortedAvailability(self, period_preferences, instructor_id):
+    def createSortedAvailability(self, period_preferences=None, instructor_id=None):
     # order check_periods_room based on whether instructor has preference or not
         order_periods = []
-        instructor_availablity = self.findInstructorAvailability(instructor_id)
-        if period_preferences:
-            for period_pref in period_preferences:
-                if period_pref in instructor_availablity:
-                    order_periods.append(period_pref.period_id)
-            for period in self.room_availability:
-                if ((period[0] not in order_periods) and (period[0] in instructor_availablity)):
-                    order_periods.append(period[0])
+        if instructor_id:
+            instructor_availablity = self.findInstructorAvailability(instructor_id)
+            if period_preferences:
+                for period_pref in period_preferences:
+                    if period_pref in instructor_availablity:
+                        order_periods.append(period_pref.period_id)
+                for period in self.room_availability:
+                    if ((period[0] not in order_periods) and (period[0] in instructor_availablity)):
+                        order_periods.append(period[0])
         else:
             # Instructor has no preference - this could be used to change the order of which periods are checked first/last
             for period in self.room_availability:
-                if ((period[0] not in order_periods) and (period[0] in instructor_availablity)):
+                if (period[0] not in order_periods):
                     order_periods.append(period[0])
         return order_periods
     
@@ -311,16 +312,17 @@ class Scheduler:
             assigned_instructor = section.instructor_id
 
             # Check if Instructor has any time preferences - Create order periods array based on period preferences
-            period_preferences = section.instructor.period_preferences
-            sorted_instructor_availability = self.createSortedAvailability(period_preferences, assigned_instructor)
+            if assigned_instructor:
+                period_preferences = section.instructor.period_preferences
+                sorted_availability = self.createSortedAvailability(period_preferences, assigned_instructor)
+            else:
+                sorted_availability = self.createSortedAvailability()
             
-            # Assigning section to period and section to a room
-            if sorted_instructor_availability:
-                # Instructor has free time - assign section to a period that is available to the instructor
-                self.assignPeriod(section, sorted_instructor_availability[0])
-    
-                # Assigning room
-                self.assignRoomDuringInstructorAvailability(section, sorted_instructor_availability)
+            # Instructor has free time - assign section to a period that is available to the instructor
+            self.assignPeriod(section, sorted_availability)
+
+            # Assigning room
+            self.assignRoomDuringInstructorAvailability(section, sorted_availability)
                     
             # Some printing for testing
             section.printInfo()
@@ -340,8 +342,12 @@ class Scheduler:
         if not instructors:
             # There are no professors with a preference for this course
             # Assign section to instructor from instructors who have no preferance or have already met their preference
-            available_instructor = self.getNextAvailableInstructor()
-            section.setInstructorByID(available_instructor)
+            if self.instructors_with_no_preferences:
+                available_instructor = self.getNextAvailableInstructor()
+                section.setInstructorByID(available_instructor)
+            else:
+                # NO instructors are available
+                pass
 
         else:
             # There exists professor(s) with a preference for this course
@@ -352,29 +358,35 @@ class Scheduler:
             # Update preferences
             self.updateCoursePreferences(section.course_id, selected_instructor)
 
-    # Input: self, section, period_id
+    # Input: self, section, array of "potential periods - with instructor preference first and instructor availability in account"
     # Output: n/a - alters section's row in DB
-    def assignPeriod(self, section, period_id):
-        section.setPeriodByID(period_id)  
-        self.updateInstructorAvailability(period_id, section.instructor_id)
+    def assignPeriod(self, section, potential_periods):
+        period_id = potential_periods[0]
+        if section.instructor_id:
+            period_id = potential_periods[0]
+            section.setPeriodByID(period_id)  
+            self.updateInstructorAvailability(period_id, section.instructor_id)
+        else:
+            for period in self.room_availability:
+                if (period[0] in potential_periods) and (period[1]):
+                    section.setPeriodByID(period[0])
+                    break
+                    
 
     # Input: self, section, sorted instructor availability array
     # Output: n/a - alters section's row in DB
-    def assignRoomDuringInstructorAvailability(self, section, sorted_instructor_availability):
-        for period in sorted_instructor_availability:
-            # get available rooms for period
-            available_rooms = self.findRoomAvailability(period)
-            if available_rooms:
-                # set room to a room that is available during that period
-                section.setRoomByID(available_rooms[0])
+    def assignRoomDuringInstructorAvailability(self, section, sorted_availability):
+        # get available rooms for period
+        available_rooms = self.findRoomAvailability(section.period_id)
+        if available_rooms:
+            # set room to a room that is available during that period
+            section.setRoomByID(available_rooms[0])
 
-                # Update enrollment numbers
-                self.updateCourseEnrollmentGivenRoom(section.course_id, section.room)
-                self.updateRoomAvailability(period, available_rooms[0])
-                break
-            else:
-                self.updateCourseEnrollment(section.course_id)
-                break
+            # Update enrollment numbers
+            self.updateCourseEnrollmentGivenRoom(section.course_id, section.room)
+            self.updateRoomAvailability(section.period_id, available_rooms[0])
+        else:
+            self.updateCourseEnrollment(section.course_id)
 
     # Input: self
     # Output: n/a - puts all sections in one array

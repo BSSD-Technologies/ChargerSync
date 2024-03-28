@@ -59,7 +59,12 @@ def formatForOutput(scheduler):
         try:   
             d = section.period.end_time
         except:
-            d = "No Period Assigned"   
+            d = "No Period Assigned" 
+
+        try:
+            instructor_assignment = section.instructor
+        except:
+            instructor_assignment = "No Instructor Assigned"
 
         # Create an empty dictionary to hold the course information
         course_info = {}
@@ -70,8 +75,8 @@ def formatForOutput(scheduler):
 
         # Fill in instructor information
         course_info["instructor"] = {
-            "fname": section.instructor.fname,
-            "name": section.instructor.lname
+            "fname": instructor_assignment,
+            "lname": instructor_assignment
         }
 
         # Fill in course information

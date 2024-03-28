@@ -8,8 +8,8 @@ class Instructor(db.Model):
     __tablename__ = 'instructor'
 
     id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
-    fname = db.Column(db.String(256), nullable=False)
-    lname = db.Column(db.String(256), nullable=False)
+    fname = db.Column(db.String(256), default=None)
+    lname = db.Column(db.String(256), nullable=None)
     priority = db.Column(db.Integer, default=None)
     
     # one to many relationship with sections
