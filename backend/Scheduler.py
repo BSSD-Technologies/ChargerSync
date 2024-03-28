@@ -15,7 +15,7 @@ class Scheduler:
     # Room ID, Max Occupancy
     room_occupancy = []
 
-    # Instructor ID, [Period IDs]
+    # Instructor ID, section count, [Period IDs]
     instructor_availability = []
     
     # Course ID, [Instructor IDs]
@@ -82,8 +82,16 @@ class Scheduler:
         for instructor in instructors:
             pull_insturctor = instructor.id
             period_ids = [period.id for period in periods]
-            tuple_item = (pull_insturctor, period_ids)
+            tuple_item = (pull_insturctor, 3, period_ids)
             self.instructor_availability.append(tuple_item)
+
+    # Input: self, instructor id
+    # Output: n/a - changes values in self
+    def getInstructorSectionCount(self, instructor_id):
+        for instructor in self.instructor_availability:
+            if instructor[0] == instructor_id:
+                return instructor[1]
+        return None
 
     # Input: self
     # Output: n/a - changes values in self
@@ -92,8 +100,12 @@ class Scheduler:
         self.instructors_with_no_preferences = []
         instructors = Instructor.query.order_by(Instructor.priority).all()
         for instructor in instructors:
-            if self.hasCoursePreferences(instructor.id, course_id) == False:
+            instructor_section_count = self.getInstructorSectionCount(instructor.id)
+            if (self.hasCoursePreferences(instructor.id, course_id) == False) and (instructor_section_count != 0):
                 self.instructors_with_no_preferences.append(instructor.id)
+        if self.instructors_with_no_preferences_pos > len(self.instructors_with_no_preferences):
+            self.instructors_with_no_preferences_pos = 0
+
 
     # Input: self
     # Output: n/a - changes values in self
@@ -151,10 +163,17 @@ class Scheduler:
     def updateInstructorAvailability(self, period_id, instructor_id):
         for instructor in self.instructor_availability:
             if instructor[0] == instructor_id:
-                availability_array = instructor[1]
+                availability_array = instructor[2]
                 if period_id in availability_array:
-                    instructor_index = availability_array.index(period_id)
-                    del availability_array[instructor_index]
+                    # the instructor tuple idexed
+                    index = self.instructor_availability.index(instructor)
+                    
+                    # the period in the availability array indexed
+                    period_index = availability_array.index(period_id)
+                    del availability_array[period_index]
+                    
+                    updated_instructor_tuple = (instructor[0], instructor[1] - 1, instructor[2])
+                    self.instructor_availability[index] = updated_instructor_tuple
                 return  # No need to continue after updating
         # Period ID not found, or room_id not found in the availability array
         print("Period ID or Instructor ID not found.")    
@@ -200,7 +219,7 @@ class Scheduler:
     def findInstructorAvailability(self, instructor_id):
         for instructor in self.instructor_availability:
             if instructor[0] == instructor_id:
-                return instructor[1]    # return array of periods instructor is available
+                return instructor[2]    # return array of periods instructor is available
         return None
         
     # OTHER
@@ -235,8 +254,9 @@ class Scheduler:
     # Input: self
     # Output: instructor id (int)
     def getNextAvailableInstructor(self):
-        available_instructor = self.instructors_with_no_preferences[self.instructors_with_no_preferences_pos]
         self.instructors_with_no_preferences_pos = (self.instructors_with_no_preferences_pos + 1) % len(self.instructors_with_no_preferences)
+        available_instructor = self.instructors_with_no_preferences[self.instructors_with_no_preferences_pos]
+        
         return available_instructor
     
     # Input: self
@@ -261,8 +281,11 @@ class Scheduler:
                 for period in self.room_availability:
                     if ((period[0] not in order_periods) and (period[0] in instructor_availablity)):
                         order_periods.append(period[0])
+            else:
+                for period in self.room_availability:
+                    if (period[0] not in order_periods and (period[0] in instructor_availablity)):
+                        order_periods.append(period[0])
         else:
-            # Instructor has no preference - this could be used to change the order of which periods are checked first/last
             for period in self.room_availability:
                 if (period[0] not in order_periods):
                     order_periods.append(period[0])
@@ -322,7 +345,7 @@ class Scheduler:
             self.assignPeriod(section, sorted_availability)
 
             # Assigning room
-            self.assignRoomDuringInstructorAvailability(section, sorted_availability)
+            self.assignRoom(section)
                     
             # Some printing for testing
             section.printInfo()
@@ -375,7 +398,7 @@ class Scheduler:
 
     # Input: self, section, sorted instructor availability array
     # Output: n/a - alters section's row in DB
-    def assignRoomDuringInstructorAvailability(self, section, sorted_availability):
+    def assignRoom(self, section):
         # get available rooms for period
         available_rooms = self.findRoomAvailability(section.period_id)
         if available_rooms:

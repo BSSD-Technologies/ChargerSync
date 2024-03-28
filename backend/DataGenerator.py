@@ -27,12 +27,12 @@ tr_times = [
 
 instructor_list = [
     # First name, Last name, priorty
-    #('Beth', 'Allen', 5),
-    #('Dan', 'Schrimpcher', 3),
-    #('Robert', 'Preston', 2),
-    #('John', 'Doe', 1),
-    #('Super', 'Man', 6),
-    #('Danny', 'Hardin', 7),
+    ('Beth', 'Allen', 5),
+    ('Dan', 'Schrimpcher', 3),
+    ('Robert', 'Preston', 2),
+    ('John', 'Doe', 1),
+    ('Super', 'Man', 6),
+    ('Danny', 'Hardin', 7),
     #('Jake', 'Doe', 8),
     #('Bat', 'Man', 9),
     #('Elizabeth', 'Hardin', 10),
