@@ -6,7 +6,7 @@ from Scheduler import Scheduler
 from output import formatForOutput
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/schedule.db'
 db.init_app(app)
 
 # need to perform database operations within app_context
