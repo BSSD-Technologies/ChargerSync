@@ -35,9 +35,9 @@ with app.app_context():
         section.printInfo()
         print('\n')
 
-    #print("TEST OF JSON OUTPUT BELOW")
+    print("TEST OF JSON OUTPUT BELOW")
 
-    #formatForOutput(scheduler)
+    formatForOutput(schedule)
 
     #print(Course.query.all())
     #print(Instructor.query.all())

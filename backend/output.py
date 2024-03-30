@@ -38,8 +38,8 @@ def getLastPart(name):
     return names[1]
 
 
-def formatForOutput(scheduler):
-    for section in scheduler.schedule:
+def formatForOutput(schedule):
+    for section in schedule.schedule:
         
         try:   
             a = section.period.start_time
