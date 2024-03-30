@@ -23,6 +23,7 @@ import {
   useGlobalCourseListStore,
   useGlobalInstructorListStore,
   useGlobalPeriodListStore,
+  useGlobalPreferenceListStore,
 } from "@/app/_stores/store";
 import { convertTime12, useFirstRender } from "@/app/_hooks/utilHooks";
 import { CoursePreference } from "@/app/_types/CoursePreference";
@@ -34,6 +35,9 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
   /** Course list and course preference list */
   const [courseList] = [useGlobalCourseListStore((state) => state.courseList)];
   const [coursePrefList, setCoursePrefList] = useState<CoursePreference[]>([]);
+  const [populateCoursePrefList] = [
+    useGlobalPreferenceListStore((state) => state.setCoursePrefList),
+  ];
 
   /** Handle change visually of select list */
   const handleChange = (event: SelectChangeEvent<typeof selectList>) => {
@@ -72,6 +76,11 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
       ]);
     }
   };
+
+  /** Auto-populate zustand course preference list */
+  useEffect(() => {
+    populateCoursePrefList(coursePrefList);
+  }, [coursePrefList, populateCoursePrefList]);
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -119,6 +128,9 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
   /** Period list and period preference list */
   const [periodList] = [useGlobalPeriodListStore((state) => state.periodList)];
   const [periodPrefList, setPeriodPrefList] = useState<PeriodPreference[]>([]);
+  const [populatePeriodPrefList] = [
+    useGlobalPreferenceListStore((state) => state.setPeriodPrefList),
+  ];
 
   /** Period list */
   const [fullPeriodList, populateFullPeriodList] = [
@@ -165,6 +177,12 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
     }
   };
 
+  /** Auto-populate zustand period preference list */
+  useEffect(() => {
+    populatePeriodPrefList(periodPrefList);
+  }, [periodPrefList, populatePeriodPrefList]);
+
+  /** Populate full period list with all days */
   useEffect(() => {
     populateFullPeriodList();
   }, [isFirstRender, populateFullPeriodList]);

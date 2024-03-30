@@ -5,6 +5,7 @@ import { Day, Period } from "../_types/Period";
 import { Instructor } from "../_types/Instructor";
 import { v4 as uuidv4 } from "uuid";
 import { CoursePreference } from "../_types/CoursePreference";
+import { PeriodPreference } from "../_types/PeriodPreference";
 
 /** COURSE STORE */
 interface GlobalCourseListState {
@@ -247,56 +248,29 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
   })
 );
 
-/** COURSE PREFERENCE STORE */
-interface GlobalCoursePreferenceListState {
+/** PREFERENCE STORE */
+interface GlobalPreferenceListState {
   /** Array of course preferences */
   coursePrefList: CoursePreference[];
-  /** Return true/false if course preference already exists in coursePrefList */
-  isCoursePrefExists: (instructorId: string, courseId: string) => boolean;
-  /** Add a course preference to list based on uuid */
-  addCoursePrefList: (coursePref: CoursePreference) => void;
-  /** Delete a course preference by id */
-  deleteCoursePrefList: (id: string) => void;
-  /** Boolean stack of whether or not there are errors in the course preference list */
-  hasErrors: boolean[];
-  /** Custom getter for hasErrors */
-  getHasErrors: () => boolean;
+  /** Populate course preference list */
+  setCoursePrefList: (list: CoursePreference[]) => void;
+  /** Array of period preferences */
+  periodPrefList: PeriodPreference[];
+  /** Add a period preference to list based on uuid */
+  setPeriodPrefList: (list: PeriodPreference[]) => void;
 }
 
-export const useGlobalCoursePreferenceListStore =
-  create<GlobalCoursePreferenceListState>()((set, get) => ({
+export const useGlobalPreferenceListStore = create<GlobalPreferenceListState>()(
+  (set) => ({
     coursePrefList: [],
-    isCoursePrefExists: (instructorUuid: string, courseUuid: string) => {
-      return get().coursePrefList.some(
-        (pref) =>
-          pref.instructor_uuid === instructorUuid &&
-          pref.course_uuid === courseUuid
-      );
-    },
-    addCoursePrefList: (coursePref: CoursePreference) =>
+    setCoursePrefList: (list: CoursePreference[]) =>
       set((state) => ({
-        coursePrefList: [...state.coursePrefList, coursePref],
+        coursePrefList: list,
       })),
-    deleteCoursePrefList: (id: string) =>
+    periodPrefList: [],
+    setPeriodPrefList: (list: PeriodPreference[]) =>
       set((state) => ({
-        coursePrefList: [
-          // Filter out course preference with matching id
-          ...state.coursePrefList.filter(
-            (coursePref) => coursePref.uuid !== id
-          ),
-        ],
+        periodPrefList: list,
       })),
-    hasErrors: [],
-    getHasErrors: () => {
-      // If array (table) is empty, error
-      if (get().coursePrefList.length == 0) {
-        return true;
-      }
-      // If errors exist in stack
-      else if (get().hasErrors.length > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-  }));
+  })
+);
