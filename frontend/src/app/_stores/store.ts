@@ -20,6 +20,8 @@ interface GlobalCourseListState {
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
   getHasErrors: () => boolean;
+  /** Get a specific course object based on uuid */
+  getCourseById: (uuid: string) => Course | undefined;
 }
 
 export const useGlobalCourseListStore = create<GlobalCourseListState>()(
@@ -56,6 +58,9 @@ export const useGlobalCourseListStore = create<GlobalCourseListState>()(
       } else {
         return false;
       }
+    },
+    getCourseById: (uuid: string) => {
+      return get().courseList.find((course) => course.uuid === uuid);
     },
   })
 );
@@ -177,7 +182,7 @@ export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
       // Iterate through periodList, duplicate each period for TR days
       const duplicatedPeriods: Period[] = [];
       for (const period of get().periodList) {
-        duplicatedPeriods.push({...period, uuid: uuidv4(), day: Day["TR"]});
+        duplicatedPeriods.push({ ...period, uuid: uuidv4(), day: Day["TR"] });
       }
 
       // Set fullPeriodList to the duplicated periods AND original
@@ -221,7 +226,9 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
       set((state) => ({
         instructorList: [
           // Filter out instructor with matching id
-          ...state.instructorList.filter((instructor) => instructor.uuid !== id),
+          ...state.instructorList.filter(
+            (instructor) => instructor.uuid !== id
+          ),
         ],
       })),
     hasErrors: [],
@@ -244,7 +251,9 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
 interface GlobalCoursePreferenceListState {
   /** Array of course preferences */
   coursePrefList: CoursePreference[];
-  /** Add a course preference to list */
+  /** Return true/false if course preference already exists in coursePrefList */
+  isCoursePrefExists: (instructorId: string, courseId: string) => boolean;
+  /** Add a course preference to list based on uuid */
   addCoursePrefList: (coursePref: CoursePreference) => void;
   /** Delete a course preference by id */
   deleteCoursePrefList: (id: string) => void;
@@ -254,19 +263,27 @@ interface GlobalCoursePreferenceListState {
   getHasErrors: () => boolean;
 }
 
-export const useGlobalCoursePreferenceListStore = create<GlobalCoursePreferenceListState>()(
-  (set, get) => ({
+export const useGlobalCoursePreferenceListStore =
+  create<GlobalCoursePreferenceListState>()((set, get) => ({
     coursePrefList: [],
-    addCoursePrefList: (coursePref: CoursePreference) => {
+    isCoursePrefExists: (instructorUuid: string, courseUuid: string) => {
+      return get().coursePrefList.some(
+        (pref) =>
+          pref.instructor_uuid === instructorUuid &&
+          pref.course_uuid === courseUuid
+      );
+    },
+    addCoursePrefList: (coursePref: CoursePreference) =>
       set((state) => ({
         coursePrefList: [...state.coursePrefList, coursePref],
-      }));
-    },
+      })),
     deleteCoursePrefList: (id: string) =>
       set((state) => ({
         coursePrefList: [
           // Filter out course preference with matching id
-          ...state.coursePrefList.filter((coursePref) => coursePref.uuid !== id),
+          ...state.coursePrefList.filter(
+            (coursePref) => coursePref.uuid !== id
+          ),
         ],
       })),
     hasErrors: [],
@@ -282,5 +299,4 @@ export const useGlobalCoursePreferenceListStore = create<GlobalCoursePreferenceL
         return false;
       }
     },
-  })
-);
+  }));

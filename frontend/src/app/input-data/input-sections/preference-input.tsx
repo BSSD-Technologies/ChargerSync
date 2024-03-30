@@ -3,11 +3,9 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Checkbox,
   Chip,
   FilledInput,
   FormControl,
-  FormControlLabel,
   Grid,
   InputLabel,
   MenuItem,
@@ -20,6 +18,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 import {
   useGlobalCourseListStore,
   useGlobalCoursePreferenceListStore,
@@ -27,48 +26,46 @@ import {
   useGlobalPeriodListStore,
 } from "@/app/_stores/store";
 import { convertTime12, useFirstRender } from "@/app/_hooks/utilHooks";
-import { CheckBox } from "@mui/icons-material";
+import { CoursePreference } from "@/app/_types/CoursePreference";
 
-function CoursePreferenceSelect() {
+function CoursePreferenceSelect(props: { instructorId: string }) {
   const [selectList, setSelectList] = useState<string[]>([]);
 
-  /** Course list */
+  /** Course list and course preference list */
   const [courseList] = [useGlobalCourseListStore((state) => state.courseList)];
+  const [coursePrefList, setCoursePrefList] = useState<CoursePreference[]>([]);
 
-  /** Course Preference list */
-  const [addCoursePrefList, deleteCoursePrefList] = [
-    useGlobalCoursePreferenceListStore((state) => state.addCoursePrefList),
-    useGlobalCoursePreferenceListStore((state) => state.deleteCoursePrefList),
-  ];
-
+  /** Handle change visually of select list */
   const handleChange = (event: SelectChangeEvent<typeof selectList>) => {
     const {
       target: { value },
     } = event;
-
-    // Determine if a selection was made
-    const selectionMade =
-      typeof value === "string"
-        ? value.split(",").length > selectList.length
-        : value.length > selectList.length;
-
-    // If a selection was made, print the value of the selected MenuItem
-    if (selectionMade) {
-      // Get the last selected value
-      const selectedCourse = courseList.find(
-        (course) => course.uuid === value[value.length - 1]
-      );
-      console.log(selectedCourse);
-      if (selectedCourse) {
-        console.log("Selected Course:", selectedCourse);
-      }
-    }
 
     // Update selectList state
     setSelectList(
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+  };
+
+  /** Function to check if a course with the given uuid exists in coursePrefList */
+  const isCourseExists = (uuid: string): boolean => {
+    return coursePrefList.some((course) => course.course_uuid === uuid);
+  };
+
+  /** Handle change in course preference list */
+  const handleCoursePrefChange = (courseId: string) => {
+    if (isCourseExists(courseId)) {
+      setCoursePrefList([
+        ...coursePrefList.filter((course) => course.course_uuid !== courseId),
+      ]);
+    } else {
+      setCoursePrefList([...coursePrefList, {
+        uuid: uuidv4(),
+        instructor_uuid: props.instructorId,
+        course_uuid: courseId,
+      }]);
+    }
   };
 
   return (
@@ -100,6 +97,7 @@ function CoursePreferenceSelect() {
           <MenuItem
             key={course.uuid}
             value={`${course.department} ${course.course_num}`}
+            onClick={() => handleCoursePrefChange(course.uuid)}
           >
             {`${course.department} ${course.course_num}`}
           </MenuItem>
@@ -191,7 +189,7 @@ function InstructorListAccordion() {
           <AccordionDetails>
             <Grid container alignItems={"center"} justifyContent={"left"}>
               <Typography variant="subtitle1">Course preferences</Typography>
-              <CoursePreferenceSelect />
+              <CoursePreferenceSelect instructorId={instructor.uuid} />
               <PeriodPreferenceSelect />
             </Grid>
           </AccordionDetails>
