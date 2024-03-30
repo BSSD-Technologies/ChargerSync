@@ -21,12 +21,12 @@ import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   useGlobalCourseListStore,
-  useGlobalCoursePreferenceListStore,
   useGlobalInstructorListStore,
   useGlobalPeriodListStore,
 } from "@/app/_stores/store";
 import { convertTime12, useFirstRender } from "@/app/_hooks/utilHooks";
 import { CoursePreference } from "@/app/_types/CoursePreference";
+import { PeriodPreference } from "@/app/_types/PeriodPreference";
 
 function CoursePreferenceSelect(props: { instructorId: string }) {
   const [selectList, setSelectList] = useState<string[]>([]);
@@ -40,7 +40,6 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
     const {
       target: { value },
     } = event;
-
     // Update selectList state
     setSelectList(
       // On autofill we get a stringified value.
@@ -55,16 +54,22 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
 
   /** Handle change in course preference list */
   const handleCoursePrefChange = (courseId: string) => {
+    // Course exists, so we need to delete from preference list
     if (isCourseExists(courseId)) {
       setCoursePrefList([
         ...coursePrefList.filter((course) => course.course_uuid !== courseId),
       ]);
-    } else {
-      setCoursePrefList([...coursePrefList, {
-        uuid: uuidv4(),
-        instructor_uuid: props.instructorId,
-        course_uuid: courseId,
-      }]);
+    }
+    // Course DNE, so we need to add to preference list
+    else {
+      setCoursePrefList([
+        ...coursePrefList,
+        {
+          uuid: uuidv4(),
+          instructor_uuid: props.instructorId,
+          course_uuid: courseId,
+        },
+      ]);
     }
   };
 
@@ -107,9 +112,13 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
   );
 }
 
-function PeriodPreferenceSelect() {
+function PeriodPreferenceSelect(props: { instructorId: string }) {
   const [selectList, setSelectList] = useState<string[]>([]);
   const isFirstRender = useFirstRender();
+
+  /** Period list and period preference list */
+  const [periodList] = [useGlobalPeriodListStore((state) => state.periodList)];
+  const [periodPrefList, setPeriodPrefList] = useState<PeriodPreference[]>([]);
 
   /** Period list */
   const [fullPeriodList, populateFullPeriodList] = [
@@ -117,6 +126,7 @@ function PeriodPreferenceSelect() {
     useGlobalPeriodListStore((state) => state.populateFullPeriodList),
   ];
 
+  /** Handle change visually of select list */
   const handleChange = (event: SelectChangeEvent<typeof selectList>) => {
     const {
       target: { value },
@@ -125,6 +135,34 @@ function PeriodPreferenceSelect() {
       // On autofill we get a stringified value.
       typeof value === "string" ? value.split(",") : value
     );
+  };
+
+  /** Function to check if a course with the given uuid exists in coursePrefList */
+  const isPeriodExists = (uuid: string): boolean => {
+    return periodPrefList.some((period) => period.period_uuid === uuid);
+  };
+
+  /** Handle change in period preference list */
+  const handlePeriodPrefChange = (periodId: string) => {
+    // Period exists, so we need to delete from preference list
+    if (isPeriodExists(periodId)) {
+      console.log("delete period");
+      setPeriodPrefList([
+        ...periodPrefList.filter((period) => period.period_uuid !== periodId),
+      ]);
+    }
+    // Period DNE, so we need to add to preference list
+    else {
+      console.log("add period");
+      setPeriodPrefList([
+        ...periodPrefList,
+        {
+          uuid: uuidv4(),
+          instructor_uuid: props.instructorId,
+          period_uuid: periodId,
+        },
+      ]);
+    }
   };
 
   useEffect(() => {
@@ -162,6 +200,7 @@ function PeriodPreferenceSelect() {
             value={`${period.day} ${convertTime12(
               period.start_time
             )} - ${convertTime12(period.end_time)}`}
+            onClick={() => handlePeriodPrefChange(period.uuid)}
           >
             {`${period.day} ${convertTime12(
               period.start_time
@@ -190,7 +229,7 @@ function InstructorListAccordion() {
             <Grid container alignItems={"center"} justifyContent={"left"}>
               <Typography variant="subtitle1">Course preferences</Typography>
               <CoursePreferenceSelect instructorId={instructor.uuid} />
-              <PeriodPreferenceSelect />
+              <PeriodPreferenceSelect instructorId={instructor.uuid} />
             </Grid>
           </AccordionDetails>
         </Accordion>
