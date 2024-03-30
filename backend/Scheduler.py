@@ -30,13 +30,18 @@ class Scheduler:
     section_counter = 0
     instructors_with_no_preferences_pos = 0
 
-    def __init__(self, courses):
+    def __init__(self, input_courses=[]):
         # Setting up attributes
-        self.getCoursesAndEnrollment(courses)
+        if not input_courses:
+            self.courses = Course.query.all()
+        else:
+            self.courses = input_courses
+
+        self.getCoursesAndEnrollment(self.courses)
         self.getRoomsAndAvailability()
         self.getRoomsAndOccupancy()
         self.getInstructorAvailability()
-        self.getCoursePreferences(courses)
+        self.getCoursePreferences(self.courses)
 
     # Constructor Functions ------
         

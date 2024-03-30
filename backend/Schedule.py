@@ -26,14 +26,15 @@ class Schedule:
             self.courses = input_courses
         self.scheduler = Scheduler(self.courses)
 
-    def getSections(self, courses):
-        for course in courses:
+    def getSections(self):
+        for course in self.courses:
             self.sections.append(Section.query.filter_by(course_id = course.id).all())
         return
     
     def generateSchedule(self):
         self.scheduler.generateSchedule()
+        self.getSections()
 
-    
+
 
 

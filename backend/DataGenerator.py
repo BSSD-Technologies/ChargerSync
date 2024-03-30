@@ -9,8 +9,8 @@ from datetime import time
 # Define times for MW and TR
 mw_times = [
     # Start time, End time
-    (time(hour=8), time(hour=9)),
-    (time(hour=9), time(hour=10)),
+    #(time(hour=8), time(hour=9)),
+    #(time(hour=9), time(hour=10)),
     (time(hour=10), time(hour=11)),
     (time(hour=11), time(hour=12)),
     (time(hour=13), time(hour=14))
@@ -18,8 +18,8 @@ mw_times = [
 
 tr_times = [
     # Start time, End time
-    (time(hour=8), time(hour=9)),
-    (time(hour=9), time(hour=10)),
+    #(time(hour=8), time(hour=9)),
+    #(time(hour=9), time(hour=10)),
     (time(hour=10), time(hour=11)),
     (time(hour=11), time(hour=12)),
     (time(hour=13), time(hour=14))
@@ -41,13 +41,13 @@ instructor_list = [
 room_list = [
     # Name, Occupancy
     ('OKT 200', 100),
-    ('OKT 307', 70),
-    ('OKT 155', 10),
-    #('LIB 201', 50),
+    ('OKT 307', 50),
+    #('OKT 155', 10),
+    ('LIB 201', 20),
     #('OKT 105', 100),
     #('OKT 201', 120),
     #('OKT 308', 20),
-    #('OKT 156', 40),
+    ('OKT 156', 20),
     #('OKT 158', 65),
     #('LIB 202', 60),
     #('OKT 106', 100),
@@ -60,15 +60,15 @@ room_list = [
 
 course_list = [
     # Course name, max, preliminary
-    ('CS 101', 200, 100),
+    ('CS 101', 100, 100),
     ('CS 221', 100, 0),
-    ('CS 453', 20, 50),
-    ('CS 200', 90, 0),
-    ('CS 390', 90, 25),
-    ('CS 317', 120, 0),
+    ('CS 453', 200, 50),
+    ('CS 200', 200, 0),
+    ('CS 390', 150, 25),
+    ('CS 317', 150, 0),
     ('CS 102', 200, 100),
-    ('CS 222', 600, 0),
-    ('CS 454', 20, 50),
+    ('CS 222', 100, 0),
+    ('CS 454', 150, 50),
 ]
 
 course_preference_list = [
