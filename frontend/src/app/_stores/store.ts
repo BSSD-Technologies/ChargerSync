@@ -21,8 +21,6 @@ interface GlobalCourseListState {
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
   getHasErrors: () => boolean;
-  /** Get a specific course object based on uuid */
-  getCourseById: (uuid: string) => Course | undefined;
 }
 
 export const useGlobalCourseListStore = create<GlobalCourseListState>()(
@@ -59,9 +57,6 @@ export const useGlobalCourseListStore = create<GlobalCourseListState>()(
       } else {
         return false;
       }
-    },
-    getCourseById: (uuid: string) => {
-      return get().courseList.find((course) => course.uuid === uuid);
     },
   })
 );
@@ -253,24 +248,42 @@ interface GlobalPreferenceListState {
   /** Array of course preferences */
   coursePrefList: CoursePreference[];
   /** Populate course preference list */
-  setCoursePrefList: (list: CoursePreference[]) => void;
+  setCoursePrefList: (
+    list: CoursePreference[],
+    instructor_uuid: string
+  ) => void;
   /** Array of period preferences */
   periodPrefList: PeriodPreference[];
   /** Add a period preference to list based on uuid */
-  setPeriodPrefList: (list: PeriodPreference[]) => void;
+  setPeriodPrefList: (
+    list: PeriodPreference[],
+    instructor_uuid: string
+  ) => void;
 }
 
 export const useGlobalPreferenceListStore = create<GlobalPreferenceListState>()(
   (set) => ({
     coursePrefList: [],
-    setCoursePrefList: (list: CoursePreference[]) =>
+    setCoursePrefList: (list: CoursePreference[], instructor_uuid: string) =>
       set((state) => ({
-        coursePrefList: list,
+        // Filter out objects with matching instructor_uuid and append the new list
+        coursePrefList: [
+          ...state.coursePrefList.filter(
+            (pref) => pref.instructor_uuid !== instructor_uuid
+          ),
+          ...list,
+        ],
       })),
     periodPrefList: [],
-    setPeriodPrefList: (list: PeriodPreference[]) =>
+    setPeriodPrefList: (list: PeriodPreference[], instructor_uuid: string) =>
       set((state) => ({
-        periodPrefList: list,
+        // Filter out objects with matching instructor_uuid and append the new list
+        periodPrefList: [
+          ...state.periodPrefList.filter(
+            (pref) => pref.instructor_uuid !== instructor_uuid
+          ),
+          ...list,
+        ],
       })),
   })
 );

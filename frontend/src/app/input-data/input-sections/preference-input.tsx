@@ -79,8 +79,8 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
 
   /** Auto-populate zustand course preference list */
   useEffect(() => {
-    populateCoursePrefList(coursePrefList);
-  }, [coursePrefList, populateCoursePrefList]);
+    populateCoursePrefList(coursePrefList, props.instructorId);
+  }, [coursePrefList, populateCoursePrefList, props.instructorId]);
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -179,8 +179,8 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
 
   /** Auto-populate zustand period preference list */
   useEffect(() => {
-    populatePeriodPrefList(periodPrefList);
-  }, [periodPrefList, populatePeriodPrefList]);
+    populatePeriodPrefList(periodPrefList, props.instructorId);
+  }, [periodPrefList, populatePeriodPrefList, props.instructorId]);
 
   /** Populate full period list with all days */
   useEffect(() => {
