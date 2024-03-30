@@ -2,7 +2,7 @@ from flask import Flask
 from extensions import db
 from models.Course import Course
 import DataGenerator
-from Scheduler import Scheduler
+from Schedule import Schedule
 from output import formatForOutput
 
 app = Flask(__name__)
@@ -18,7 +18,7 @@ with app.app_context():
     DataGenerator.loadData()
 
     
-    schedule = Scheduler(Course.query.all())
+    schedule = Schedule()
     schedule.generateSchedule()
 
     #print("TEST OF JSON OUTPUT BELOW")
