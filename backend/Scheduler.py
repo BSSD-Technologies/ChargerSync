@@ -23,28 +23,27 @@ class Scheduler:
 
     # ----- Arrays ------
     instructors_with_no_preferences = []
-    schedule = []
-    sections = []
+    sections_to_be_assigned = []
+    all_sections = []
     
     # ----- Other Attributes ------
     section_counter = 0
     instructors_with_no_preferences_pos = 0
 
-    def __init__(self):
+    def __init__(self, courses):
         # Setting up attributes
-        self.getCoursesAndEnrollment()
+        self.getCoursesAndEnrollment(courses)
         self.getRoomsAndAvailability()
         self.getRoomsAndOccupancy()
         self.getInstructorAvailability()
-        self.getCoursePreferences()
+        self.getCoursePreferences(courses)
 
     # Constructor Functions ------
         
     # Input: self
     # Output: n/a - changes values in self
-    def getCoursesAndEnrollment(self):
+    def getCoursesAndEnrollment(self, courses):
         # Creating a tuple to represent course, max enrollment, and fulfilled/not fulfilled
-        courses = Course.query.all()
         for course in courses:
             pull_course = course.id
             tuple_item = (pull_course, course.max_enrollment, 0)
@@ -109,9 +108,8 @@ class Scheduler:
 
     # Input: self
     # Output: n/a - changes values in self
-    def getCoursePreferences(self):
+    def getCoursePreferences(self, courses):
         # Creates a tuple of course preferences for each course
-        courses = Course.query.all()
         for course in courses:
             course_id = course.id
             course_preferences = course.preferences
@@ -122,6 +120,11 @@ class Scheduler:
                 self.sortedInsert(sorted_array, instructor, priority)
             tuple_item = (course_id, sorted_array)
             self.course_preferences.append(tuple_item)
+
+    # Input: self
+    # Output: n/a - puts all sections_to_be_assigned in one array
+    def getAllSections(self):
+        self.all_sections = Section.query.all()
         
 
     # Update Functions -----
@@ -227,7 +230,7 @@ class Scheduler:
     # Input: self
     # Output: n/a 
     def prepareForMoreSections(self):
-        self.sections = []
+        self.sections_to_be_assigned = []
         self.section_counter += 1
         self.instructors_with_no_preferences_pos = 0
         return
@@ -244,12 +247,12 @@ class Scheduler:
     # Input: self
     # Output: n/a 
     def createNewSections(self):
-        # Creates section list of sections to be assigned
+        # Creates section list of sections_to_be_assigned
         for course in self.courses_and_enrollment:
-            # if course enrollement is unfulfilled, add section to list of sections to be assigned
+            # if course enrollement is unfulfilled, add section to list of sections_to_be_assigned
             if course[2] == 0:
                 new_section = Course.newSectionFromId(course[0])
-                self.sections.append(new_section)
+                self.sections_to_be_assigned.append(new_section)
     
     # Input: self
     # Output: instructor id (int)
@@ -324,7 +327,7 @@ class Scheduler:
     # Input: self
     # Output: n/a - creates a schedule in the scheduler class
     def scheduleSections(self):
-        for section in self.sections:
+        for section in self.sections_to_be_assigned:
             # Gather course information
             self.getInstructorsWithNoPref(section.course_id)
 
@@ -351,11 +354,7 @@ class Scheduler:
             section.printInfo()
             print("\n")
 
-            # If all courses are fulfilled - end loop
-            if self.checkCoursesFulfillment() == True:
-                self.updateSchedule()
-                break
-        self.updateSchedule()
+        self.getAllSections()
 
     # Input: self, section
     # Output: n/a - alters section's row in DB
@@ -411,7 +410,14 @@ class Scheduler:
         else:
             self.updateCourseEnrollment(section.course_id)
 
-    # Input: self
-    # Output: n/a - puts all sections in one array
-    def updateSchedule(self):
-        self.schedule = Section.query.all()
+    def generateSchedule(self):
+        # MAIN LOOP
+        while 1:
+            self.prepareForMoreSections()
+            self.createNewSections()
+            self.scheduleSections()
+            # If all courses are fulfilled - end loop
+            if self.checkCoursesFulfillment() == True:
+                self.getAllSections()
+                break
+        

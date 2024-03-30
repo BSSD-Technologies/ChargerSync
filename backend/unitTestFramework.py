@@ -11,6 +11,11 @@ def buildDatabase(db):
     db.create_all()
     loadData()
 
+def buildApp():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+    db.init_app(app)
+    return app
 
 
 # Define times for MW and TR

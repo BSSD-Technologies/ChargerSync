@@ -1,7 +1,6 @@
 from flask import Flask
-from datetime import time
 from extensions import db
-from models.Course import Section, Course
+from models.Course import Course
 import DataGenerator
 from Scheduler import Scheduler
 from output import formatForOutput
@@ -18,18 +17,13 @@ with app.app_context():
     db.create_all()
     DataGenerator.loadData()
 
-    scheduler = Scheduler()
-
-    for i in range(10):
-
-        scheduler.prepareForMoreSections()
-        scheduler.createNewSections()
-        scheduler.scheduleSections()
     
+    schedule = Scheduler(Course.query.all())
+    schedule.generateSchedule()
 
-    print("TEST OF JSON OUTPUT BELOW")
+    #print("TEST OF JSON OUTPUT BELOW")
 
-    formatForOutput(scheduler)
+    #formatForOutput(scheduler)
 
     #print(Course.query.all())
     #print(Instructor.query.all())
