@@ -1,6 +1,5 @@
 from flask import Flask
 from extensions import db
-from models.Course import Course
 import DataGenerator
 from Schedule import Schedule
 from output import formatForOutput
@@ -19,7 +18,22 @@ with app.app_context():
 
     
     schedule = Schedule()
-    schedule.generateSchedule()
+    schedule.generateCompleteSchedule()
+
+    print('\nALL SECTIONS\n')
+    for section in schedule.sections:
+        section.printInfo()
+        print('\n')
+
+    print('\nSCHEDULED\n')
+    for section in schedule.schedule:
+        section.printInfo()
+        print('\n')
+
+    print('\nCONFLICTS\n')
+    for section in schedule.conflicts:
+        section.printInfo()
+        print('\n')
 
     #print("TEST OF JSON OUTPUT BELOW")
 

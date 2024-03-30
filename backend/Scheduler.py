@@ -354,10 +354,7 @@ class Scheduler:
 
             # Assigning room
             self.assignRoom(section)
-                    
-            # Some printing for testing
-            section.printInfo()
-            print("\n")
+                
 
         self.getAllSections()
 

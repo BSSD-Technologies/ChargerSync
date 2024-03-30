@@ -49,6 +49,7 @@ class Section(db.Model):
     room_id = db.Column(db.Integer, db.ForeignKey('room.id'), default=None)
     period_id = db.Column(db.Integer, db.ForeignKey('period.id'), default=None)
     section_no = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.Enum('Complete', 'Conflict', 'Incomplete'), default=None)
 
     # one to many relationship w/ Course
     course = db.relationship('Course', backref='sections', lazy=True)
@@ -103,6 +104,8 @@ class Section(db.Model):
             print(f"Period: {self.period.start_time} Day: {self.period.day}")
         else:
             print("Period: Not assigned")
+        if self.status:
+            print((f"Status: {self.status}"))
         print(f"Section Number: {self.section_no}")
     
 
