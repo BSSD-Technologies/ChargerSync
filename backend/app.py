@@ -137,5 +137,22 @@ def process_instructors_csv():
     else:
         return jsonify({'error': "Invalid template."}), 412
     
+"""
+/generate/schedule
+User sends all inputted data to be generated into a schedule, then the schedule
+is sent back to the user.
+
+Error Codes:
+200 - OK
+400 - Not JSON data
+"""
+@app.route('/generate/schedule',  methods=['POST'])
+def generate_schedule():
+    # Ensure request contains JSON data
+    if not request.is_json:
+        return jsonify({'error': 'Request must be JSON'}), 400
+    else:
+        return jsonify({'no error': 'Request was good'}), 200
+
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
