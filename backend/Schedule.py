@@ -34,7 +34,8 @@ class Schedule:
                 self.sections.append(section)
         return
     
-    def generateCompleteSchedule(self):
+    def generate(self):
+        # fills everything in the class arrays
         self.scheduler.generateSchedule()
         self.getSections()
         self.generateConflicts()

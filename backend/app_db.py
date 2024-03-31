@@ -18,12 +18,12 @@ with app.app_context():
 
     
     schedule = Schedule()
-    schedule.generateCompleteSchedule()
+    schedule.generate()
 
     print('\nALL SECTIONS\n')
     for section in schedule.sections:
         section.printInfo()
-        print('\n')
+        print("\n")
 
     print('\nSCHEDULED\n')
     for section in schedule.schedule:
