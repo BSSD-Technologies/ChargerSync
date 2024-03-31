@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { Day, Period } from "../_types/Period";
 import { v4 as uuidv4 } from "uuid";
+import { Course } from "../_types/Course";
+import { Room } from "../_types/Room";
+import { Instructor } from "../_types/Instructor";
+import { CoursePreference } from "../_types/CoursePreference";
+import { PeriodPreference } from "../_types/PeriodPreference";
 
 /**
  * Detect first render of a component
