@@ -1,13 +1,11 @@
 from flask import Flask
-from datetime import time
 from extensions import db
-from models.Course import Section, Course
 import DataGenerator
-from Scheduler import Scheduler
+from Schedule import Schedule
 from output import formatForOutput
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/schedule.db'
 db.init_app(app)
 
 # need to perform database operations within app_context
@@ -18,18 +16,28 @@ with app.app_context():
     db.create_all()
     DataGenerator.loadData()
 
-    scheduler = Scheduler()
-
-    for i in range(10):
-
-        scheduler.prepareForMoreSections()
-        scheduler.createNewSections()
-        scheduler.scheduleSections()
     
+    schedule = Schedule()
+    schedule.generateCompleteSchedule()
+
+    print('\nALL SECTIONS\n')
+    for section in schedule.sections:
+        section.printInfo()
+        print('\n')
+
+    print('\nSCHEDULED\n')
+    for section in schedule.schedule:
+        section.printInfo()
+        print('\n')
+
+    print('\nCONFLICTS\n')
+    for section in schedule.conflicts:
+        section.printInfo()
+        print('\n')
 
     print("TEST OF JSON OUTPUT BELOW")
 
-    formatForOutput(scheduler)
+    formatForOutput(schedule)
 
     #print(Course.query.all())
     #print(Instructor.query.all())

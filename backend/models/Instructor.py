@@ -8,8 +8,8 @@ class Instructor(db.Model):
     __tablename__ = 'instructor'
 
     id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
-    fname = db.Column(db.String(256), nullable=False)
-    lname = db.Column(db.String(256), nullable=False)
+    fname = db.Column(db.String(256), default=None)
+    lname = db.Column(db.String(256), nullable=None)
     priority = db.Column(db.Integer, default=None)
     
     # one to many relationship with sections
@@ -37,11 +37,6 @@ class Instructor(db.Model):
         db.session.add(new_preference)
         db.session.commit()
     
-    def getPeriodPreferences(self):
-        arr_pref = []
-        for preference in self.period_preferences:
-            arr_pref.append(preference)
-        return arr_pref
     
 
     
