@@ -11,6 +11,11 @@ def buildDatabase(db):
     db.create_all()
     loadData()
 
+def buildApp():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
+    db.init_app(app)
+    return app
 
 
 # Define times for MW and TR
@@ -95,7 +100,8 @@ def loadData():
 
     # Add Courses
     for course, max, pre in course_list:
-        new_course = Course(name=course, max_enrollment=max, preliminary_enrollment=pre)
+        course_div = course.split()
+        new_course = Course(name=course, department=course_div[0], num=course_div[1], max_enrollment=max, preliminary_enrollment=pre)
         db.session.add(new_course)
     db.session.commit()
 
