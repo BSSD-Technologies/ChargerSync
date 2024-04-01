@@ -16,7 +16,7 @@ import { UseGenerateSchedule } from "@/app/_hooks/apiHooks";
 export default function SubmitInput() {
   const [courseList] = [useGlobalCourseListStore((state) => state.courseList)];
   const [roomList] = [useGlobalRoomListStore((state) => state.roomList)];
-  const [periodList] = [useGlobalPeriodListStore((state) => state.periodList)];
+  const [fullPeriodList] = [useGlobalPeriodListStore((state) => state.fullPeriodList)];
   const [instructorList] = [
     useGlobalInstructorListStore((state) => state.instructorList),
   ];
@@ -26,7 +26,7 @@ export default function SubmitInput() {
   ];
 
   const testFunction = async () => {
-    await UseGenerateSchedule(courseList, roomList, periodList, instructorList, coursePrefList, periodPrefList);
+    await UseGenerateSchedule(courseList, roomList, fullPeriodList, instructorList, coursePrefList, periodPrefList);
   };
 
   return (

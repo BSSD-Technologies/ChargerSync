@@ -46,7 +46,7 @@ def formatForOutput(schedule):
     for section in schedule.schedule:
         
         try:   
-            a = section.period.start_time.strftime("%m/%d/%Y, %H:%M:%S")
+            a = section.period.start_time
         except:
             a = "No Period Assigned"
         
@@ -56,7 +56,7 @@ def formatForOutput(schedule):
             b = "No Period Assigned"
 
         try:
-            room_id = section.room.id
+            room_id = section.room.name
         except:
             room_id = "No Room Assigned"
 
@@ -66,9 +66,9 @@ def formatForOutput(schedule):
             c = "No Room Assigned"
 
         try:   
-            d = section.period.end_time.strftime("%m/%d/%Y, %H:%M:%S")
+            d = section.period.end_time
         except:
-            d = "No Period Assigned" 
+            d = "No Period Assigned"
 
         try:
             instructor_fname_assignment = section.instructor.fname
@@ -85,7 +85,7 @@ def formatForOutput(schedule):
 
         # Fill in the values for the course
         course_info["uuid"] = section.id
-        course_info["section_id"] = section.course_id
+        course_info["section_id"] = section.name
 
         # Fill in instructor information
         course_info["instructor"] = {

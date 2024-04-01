@@ -6,9 +6,9 @@ from extensions import db
 class Period(db.Model):
     __tablename__ = 'period'
 
-    id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
-    start_time = db.Column(db.Time, nullable=False)
-    end_time = db.Column(db.Time, nullable=False)
+    id = db.Column(db.String(255), primary_key=True) # To be converted to UUID once api is complete
+    start_time = db.Column(db.String(255), nullable=False)
+    end_time = db.Column(db.String(255), nullable=False)
     day = db.Column(db.Enum('MW', 'TR'))
 
     def __repr__(self):
