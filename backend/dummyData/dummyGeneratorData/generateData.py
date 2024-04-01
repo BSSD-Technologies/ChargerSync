@@ -1,6 +1,7 @@
 import pandas as pd
 import json
 import csv
+import random
 from os import remove
 
 def read_csv_as_list(csv_file):
@@ -22,6 +23,12 @@ def json_to_csv(json_filename, csv_mapping):
         # Select only the required columns
         df = df[columns]
         
+    if csv_filename == 'roomTemplate.csv':
+        min_capacity = 30
+        max_capacity = 150
+        capacity_increment = 10
+        df['Max Capacity'] = [random.randrange(min_capacity, max_capacity+1, capacity_increment) for _ in range(len(df))]
+
         # Write DataFrame to CSV file
         df.to_csv(csv_filename, index=False)
 
