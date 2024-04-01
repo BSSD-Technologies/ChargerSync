@@ -4,6 +4,7 @@ import {
   FilledInput,
   FormHelperText,
   Grid,
+  InputLabel,
   OutlinedInput,
   Stack,
   Table,
@@ -298,12 +299,14 @@ export default function CourseInput(props: {
             A short description about what type of data goes here.
           </Typography>
         </Stack>
+        <InputLabel>Test</InputLabel>
         <OutlinedInput
           type="file"
           startAdornment={<CloudUploadIcon sx={{ marginRight: "10px" }} />}
           sx={{
             width: "20%",
           }}
+          inputProps={{label: "Test"}}
           onChange={handleUpload}
         />
       </Grid>

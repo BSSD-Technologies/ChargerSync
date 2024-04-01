@@ -16,7 +16,7 @@ import CourseInput from "./input-sections/course-input";
 import RoomInput from "./input-sections/room-input";
 import PeriodInput from "./input-sections/period-input";
 import InstructorInput from "./input-sections/instructor-input";
-import UploadInput from "./input-sections/upload-input";
+import DownloadTemplates from "./input-sections/download-templates";
 import SubmitInput from "./input-sections/submit-input";
 import { useState } from "react";
 import PreferenceInput from "./input-sections/preference-input";
@@ -65,7 +65,7 @@ export default function InputData() {
       </Typography>
       <br />
       <Divider />
-      <UploadInput />
+      <DownloadTemplates />
       <Divider />
       <br />
       <Box>
