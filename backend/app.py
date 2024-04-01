@@ -3,6 +3,8 @@ from flask_cors import CORS
 from functions import *
 from extensions import db
 from Schedule import Schedule
+import DataGenerator
+from output import formatForOutput
 
 app = Flask(__name__)
 # Enable CORS for all routes
@@ -158,9 +160,14 @@ def generate_schedule():
     if not request.is_json:
         return jsonify({'error': 'Request must be JSON'}), 400
     else:
-        return jsonify({'no error': 'Request was good'}), 200
+        #return jsonify({'no error': 'Request was good'}), 200
+        DataGenerator.loadData()
+        schedule = Schedule()
+        schedule.generate()
+        #schedule_data = [{"name": section.name} for section in schedule.schedule]
+        schedule_data = formatForOutput(schedule)
+        return jsonify({'schedule': schedule_data}), 200
     
-
 
 if __name__ == '__main__':
     with app.app_context():
