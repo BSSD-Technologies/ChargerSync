@@ -3,6 +3,7 @@ import json
 import csv
 import random
 from os import remove
+from functools import reduce
 
 def read_csv_as_list(csv_file):
     data = []
@@ -83,7 +84,39 @@ def removeCourseHyphensAndDuplicates(csv_filename):
         writer.writerow(data_list)
     myFile.close()
 
+def fixNameIssues(csv_filename):
+    csv_data = read_csv_as_list(csv_filename)
+    temparr = []
+    j = 0
+    for i in csv_data:
+        if j != 0:     
+            print(i)   
+            temp = str(i)
+            temp2 = temp.split()
+            lname = temp2[-1]
+            print(lname)
+            if(lname != "['STAFF']"):
+                temp2.pop()
+                fname = str(reduce(lambda x,y: x+"-"+y, temp2))
+                temparr.append([fname,lname])
+
+            else:
+                continue
+           
+            
+        else:
+            j+=1
+    csv_data.pop(0)
+    myFile = open("test.csv", 'w')
+    writer = csv.writer(myFile)
+    writer.writerow(['fname', 'lname'])
+    for data_list in csv_data:
+        writer.writerow(data_list)
+    myFile.close()
+
+    return
 
 # Convert JSON data to CSV
 json_to_csv("rawCourseData.json", csv_mapping)
 removeCourseHyphensAndDuplicates('courseTemplate.csv')
+fixNameIssues('instructorTemplate.csv')
