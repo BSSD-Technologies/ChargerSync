@@ -8,6 +8,8 @@ class Course(db.Model):
 
     id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
     name = db.Column(db.String(255), nullable=False) # TODO Split to department and course number
+    department = db.Column(db.String(255), nullable=False) 
+    num = db.Column(db.String(255), nullable=False)
     max_enrollment = db.Column(db.Integer, nullable=False)
     preliminary_enrollment = db.Column(db.Integer, default=0)
 
@@ -22,7 +24,7 @@ class Course(db.Model):
     def newSection(self):
         new_number = self.sectionCount() + 1
         new_name = self.name + "-" + str(new_number)
-        new_section = Section(name=new_name, course_id=self.id, section_no=new_number)
+        new_section = Section(name=new_name, department=self.department, num=self.num, course_id=self.id, section_no=new_number)
         db.session.add(new_section)
         db.session.commit()
         return new_section
@@ -40,11 +42,14 @@ class Section(db.Model):
 
     id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
     name = db.Column(db.String(255), nullable=False)
+    department = db.Column(db.String(255), nullable=False) 
+    num = db.Column(db.String(255), nullable=False)
     instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.id'), default=None)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     room_id = db.Column(db.Integer, db.ForeignKey('room.id'), default=None)
     period_id = db.Column(db.Integer, db.ForeignKey('period.id'), default=None)
     section_no = db.Column(db.Integer, nullable=False)
+    status = db.Column(db.Enum('Complete', 'Conflict', 'Incomplete'), default=None)
 
     # one to many relationship w/ Course
     course = db.relationship('Course', backref='sections', lazy=True)
@@ -99,13 +104,11 @@ class Section(db.Model):
             print(f"Period: {self.period.start_time} Day: {self.period.day}")
         else:
             print("Period: Not assigned")
+        if self.status:
+            print((f"Status: {self.status}"))
         print(f"Section Number: {self.section_no}")
     
-    def getCoursePreferences(self):
-        return self.instructor.course_preferences
-    
-    def getPeriodPreferences(self):
-        return self.instructor.period_preferences
+
 
     
     

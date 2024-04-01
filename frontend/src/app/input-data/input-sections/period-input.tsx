@@ -19,7 +19,7 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { Period, defaultPeriod } from "@/app/_types/Period";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useFirstRender, useValidateTime } from "@/app/_hooks/utilHooks";
 import { useGlobalPeriodListStore } from "@/app/_stores/store";

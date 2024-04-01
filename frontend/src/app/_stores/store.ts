@@ -1,8 +1,11 @@
 import { create } from "zustand";
 import { Course } from "../_types/Course";
 import { Room } from "../_types/Room";
-import { Period } from "../_types/Period";
+import { Day, Period } from "../_types/Period";
 import { Instructor } from "../_types/Instructor";
+import { v4 as uuidv4 } from "uuid";
+import { CoursePreference } from "../_types/CoursePreference";
+import { PeriodPreference } from "../_types/PeriodPreference";
 
 /** COURSE STORE */
 interface GlobalCourseListState {
@@ -116,6 +119,8 @@ export const useGlobalRoomListStore = create<GlobalRoomListState>()(
 interface GlobalPeriodListState {
   /** Array of period blocks */
   periodList: Period[];
+  /** Array of FULL period blocks */
+  fullPeriodList: Period[];
   /** Update existing period */
   updatePeriodList: (period: Period) => void;
   /** Add a period to list */
@@ -126,11 +131,14 @@ interface GlobalPeriodListState {
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
   getHasErrors: () => boolean;
+  /** Populate FULL period list */
+  populateFullPeriodList: () => void;
 }
 
 export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
   (set, get) => ({
     periodList: [],
+    fullPeriodList: [],
     updatePeriodList: (period: Period) =>
       set((state) => ({
         periodList: state.periodList.map((p) =>
@@ -162,6 +170,19 @@ export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
       } else {
         return false;
       }
+    },
+    populateFullPeriodList: () => {
+      // Empty the fullPeriodList
+      set({ fullPeriodList: [] });
+
+      // Iterate through periodList, duplicate each period for TR days
+      const duplicatedPeriods: Period[] = [];
+      for (const period of get().periodList) {
+        duplicatedPeriods.push({ ...period, uuid: uuidv4(), day: Day["TR"] });
+      }
+
+      // Set fullPeriodList to the duplicated periods AND original
+      set({ fullPeriodList: [...get().periodList, ...duplicatedPeriods] });
     },
   })
 );
@@ -200,8 +221,10 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
     deleteInstructorList: (id: string) =>
       set((state) => ({
         instructorList: [
-          // Filter out period with matching id
-          ...state.instructorList.filter((instructor) => instructor.uuid !== id),
+          // Filter out instructor with matching id
+          ...state.instructorList.filter(
+            (instructor) => instructor.uuid !== id
+          ),
         ],
       })),
     hasErrors: [],
@@ -217,5 +240,50 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
         return false;
       }
     },
+  })
+);
+
+/** PREFERENCE STORE */
+interface GlobalPreferenceListState {
+  /** Array of course preferences */
+  coursePrefList: CoursePreference[];
+  /** Populate course preference list */
+  setCoursePrefList: (
+    list: CoursePreference[],
+    instructor_uuid: string
+  ) => void;
+  /** Array of period preferences */
+  periodPrefList: PeriodPreference[];
+  /** Add a period preference to list based on uuid */
+  setPeriodPrefList: (
+    list: PeriodPreference[],
+    instructor_uuid: string
+  ) => void;
+}
+
+export const useGlobalPreferenceListStore = create<GlobalPreferenceListState>()(
+  (set) => ({
+    coursePrefList: [],
+    setCoursePrefList: (list: CoursePreference[], instructor_uuid: string) =>
+      set((state) => ({
+        // Filter out objects with matching instructor_uuid and append the new list
+        coursePrefList: [
+          ...state.coursePrefList.filter(
+            (pref) => pref.instructor_uuid !== instructor_uuid
+          ),
+          ...list,
+        ],
+      })),
+    periodPrefList: [],
+    setPeriodPrefList: (list: PeriodPreference[], instructor_uuid: string) =>
+      set((state) => ({
+        // Filter out objects with matching instructor_uuid and append the new list
+        periodPrefList: [
+          ...state.periodPrefList.filter(
+            (pref) => pref.instructor_uuid !== instructor_uuid
+          ),
+          ...list,
+        ],
+      })),
   })
 );
