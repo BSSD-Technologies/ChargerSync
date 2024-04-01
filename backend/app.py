@@ -1,9 +1,15 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS  
 from functions import *
+from extensions import db
+from Schedule import Schedule
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+# Enable CORS for all routes
+CORS(app)
+# Setting up the database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+db.init_app(app)
 
 @app.route('/')
 def hello_world():
@@ -153,6 +159,12 @@ def generate_schedule():
         return jsonify({'error': 'Request must be JSON'}), 400
     else:
         return jsonify({'no error': 'Request was good'}), 200
+    
+
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+
     app.run(debug=True, host="0.0.0.0")
