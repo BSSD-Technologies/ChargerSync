@@ -167,7 +167,6 @@ def generate_schedule():
         #schedule_data = [{"name": section.name} for section in schedule.schedule]
         schedule_data = formatForOutput(schedule)
         return jsonify({'schedule': schedule_data}), 200
-    
 
 if __name__ == '__main__':
     with app.app_context():
