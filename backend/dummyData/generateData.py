@@ -29,7 +29,8 @@ def json_to_csv(json_filename, csv_mapping):
             max_capacity = 150
             capacity_increment = 10
             df['Max Capacity'] = [random.randrange(min_capacity, max_capacity+1, capacity_increment) for _ in range(len(df))]
-
+            #TODO Make it so that TBA and ONLN are removed to the template
+            # df = df[~df['room_id'].isin(['TBA', 'ONLN'])] 
         # Write DataFrame to CSV file
         df.to_csv(csv_filename, index=False)
 
@@ -38,7 +39,7 @@ csv_mapping = {
     'courseTemplate.csv': ['department', 'course', 'max_enrollment', 'enrollment'],
     'instructorTemplate.csv': ['instructor'],
     'periodTemplate.csv': ['start', 'end'],
-    'roomTemplate.csv': ['building']
+    'roomTemplate.csv': ['room_id']
 }
 def removeCourseHyphensAndDuplicates(csv_filename):
     csv_data = read_csv_as_list(csv_filename)
@@ -78,7 +79,7 @@ def removeCourseHyphensAndDuplicates(csv_filename):
     remove(csv_filename)
     myFile = open(csv_filename, 'w')
     writer = csv.writer(myFile)
-    writer.writerow(['Department', 'Course', 'Max Enrollment', 'Preliminary Enrollment'])
+    writer.writerow(['Department', 'Course Number', 'Max Enrollment', 'Preliminary Enrollment'])
     for data_list in csv_data:
         writer.writerow(data_list)
     myFile.close()
