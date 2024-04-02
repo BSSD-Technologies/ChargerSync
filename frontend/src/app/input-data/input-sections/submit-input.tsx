@@ -46,6 +46,7 @@ export default function SubmitInput() {
     );
     if (getData) {
       setSectionList(getData);
+      //formatSectionList();
       router.push("/schedule-report");
     }
   };

@@ -1,7 +1,9 @@
 "use client";
 
+import { useGlobalScheduleStore } from '@/app/_stores/store';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { useEffect } from 'react';
 
 const columns: GridColDef[] = [
   { field: 'course', headerName: 'Course', editable: true },
@@ -12,22 +14,26 @@ const columns: GridColDef[] = [
   { field: 'instructor', headerName: 'Instructor', editable: true },
 ];
 
-const rows = [
-  { id: 1, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-  { id: 2, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-  { id: 3, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-  { id: 4, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-  { id: 5, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-  { id: 6, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-  { id: 7, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-  { id: 8, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-];
+// const rows = [
+//   { id: 1, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
+//   { id: 2, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
+//   { id: 3, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
+//   { id: 4, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
+//   { id: 5, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
+//   { id: 6, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
+//   { id: 7, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
+//   { id: 8, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
+// ];
 
 export default function Report() {
+  const [sectionList] = [
+    useGlobalScheduleStore((state) => state.sectionList),
+  ];
+
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
       <DataGrid
-        rows={rows}
+        rows={sectionList}
         columns={columns}
         initialState={{
           pagination: {
