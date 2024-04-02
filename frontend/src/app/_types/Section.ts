@@ -20,4 +20,5 @@ export type Section = {
     end_time: string;
     day: Day;
   }
+  status: "Complete" | "Incomplete" | "Conflict"
 };

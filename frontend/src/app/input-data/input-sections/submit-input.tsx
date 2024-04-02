@@ -10,13 +10,19 @@ import {
   useGlobalPeriodListStore,
   useGlobalPreferenceListStore,
   useGlobalRoomListStore,
+  useGlobalScheduleStore,
 } from "@/app/_stores/store";
 import { UseGenerateSchedule } from "@/app/_hooks/apiHooks";
+import { useRouter } from "next/navigation";
 
 export default function SubmitInput() {
+  const router = useRouter();
+
   const [courseList] = [useGlobalCourseListStore((state) => state.courseList)];
   const [roomList] = [useGlobalRoomListStore((state) => state.roomList)];
-  const [fullPeriodList] = [useGlobalPeriodListStore((state) => state.fullPeriodList)];
+  const [fullPeriodList] = [
+    useGlobalPeriodListStore((state) => state.fullPeriodList),
+  ];
   const [instructorList] = [
     useGlobalInstructorListStore((state) => state.instructorList),
   ];
@@ -25,8 +31,23 @@ export default function SubmitInput() {
     useGlobalPreferenceListStore((state) => state.periodPrefList),
   ];
 
+  const [setSectionList] = [
+    useGlobalScheduleStore((state) => state.setSectionList),
+  ];
+
   const testFunction = async () => {
-    await UseGenerateSchedule(courseList, roomList, fullPeriodList, instructorList, coursePrefList, periodPrefList);
+    const getData = await UseGenerateSchedule(
+      courseList,
+      roomList,
+      fullPeriodList,
+      instructorList,
+      coursePrefList,
+      periodPrefList
+    );
+    if (getData) {
+      setSectionList(getData);
+      router.push("/schedule-report");
+    }
   };
 
   return (

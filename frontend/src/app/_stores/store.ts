@@ -6,6 +6,7 @@ import { Instructor } from "../_types/Instructor";
 import { v4 as uuidv4 } from "uuid";
 import { CoursePreference } from "../_types/CoursePreference";
 import { PeriodPreference } from "../_types/PeriodPreference";
+import { Section } from "../_types/Section";
 
 /** COURSE STORE */
 interface GlobalCourseListState {
@@ -284,6 +285,26 @@ export const useGlobalPreferenceListStore = create<GlobalPreferenceListState>()(
           ),
           ...list,
         ],
+      })),
+  })
+);
+
+/** SCHEDULE STORE */
+interface GlobalScheduleState {
+  /** Array of sections */
+  sectionList: Section[];
+  /** Populate course preference list */
+  setSectionList: (
+    list: Section[]
+  ) => void;
+}
+
+export const useGlobalScheduleStore = create<GlobalScheduleState>()(
+  (set) => ({
+    sectionList: [],
+    setSectionList: (list: Section[]) =>
+      set((state) => ({
+        sectionList: list
       })),
   })
 );

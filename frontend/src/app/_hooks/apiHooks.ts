@@ -204,7 +204,7 @@ export const UseGenerateSchedule = async (
     instructors: instructorList,
     course_prefs: coursePrefList,
     period_prefs: periodPrefList,
-  }
+  };
 
   try {
     const response = await axios.post(
@@ -218,6 +218,7 @@ export const UseGenerateSchedule = async (
     );
     // 200: OK, success toast, return message
     toast.success("Upload successful!");
+    return response.data["schedule"];
   } catch (error: any) {
     if (error.response) {
       const status = error.response.status;
