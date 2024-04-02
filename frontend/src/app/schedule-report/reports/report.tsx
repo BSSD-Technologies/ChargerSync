@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingAnimation from '@/app/_components/loading';
 import { useGlobalScheduleStore } from '@/app/_stores/store';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -32,6 +33,7 @@ export default function Report() {
 
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
+      <LoadingAnimation />
       <DataGrid
         rows={sectionList}
         columns={columns}
