@@ -15,17 +15,6 @@ const columns: GridColDef[] = [
   { field: 'instructor', headerName: 'Instructor', editable: true },
 ];
 
-// const rows = [
-//   { id: 1, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-//   { id: 2, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-//   { id: 3, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-//   { id: 4, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-//   { id: 5, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-//   { id: 6, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-//   { id: 7, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-//   { id: 8, course: 'CS 100', days: 'MW', start: '8:00 AM', end: '9:20 AM', location: 'OKT N324', instructor: 'John Doe' },
-// ];
-
 export default function Report() {
   const [sectionList] = [
     useGlobalScheduleStore((state) => state.sectionList),
