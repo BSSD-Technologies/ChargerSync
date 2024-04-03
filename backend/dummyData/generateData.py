@@ -70,6 +70,11 @@ def json_to_csv(json_filename, csv_mapping):
             df.drop_duplicates(subset=['start', 'end'], inplace=True)
             df.sort_values(by='start', inplace=True)
             df.rename(columns={'start': 'start_time', 'end': 'end_time'}, inplace=True)
+
+            # Convert time format from XX:YYAM/PM to XX:YY AM/PM
+            df['start_time'] = pd.to_datetime(df['start_time'], format='%I:%M%p').dt.strftime('%I:%M %p')
+            df['end_time'] = pd.to_datetime(df['end_time'], format='%I:%M%p').dt.strftime('%I:%M %p')
+
             df = df[['start_time', 'end_time']]
 
 
