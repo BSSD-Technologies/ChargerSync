@@ -9,8 +9,8 @@ from datetime import time
 # Define times for MW and TR
 mw_times = [
     # Start time, End time
-    (time(hour=8), time(hour=9)),
-    (time(hour=9), time(hour=10)),
+    #(time(hour=8), time(hour=9)),
+    #(time(hour=9), time(hour=10)),
     (time(hour=10), time(hour=11)),
     (time(hour=11), time(hour=12)),
     (time(hour=13), time(hour=14))
@@ -18,8 +18,8 @@ mw_times = [
 
 tr_times = [
     # Start time, End time
-    (time(hour=8), time(hour=9)),
-    (time(hour=9), time(hour=10)),
+    #(time(hour=8), time(hour=9)),
+    #(time(hour=9), time(hour=10)),
     (time(hour=10), time(hour=11)),
     (time(hour=11), time(hour=12)),
     (time(hour=13), time(hour=14))
@@ -30,55 +30,45 @@ instructor_list = [
     ('Beth', 'Allen', 5),
     ('Dan', 'Schrimpcher', 3),
     ('Robert', 'Preston', 2),
-    ('John', 'Doe', 9),
-    ('Super', 'Man', 9),
-    ('Danny', 'Hardin', 9),
-    ('Jake', 'Doe', 9),
-    ('Bat', 'Man', 9),
-    ('Elizabeth', 'Hardin', 9),
+    ('John', 'Doe', 1),
+    ('Super', 'Man', 6),
+    ('Danny', 'Hardin', 7),
+    #('Jake', 'Doe', 8),
+    #('Bat', 'Man', 9),
+    #('Elizabeth', 'Hardin', 10),
 ]
 
 room_list = [
     # Name, Occupancy
     ('OKT 200', 100),
-    ('OKT 307', 70),
-    ('OKT 155', 10),
-    ('OKT 157', 10),
-    ('LIB 201', 50),
-    ('OKT 105', 100),
-    ('OKT 201', 120),
-    ('OKT 308', 20),
-    ('OKT 156', 40),
-    ('OKT 158', 65),
-    ('LIB 202', 60),
-    ('OKT 106', 100),
-    ('OKT 202', 10),
-    ('OKT 309', 70),
-    ('OKT 159', 121),
-    ('LIB 204', 66),
-    ('OKT 108', 100),
+    ('OKT 307', 50),
+    #('OKT 155', 10),
+    ('LIB 201', 20),
+    #('OKT 105', 100),
+    #('OKT 201', 120),
+    #('OKT 308', 20),
+    ('OKT 156', 20),
+    #('OKT 158', 65),
+    #('LIB 202', 60),
+    #('OKT 106', 100),
+    #('OKT 202', 10),
+    #('OKT 309', 70),
+    #('OKT 159', 121),
+    #('LIB 204', 66),
+    #('OKT 108', 100),
 ]
 
 course_list = [
     # Course name, max, preliminary
-    ('CS 101', 200, 100),
+    ('CS 101', 100, 100),
     ('CS 221', 100, 0),
-    ('CS 453', 20, 50),
-    ('CS 200', 90, 0),
-    ('CS 390', 90, 25),
-    ('CS 317', 120, 0),
+    ('CS 453', 200, 50),
+    ('CS 200', 200, 0),
+    ('CS 390', 150, 25),
+    ('CS 317', 150, 0),
     ('CS 102', 200, 100),
-    ('CS 222', 600, 0),
-    ('CS 454', 20, 50),
-    ('CS 201', 90, 0),
-    ('CS 391', 10, 25),
-    ('CS 318', 120, 100),
-    ('CS 103', 200, 100),
-    ('CS 222', 10, 0),
-    ('CS 455', 20, 50),
-    ('CS 202', 30, 0),
-    ('CS 392', 90, 25),
-    ('CS 319', 120, 0),
+    ('CS 222', 100, 0),
+    ('CS 454', 150, 50),
 ]
 
 course_preference_list = [
@@ -86,13 +76,16 @@ course_preference_list = [
     ('Beth', 'Allen', ['CS 101', 'CS 221']),
     ('Robert', 'Preston', ['CS 390']),
     ('Super', 'Man', ['CS 200']),
+    ('Danny', 'Hardin', ['CS 317', 'CS 101']),
 ]
 
 period_preference_list = [
     # fname, lname, preference in array
     ('Beth', 'Allen', [1, 2, 3]),
     ('Robert', 'Preston', [4, 5]),
-    ('Super', 'Man', [3]),
+    ('Super', 'Man', [8, 9]),
+    ('John', 'Doe', [6, 8]),
+    ('Bat', 'Man', [4]),
 ]
 
 def loadData():
@@ -121,7 +114,8 @@ def loadData():
 
     # Add Courses
     for course, max, pre in course_list:
-        new_course = Course(name=course, max_enrollment=max, preliminary_enrollment=pre)
+        course_div = course.split()
+        new_course = Course(name=course, department=course_div[0], num=course_div[1], max_enrollment=max, preliminary_enrollment=pre)
         db.session.add(new_course)
     db.session.commit()
 
