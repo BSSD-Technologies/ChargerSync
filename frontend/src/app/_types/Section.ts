@@ -20,4 +20,15 @@ export type Section = {
     end_time: string;
     day: Day;
   }
+  status: "Complete" | "Incomplete" | "Conflict"
 };
+
+export type FormattedSection = {
+  id: string,
+  course: string,
+  days: string,
+  start: string,
+  end: string,
+  location: string,
+  instructor: string,
+}

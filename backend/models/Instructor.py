@@ -7,7 +7,7 @@ from models.Course import Section
 class Instructor(db.Model):
     __tablename__ = 'instructor'
 
-    id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
+    id = db.Column(db.String(255), primary_key=True) # To be converted to UUID once api is complete
     fname = db.Column(db.String(256), default=None)
     lname = db.Column(db.String(256), nullable=None)
     priority = db.Column(db.Integer, default=None)

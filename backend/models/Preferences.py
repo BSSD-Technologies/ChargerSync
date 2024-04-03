@@ -5,9 +5,9 @@ from extensions import db
 class CoursePreference(db.Model):
     __tablename__ = 'course_preference'
 
-    id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
-    instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.id'), nullable=False)
-    course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
+    id = db.Column(db.String(255), primary_key=True) # To be converted to UUID once api is complete
+    instructor_id = db.Column(db.String(255), db.ForeignKey('instructor.id'), nullable=False)
+    course_id = db.Column(db.String(255), db.ForeignKey('course.id'), nullable=False)
 
     #instructor = db.relationship('Instructor', backref='course_preferences')
 
@@ -19,9 +19,9 @@ class CoursePreference(db.Model):
 class PeriodPreference(db.Model):
     __tablename__ = 'time_preference'
 
-    id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
-    instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.id'), nullable=False)
-    period_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
+    id = db.Column(db.String(255), primary_key=True) # To be converted to UUID once api is complete
+    instructor_id = db.Column(db.String(255), db.ForeignKey('instructor.id'), nullable=False)
+    period_id = db.Column(db.String(255), db.ForeignKey('course.id'), nullable=False)
    
     #instructor = db.relationship('Instructor', backref='period_preferences')
 

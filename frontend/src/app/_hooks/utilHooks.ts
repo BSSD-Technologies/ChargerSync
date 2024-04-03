@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { Day, Period } from "../_types/Period";
 import { v4 as uuidv4 } from "uuid";
+import { Course } from "../_types/Course";
+import { Room } from "../_types/Room";
+import { Instructor } from "../_types/Instructor";
+import { CoursePreference } from "../_types/CoursePreference";
+import { PeriodPreference } from "../_types/PeriodPreference";
 
 /**
  * Detect first render of a component
@@ -211,8 +216,8 @@ export function convertTime12(time: string): string {
   }
 
   const period = hours < 12 ? "AM" : "PM"; // Set period based on hours
-  const twelveHour = hours % 12 || 12; // Convert to 12 hr format hours
-  const convertedTime = `${twelveHour.toString().padStart(2, "0")}:${minutes
+  const twelveHour = parseInt((hours % 12 || 12).toString()); // Convert to 12 hr format hours
+  const convertedTime = `${twelveHour}:${minutes
     .toString()
     .padStart(2, "0")} ${period}`; // Format 12 hr format string
   return convertedTime;
