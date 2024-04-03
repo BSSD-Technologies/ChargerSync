@@ -6,6 +6,8 @@ import { Instructor } from "../_types/Instructor";
 import { v4 as uuidv4 } from "uuid";
 import { CoursePreference } from "../_types/CoursePreference";
 import { PeriodPreference } from "../_types/PeriodPreference";
+import { FormattedSection, Section } from "../_types/Section";
+import { convertTime12 } from "../_hooks/utilHooks";
 
 /** COURSE STORE */
 interface GlobalCourseListState {
@@ -285,5 +287,36 @@ export const useGlobalPreferenceListStore = create<GlobalPreferenceListState>()(
           ...list,
         ],
       })),
+  })
+);
+
+/** SCHEDULE STORE */
+interface GlobalScheduleState {
+  /** Array of sections */
+  sectionList: FormattedSection[];
+  /** Populate section list with formatted data */
+  setSectionList: (list: Section[]) => void;
+}
+
+export const useGlobalScheduleStore = create<GlobalScheduleState>()(
+  (set, get) => ({
+    sectionList: [],
+    setSectionList: (list: Section[]) => {
+      let formattedList: FormattedSection[] = [];
+      list.map((section: Section) => {
+        formattedList.push({
+          id: section.uuid,
+          course: section.section_id,
+          days: section.period.day,
+          start: convertTime12(section.period.start_time),
+          end: convertTime12(section.period.end_time),
+          location: section.room.id,
+          instructor: section.instructor.fname + " " + section.instructor.lname,
+        });
+      });
+      set((state) => ({
+        sectionList: formattedList,
+      }));
+    },
   })
 );
