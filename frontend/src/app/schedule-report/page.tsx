@@ -13,8 +13,10 @@ import Report from "./reports/report";
 import ConflictReport from "./reports/conflict-report";
 import NonConflictReport from "./reports/nonconflict-report";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
+import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import { useState } from "react";
 import ExportModal from "./export-modal";
+import Link from "next/link";
 
 export default function ScheduleReport() {
   const [open, setOpen] = useState(false);
@@ -34,6 +36,12 @@ export default function ScheduleReport() {
         paddingBottom: "10%",
       }}
     >
+      <Link passHref href={"/input-data"}>
+        <Button startIcon={<ArrowBackIosNewRoundedIcon />} variant="text">
+          Edit schedule data
+        </Button>
+      </Link>
+      <br />
       <Typography variant="h3">Schedule Report</Typography>
       <Typography variant="body1">
         Insert a description about the report generated, with the necessary

@@ -207,7 +207,7 @@ export default function InputData() {
             </Button>
             <Button
               onClick={() => {
-                setActiveStep(0);
+                setActiveStep(activeStep - 1);
               }}
               sx={{ mt: 1, mr: 1 }}
             >

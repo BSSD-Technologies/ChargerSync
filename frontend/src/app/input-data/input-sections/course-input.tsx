@@ -299,7 +299,6 @@ export default function CourseInput(props: {
             A short description about what type of data goes here.
           </Typography>
         </Stack>
-        <InputLabel>Test</InputLabel>
         <OutlinedInput
           type="file"
           startAdornment={<CloudUploadIcon sx={{ marginRight: "10px" }} />}
