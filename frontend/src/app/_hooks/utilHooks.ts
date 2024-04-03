@@ -216,8 +216,8 @@ export function convertTime12(time: string): string {
   }
 
   const period = hours < 12 ? "AM" : "PM"; // Set period based on hours
-  const twelveHour = hours % 12 || 12; // Convert to 12 hr format hours
-  const convertedTime = `${twelveHour.toString().padStart(2, "0")}:${minutes
+  const twelveHour = parseInt((hours % 12 || 12).toString()); // Convert to 12 hr format hours
+  const convertedTime = `${twelveHour}:${minutes
     .toString()
     .padStart(2, "0")} ${period}`; // Format 12 hr format string
   return convertedTime;

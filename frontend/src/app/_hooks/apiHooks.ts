@@ -186,6 +186,7 @@ export const UseUploadInstructors = async (file: File) => {
  * Send all completed inputted user data to backend to generate a schedule,
  * then get the generated schedule to be returned to the user.
  *
+ * @param JSON object
  * @returns JSON object
  */
 export const UseGenerateSchedule = async (
@@ -216,14 +217,13 @@ export const UseGenerateSchedule = async (
         },
       }
     );
-    // 200: OK, success toast, return message
-    toast.success("Upload successful!");
+    // 200: OK, return response data
     return response.data["schedule"];
   } catch (error: any) {
     if (error.response) {
       const status = error.response.status;
-      // File parameter not provided
-      if (status === 400) toast.error("No parameters received.");
+      // JSON object parameter not provided
+      if (status === 400) toast.error("Error generating schedule. Please try again.");
     }
   }
   return null;
