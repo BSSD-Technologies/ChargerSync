@@ -4,6 +4,7 @@ import {
   FilledInput,
   FormHelperText,
   Grid,
+  InputLabel,
   OutlinedInput,
   Stack,
   Table,
@@ -304,6 +305,7 @@ export default function CourseInput(props: {
           sx={{
             width: "20%",
           }}
+          inputProps={{label: "Test"}}
           onChange={handleUpload}
         />
       </Grid>
