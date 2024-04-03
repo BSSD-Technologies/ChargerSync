@@ -103,7 +103,7 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
             paddingTop: "20px",
           },
           ...(ownerState.error === true && {
-            backgroundColor: theme.palette.error.light,
+            backgroundColor: "#E57373",
             color: "black",
           }),
         }),
