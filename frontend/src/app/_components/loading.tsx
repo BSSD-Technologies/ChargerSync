@@ -1,13 +1,18 @@
 import Lottie from "lottie-react";
 import groovyWalkAnimation from "./Animation - 1712038115019.json";
-import { Stack, Typography } from "@mui/material";
+import { Backdrop, Stack, Typography } from "@mui/material";
 
-const LoadingAnimation = () => {
+const LoadingAnimation = (props: { openState: boolean }) => {
   return (
-    <Stack alignItems={"center"}>
-      <Lottie animationData={groovyWalkAnimation} />
-      <Typography variant="h6">Generating Schedule...</Typography>
-    </Stack>
+    <Backdrop
+      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      open={props.openState}
+    >
+      <Stack alignItems={"center"}>
+        <Typography variant="h4">Generating Schedule...</Typography>
+        <Lottie animationData={groovyWalkAnimation} />
+      </Stack>
+    </Backdrop>
   );
 };
 

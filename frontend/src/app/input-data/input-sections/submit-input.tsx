@@ -14,9 +14,12 @@ import {
 } from "@/app/_stores/store";
 import { UseGenerateSchedule } from "@/app/_hooks/apiHooks";
 import { useRouter } from "next/navigation";
+import LoadingAnimation from "@/app/_components/loading";
+import { useState } from "react";
 
 export default function SubmitInput() {
   const router = useRouter();
+  const [loadingState, setLoadingState] = useState(false);
 
   const [courseList] = [useGlobalCourseListStore((state) => state.courseList)];
   const [roomList] = [useGlobalRoomListStore((state) => state.roomList)];
@@ -35,7 +38,8 @@ export default function SubmitInput() {
     useGlobalScheduleStore((state) => state.setSectionList),
   ];
 
-  const testFunction = async () => {
+  const generateSchedule = async () => {
+    setLoadingState(true);
     const getData = await UseGenerateSchedule(
       courseList,
       roomList,
@@ -46,9 +50,9 @@ export default function SubmitInput() {
     );
     if (getData) {
       setSectionList(getData);
-      //formatSectionList();
       router.push("/schedule-report");
     }
+    setLoadingState(true);
   };
 
   return (
@@ -58,6 +62,7 @@ export default function SubmitInput() {
         marginBottom: "2%",
       }}
     >
+      <LoadingAnimation openState={loadingState} />
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
         <Stack direction={"column"}>
           <Typography variant="h4">Generate Schedule</Typography>
@@ -65,16 +70,16 @@ export default function SubmitInput() {
             Click here to generate a schedule based on the data you provided.
           </Typography>
         </Stack>
-        <LoadingButton onClick={testFunction}>Test</LoadingButton>
         <Link passHref href="/schedule-report">
           <LoadingButton
             variant="contained"
             color="success"
-            loading={false}
+            loading={loadingState}
             startIcon={<SendRoundedIcon />}
             sx={{
               paddingLeft: "15px",
             }}
+            onClick={generateSchedule}
           >
             <span>Generate</span>
           </LoadingButton>

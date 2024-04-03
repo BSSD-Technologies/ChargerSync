@@ -1,18 +1,16 @@
 "use client";
 
-import LoadingAnimation from '@/app/_components/loading';
 import { useGlobalScheduleStore } from '@/app/_stores/store';
 import Box from '@mui/material/Box';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { useEffect } from 'react';
 
 const columns: GridColDef[] = [
-  { field: 'course', headerName: 'Course', editable: true },
-  { field: 'days', headerName: 'Days', editable: true },
-  { field: 'start', headerName: 'Start Time', editable: true },
-  { field: 'end', headerName: 'End Time', editable: true },
-  { field: 'location', headerName: 'Location', editable: true },
-  { field: 'instructor', headerName: 'Instructor', editable: true },
+  { field: 'course', headerName: 'Course', minWidth: 150 },
+  { field: 'days', headerName: 'Days', minWidth: 100 },
+  { field: 'start', headerName: 'Start Time', minWidth: 120 },
+  { field: 'end', headerName: 'End Time', minWidth: 120 },
+  { field: 'location', headerName: 'Location', minWidth: 150 },
+  { field: 'instructor', headerName: 'Instructor', minWidth: 300 },
 ];
 
 export default function Report() {
@@ -22,7 +20,6 @@ export default function Report() {
 
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
-      <LoadingAnimation />
       <DataGrid
         rows={sectionList}
         columns={columns}
