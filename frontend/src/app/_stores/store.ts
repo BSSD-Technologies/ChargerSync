@@ -19,6 +19,8 @@ interface GlobalCourseListState {
   addCourseList: (course: Course) => void;
   /** Delete a course by id */
   deleteCourseList: (id: string) => void;
+  /** Delete all courses */
+  deleteAllCourseList: () => void;
   /** Boolean stack of whether or not there are errors in the course list */
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
@@ -47,6 +49,12 @@ export const useGlobalCourseListStore = create<GlobalCourseListState>()(
           ...state.courseList.filter((course) => course.uuid !== id),
         ],
       })),
+    deleteAllCourseList: () => {
+      set((state) => ({
+        courseList: [],
+        hasErrors: [],
+      }))
+    },
     hasErrors: [],
     getHasErrors: () => {
       // If array (table) is empty, error
