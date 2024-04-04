@@ -4,6 +4,7 @@ import {
   FilledInput,
   FormHelperText,
   Grid,
+  IconButton,
   OutlinedInput,
   Stack,
   Table,
@@ -19,6 +20,7 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import DisabledByDefaultRoundedIcon from "@mui/icons-material/DisabledByDefaultRounded";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Room, defaultRoom } from "@/app/_types/Room";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -148,6 +150,12 @@ function RoomTableRow(props: { row: Room }) {
 export default function RoomInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
+  /** Scroll to continue functionality */
+  const executeScroll = () => {
+    const section = document.querySelector("#room-continue");
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   /** Room list */
   const [roomList, addRoomList, getHasErrors, deleteAllRoomList] = [
     useGlobalRoomListStore((state) => state.roomList),
@@ -228,7 +236,7 @@ export default function RoomInput(props: {
             ))}
           </TableBody>
         </Table>
-        <Box sx={{ paddingTop: "2%" }}>
+        <Box sx={{ paddingTop: "2%" }} id={"room-continue"}>
           <Button
             variant="outlined"
             color="info"
@@ -243,6 +251,13 @@ export default function RoomInput(props: {
           </Button>
         </Box>
       </TableContainer>
+      <IconButton
+        title={"Scroll to bottom"}
+        className="Scroll"
+        onClick={executeScroll}
+      >
+        <KeyboardArrowDownRoundedIcon color={"info"} />
+      </IconButton>
     </Box>
   );
 }

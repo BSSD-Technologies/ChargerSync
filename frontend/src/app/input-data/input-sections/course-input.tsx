@@ -4,7 +4,7 @@ import {
   FilledInput,
   FormHelperText,
   Grid,
-  InputLabel,
+  IconButton,
   OutlinedInput,
   Stack,
   Table,
@@ -20,6 +20,7 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import DisabledByDefaultRoundedIcon from "@mui/icons-material/DisabledByDefaultRounded";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Course, defaultCourse } from "@/app/_types/Course";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -262,6 +263,12 @@ function CourseTableRow(props: { row: Course }) {
 export default function CourseInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
+  /** Scroll to continue functionality */
+  const executeScroll = () => {
+    const section = document.querySelector("#course-continue");
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   /** Course list */
   const [courseList, addCourseList, getHasErrors, deleteAllCourseList] = [
     useGlobalCourseListStore((state) => state.courseList),
@@ -313,7 +320,7 @@ export default function CourseInput(props: {
           sx={{
             width: "20%",
           }}
-          inputProps={{label: "Test"}}
+          inputProps={{ label: "Test" }}
           onChange={handleUpload}
         />
       </Grid>
@@ -345,7 +352,7 @@ export default function CourseInput(props: {
             ))}
           </TableBody>
         </Table>
-        <Box sx={{ paddingTop: "2%" }}>
+        <Box sx={{ paddingTop: "2%" }} id={"course-continue"}>
           <Button
             variant="outlined"
             color="info"
@@ -360,6 +367,13 @@ export default function CourseInput(props: {
           </Button>
         </Box>
       </TableContainer>
+      <IconButton
+        title={"Scroll to bottom"}
+        className="Scroll"
+        onClick={executeScroll}
+      >
+        <KeyboardArrowDownRoundedIcon color={"info"} />
+      </IconButton>
     </Box>
   );
 }
