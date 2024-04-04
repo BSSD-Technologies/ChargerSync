@@ -39,11 +39,11 @@
 #     return names[1]
 
 
-def formatForOutput(sections):
+def formatForOutput(scheduler):
     # List of sections
     section_list = []
 
-    for section in sections:
+    for section in scheduler.schedule:
         
         try:   
             a = section.period.start_time

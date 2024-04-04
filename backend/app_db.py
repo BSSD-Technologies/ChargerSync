@@ -3,6 +3,7 @@ from extensions import db
 import DataGenerator
 from Schedule import Schedule
 from output import formatForOutput
+import csvOutput
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/schedule.db'
@@ -38,7 +39,10 @@ with app.app_context():
     print("TEST OF JSON OUTPUT BELOW")
 
     formatForOutput(schedule)
-
+    csvOutput.return_fullSchedule_CSV(schedule)
+    csvOutput.return_filtered_dept(schedule, "CS")
+    csvOutput.return_filtered_prof(schedule, "Robert Preston")
+    csvOutput.return_filtered_room(schedule, "OKT 200")
     #print(Course.query.all())
     #print(Instructor.query.all())
 

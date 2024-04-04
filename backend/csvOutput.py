@@ -1,10 +1,5 @@
 import csv
 
-def getFirstPart(name):
-    names = name.split()
-    return names[0]
-
-
 def return_fullSchedule_CSV(scheduler):
     for section in scheduler.schedule:
 
@@ -49,7 +44,7 @@ def return_fullSchedule_CSV(scheduler):
 
 def return_filtered_dept(scheduler, filtered_department):
     for section in scheduler.schedule:
-        if filtered_department == getFirstPart(section.name):
+        if filtered_department == section.department:
             try:   
                 a = section.period.start_time
             except:
