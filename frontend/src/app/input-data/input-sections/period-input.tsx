@@ -18,6 +18,7 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import DisabledByDefaultRoundedIcon from "@mui/icons-material/DisabledByDefaultRounded";
 import { Period, defaultPeriod } from "@/app/_types/Period";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -161,10 +162,11 @@ export default function PeriodInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
   /** Period list */
-  const [periodList, addPeriodList, getHasErrors] = [
+  const [periodList, addPeriodList, getHasErrors, deleteAllPeriodList] = [
     useGlobalPeriodListStore((state) => state.periodList),
     useGlobalPeriodListStore((state) => state.addPeriodList),
     useGlobalPeriodListStore((state) => state.getHasErrors),
+    useGlobalPeriodListStore((state) => state.deleteAllPeriodList),
   ];
 
   /** Check for errors regularly */
@@ -214,7 +216,17 @@ export default function PeriodInput(props: {
             <TableRow>
               <TableCell>Start Time *</TableCell>
               <TableCell>End Time *</TableCell>
-              <TableCell></TableCell>
+              <TableCell title="Clear All">
+                <Button
+                  fullWidth
+                  onClick={deleteAllPeriodList}
+                  sx={{
+                    display: (periodList.length > 0 ? "flex" : "none")
+                  }}
+                >
+                  <DisabledByDefaultRoundedIcon fontSize="medium" />
+                </Button>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

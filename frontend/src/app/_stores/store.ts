@@ -53,7 +53,7 @@ export const useGlobalCourseListStore = create<GlobalCourseListState>()(
       set((state) => ({
         courseList: [],
         hasErrors: [],
-      }))
+      }));
     },
     hasErrors: [],
     getHasErrors: () => {
@@ -81,6 +81,8 @@ interface GlobalRoomListState {
   addRoomList: (room: Room) => void;
   /** Delete a room by id */
   deleteRoomList: (id: string) => void;
+  /** Delete all rooms */
+  deleteAllRoomList: () => void;
   /** Boolean stack of whether or not there are errors in the room list */
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
@@ -109,6 +111,12 @@ export const useGlobalRoomListStore = create<GlobalRoomListState>()(
           ...state.roomList.filter((room) => room.uuid !== id),
         ],
       })),
+    deleteAllRoomList: () => {
+      set((state) => ({
+        roomList: [],
+        hasErrors: [],
+      }));
+    },
     hasErrors: [],
     getHasErrors: () => {
       // If array (table) is empty, error
@@ -137,6 +145,8 @@ interface GlobalPeriodListState {
   addPeriodList: (period: Period) => void;
   /** Delete a period by id */
   deletePeriodList: (id: string) => void;
+  /** Delete all periods */
+  deleteAllPeriodList: () => void;
   /** Boolean stack of whether or not there are errors in the period list */
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
@@ -168,6 +178,12 @@ export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
           ...state.periodList.filter((period) => period.uuid !== id),
         ],
       })),
+    deleteAllPeriodList: () => {
+      set((state) => ({
+        periodList: [],
+        hasErrors: [],
+      }));
+    },
     hasErrors: [],
     getHasErrors: () => {
       // If array (table) is empty, error
@@ -207,6 +223,8 @@ interface GlobalInstructorListState {
   addInstructorList: (instructor: Instructor) => void;
   /** Delete an instructor by id */
   deleteInstructorList: (id: string) => void;
+  /** Delete all instructors */
+  deleteAllInstructorList: () => void;
   /** Boolean stack of whether or not there are errors in the instructor list */
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
@@ -237,6 +255,12 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
           ),
         ],
       })),
+    deleteAllInstructorList: () => {
+      set((state) => ({
+        instructorList: [],
+        hasErrors: [],
+      }));
+    },
     hasErrors: [],
     getHasErrors: () => {
       // If array (table) is empty, error
