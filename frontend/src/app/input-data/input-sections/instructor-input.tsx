@@ -190,7 +190,12 @@ export default function InstructorInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
   /** Instructor list */
-  const [instructorList, addInstructorList, getHasErrors, deleteAllInstructorList] = [
+  const [
+    instructorList,
+    addInstructorList,
+    getHasErrors,
+    deleteAllInstructorList,
+  ] = [
     useGlobalInstructorListStore((state) => state.instructorList),
     useGlobalInstructorListStore((state) => state.addInstructorList),
     useGlobalInstructorListStore((state) => state.getHasErrors),
@@ -218,6 +223,14 @@ export default function InstructorInput(props: {
       sx={{
         marginTop: "2%",
         marginBottom: "2%",
+        padding: "2%",
+        border: "2px solid",
+        borderColor:
+          getHasErrors() && instructorList.length > 0
+            ? "#d32f2f"
+            : "transparent",
+        borderRadius: "15px",
+        transition: "all .5s ease",
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
@@ -249,7 +262,7 @@ export default function InstructorInput(props: {
                   fullWidth
                   onClick={deleteAllInstructorList}
                   sx={{
-                    display: (instructorList.length > 0 ? "flex" : "none")
+                    display: instructorList.length > 0 ? "flex" : "none",
                   }}
                 >
                   <DisabledByDefaultRoundedIcon fontSize="medium" />

@@ -52,8 +52,8 @@ function PeriodTableRow(props: { row: Period }) {
       setEndTime("");
       setEndTimeError(false);
     } else {
-      setEndTimeDisabled(false)
-      validateEndTime(endTime, uuid, periodList)
+      setEndTimeDisabled(false);
+      validateEndTime(endTime, uuid, periodList);
     }
   };
 
@@ -113,7 +113,15 @@ function PeriodTableRow(props: { row: Period }) {
       validateStartTime(startTime, uuid, periodList);
       validateEndTime(endTime, uuid, periodList);
     }
-  }, [endTime, isFirstRender, periodList, startTime, uuid, validateEndTime, validateStartTime]);
+  }, [
+    endTime,
+    isFirstRender,
+    periodList,
+    startTime,
+    uuid,
+    validateEndTime,
+    validateStartTime,
+  ]);
 
   return (
     <TableRow key={uuid}>
@@ -191,6 +199,12 @@ export default function PeriodInput(props: {
       sx={{
         marginTop: "2%",
         marginBottom: "2%",
+        padding: "2%",
+        border: "2px solid",
+        borderColor:
+          getHasErrors() && periodList.length > 0 ? "#d32f2f" : "transparent",
+        borderRadius: "15px",
+        transition: "all .5s ease",
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
@@ -221,7 +235,7 @@ export default function PeriodInput(props: {
                   fullWidth
                   onClick={deleteAllPeriodList}
                   sx={{
-                    display: (periodList.length > 0 ? "flex" : "none")
+                    display: periodList.length > 0 ? "flex" : "none",
                   }}
                 >
                   <DisabledByDefaultRoundedIcon fontSize="medium" />

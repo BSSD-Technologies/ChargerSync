@@ -178,6 +178,12 @@ export default function RoomInput(props: {
       sx={{
         marginTop: "2%",
         marginBottom: "2%",
+        padding: "2%",
+        border: "2px solid",
+        borderColor:
+          getHasErrors() && roomList.length > 0 ? "#d32f2f" : "transparent",
+        borderRadius: "15px",
+        transition: "all .5s ease",
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
@@ -208,7 +214,7 @@ export default function RoomInput(props: {
                   fullWidth
                   onClick={deleteAllRoomList}
                   sx={{
-                    display: (roomList.length > 0 ? "flex" : "none")
+                    display: roomList.length > 0 ? "flex" : "none",
                   }}
                 >
                   <DisabledByDefaultRoundedIcon fontSize="medium" />
