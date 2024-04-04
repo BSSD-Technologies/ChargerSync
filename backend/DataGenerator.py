@@ -5,24 +5,25 @@ from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
 from datetime import time
+import uuid
 
 # Define times for MW and TR
 mw_times = [
     # Start time, End time
     #(time(hour=8), time(hour=9)),
     #(time(hour=9), time(hour=10)),
-    (time(hour=10), time(hour=11)),
-    (time(hour=11), time(hour=12)),
-    (time(hour=13), time(hour=14))
+    ("10:00PM","11:00PM"),
+    ("11:00PM","12:00PM"),
+    ("12:00PM","1:00PM")
 ]
 
 tr_times = [
     # Start time, End time
     #(time(hour=8), time(hour=9)),
     #(time(hour=9), time(hour=10)),
-    (time(hour=10), time(hour=11)),
-    (time(hour=11), time(hour=12)),
-    (time(hour=13), time(hour=14))
+    ("10:00PM","11:00PM"),
+    ("11:00PM","12:00PM"),
+    ("12:00PM","1:00PM")
 ]
 
 instructor_list = [
@@ -91,31 +92,31 @@ period_preference_list = [
 def loadData():
     # Create Periods
     for start, end in mw_times:
-        period = Period(start_time=start, end_time=end, day='MW')
+        period = Period(id=str(uuid.uuid4()), start_time=start, end_time=end, day='MW')
         db.session.add(period)
     db.session.commit()
 
     for start, end in tr_times:
-        period = Period(start_time=start, end_time=end, day='TR')
+        period = Period(id=str(uuid.uuid4()), start_time=start, end_time=end, day='TR')
         db.session.add(period)
     db.session.commit()
 
     # Add Instructors
     for first_name, last_name, priority in instructor_list:
-        new_instructor = Instructor(fname=first_name, lname=last_name, priority=priority)
+        new_instructor = Instructor(id=str(uuid.uuid4()), fname=first_name, lname=last_name, priority=priority)
         db.session.add(new_instructor)
     db.session.commit()
 
     # Add Rooms
     for name, occupancy in room_list:
-        new_room = Room(name=name, max_occupancy=occupancy)
+        new_room = Room(id=str(uuid.uuid4()), name=name, max_occupancy=occupancy)
         db.session.add(new_room)
     db.session.commit()
 
     # Add Courses
     for course, max, pre in course_list:
         course_div = course.split()
-        new_course = Course(name=course, department=course_div[0], num=course_div[1], max_enrollment=max, preliminary_enrollment=pre)
+        new_course = Course(id=str(uuid.uuid4()), name=course, department=course_div[0], num=course_div[1], max_enrollment=max, preliminary_enrollment=pre)
         db.session.add(new_course)
     db.session.commit()
 

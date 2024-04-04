@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Grid,
+  IconButton,
   OutlinedInput,
   Stack,
   Table,
@@ -18,6 +19,8 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import DisabledByDefaultRoundedIcon from "@mui/icons-material/DisabledByDefaultRounded";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Period, defaultPeriod } from "@/app/_types/Period";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -51,8 +54,8 @@ function PeriodTableRow(props: { row: Period }) {
       setEndTime("");
       setEndTimeError(false);
     } else {
-      setEndTimeDisabled(false)
-      validateEndTime(endTime, uuid, periodList)
+      setEndTimeDisabled(false);
+      validateEndTime(endTime, uuid, periodList);
     }
   };
 
@@ -112,7 +115,15 @@ function PeriodTableRow(props: { row: Period }) {
       validateStartTime(startTime, uuid, periodList);
       validateEndTime(endTime, uuid, periodList);
     }
-  }, [endTime, isFirstRender, periodList, startTime, uuid, validateEndTime, validateStartTime]);
+  }, [
+    endTime,
+    isFirstRender,
+    periodList,
+    startTime,
+    uuid,
+    validateEndTime,
+    validateStartTime,
+  ]);
 
   return (
     <TableRow key={uuid}>
@@ -160,11 +171,18 @@ function PeriodTableRow(props: { row: Period }) {
 export default function PeriodInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
+  /** Scroll to continue functionality */
+  const executeScroll = () => {
+    const section = document.querySelector("#period-continue");
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   /** Period list */
-  const [periodList, addPeriodList, getHasErrors] = [
+  const [periodList, addPeriodList, getHasErrors, deleteAllPeriodList] = [
     useGlobalPeriodListStore((state) => state.periodList),
     useGlobalPeriodListStore((state) => state.addPeriodList),
     useGlobalPeriodListStore((state) => state.getHasErrors),
+    useGlobalPeriodListStore((state) => state.deleteAllPeriodList),
   ];
 
   /** Check for errors regularly */
@@ -189,6 +207,12 @@ export default function PeriodInput(props: {
       sx={{
         marginTop: "2%",
         marginBottom: "2%",
+        padding: "2%",
+        border: "2px solid",
+        borderColor:
+          getHasErrors() && periodList.length > 0 ? "#d32f2f" : "transparent",
+        borderRadius: "15px",
+        transition: "all .5s ease",
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
@@ -214,7 +238,17 @@ export default function PeriodInput(props: {
             <TableRow>
               <TableCell>Start Time *</TableCell>
               <TableCell>End Time *</TableCell>
-              <TableCell></TableCell>
+              <TableCell title="Clear All">
+                <Button
+                  fullWidth
+                  onClick={deleteAllPeriodList}
+                  sx={{
+                    display: periodList.length > 0 ? "flex" : "none",
+                  }}
+                >
+                  <DisabledByDefaultRoundedIcon fontSize="medium" />
+                </Button>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -223,7 +257,7 @@ export default function PeriodInput(props: {
             ))}
           </TableBody>
         </Table>
-        <Box sx={{ paddingTop: "2%" }}>
+        <Box sx={{ paddingTop: "2%" }} id={"period-continue"}>
           <Button
             variant="outlined"
             color="info"
@@ -238,6 +272,13 @@ export default function PeriodInput(props: {
           </Button>
         </Box>
       </TableContainer>
+      <IconButton
+        title={"Scroll to bottom"}
+        className="Scroll"
+        onClick={executeScroll}
+      >
+        <KeyboardArrowDownRoundedIcon color={"info"} />
+      </IconButton>
     </Box>
   );
 }

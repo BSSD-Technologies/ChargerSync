@@ -58,6 +58,16 @@ class Schedule:
                 self.schedule.append(section)
                 continue
 
+    def clear(self):
+        # Clear all arrays
+        self.courses = []
+        self.sections = []
+        self.schedule = []
+        self.conflicts = []
+        self.incompletes = []
+
+        
+
 
 
 

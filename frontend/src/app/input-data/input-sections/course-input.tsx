@@ -4,7 +4,7 @@ import {
   FilledInput,
   FormHelperText,
   Grid,
-  InputLabel,
+  IconButton,
   OutlinedInput,
   Stack,
   Table,
@@ -19,6 +19,8 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import DisabledByDefaultRoundedIcon from "@mui/icons-material/DisabledByDefaultRounded";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Course, defaultCourse } from "@/app/_types/Course";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -261,11 +263,18 @@ function CourseTableRow(props: { row: Course }) {
 export default function CourseInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
+  /** Scroll to continue functionality */
+  const executeScroll = () => {
+    const section = document.querySelector("#course-continue");
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   /** Course list */
-  const [courseList, addCourseList, getHasErrors] = [
+  const [courseList, addCourseList, getHasErrors, deleteAllCourseList] = [
     useGlobalCourseListStore((state) => state.courseList),
     useGlobalCourseListStore((state) => state.addCourseList),
     useGlobalCourseListStore((state) => state.getHasErrors),
+    useGlobalCourseListStore((state) => state.deleteAllCourseList),
   ];
 
   /** Check for errors regularly */
@@ -290,6 +299,12 @@ export default function CourseInput(props: {
       sx={{
         marginTop: "2%",
         marginBottom: "2%",
+        padding: "2%",
+        border: "2px solid",
+        borderColor:
+          getHasErrors() && courseList.length > 0 ? "#d32f2f" : "transparent",
+        borderRadius: "15px",
+        transition: "all .5s ease",
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
@@ -305,7 +320,7 @@ export default function CourseInput(props: {
           sx={{
             width: "20%",
           }}
-          inputProps={{label: "Test"}}
+          inputProps={{ label: "Test" }}
           onChange={handleUpload}
         />
       </Grid>
@@ -318,7 +333,17 @@ export default function CourseInput(props: {
               <TableCell>Course Number *</TableCell>
               <TableCell>Max Enrollment *</TableCell>
               <TableCell>Preliminary Enrollment</TableCell>
-              <TableCell></TableCell>
+              <TableCell title="Clear All">
+                <Button
+                  fullWidth
+                  onClick={deleteAllCourseList}
+                  sx={{
+                    display: courseList.length > 0 ? "flex" : "none",
+                  }}
+                >
+                  <DisabledByDefaultRoundedIcon fontSize="medium" />
+                </Button>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -327,7 +352,7 @@ export default function CourseInput(props: {
             ))}
           </TableBody>
         </Table>
-        <Box sx={{ paddingTop: "2%" }}>
+        <Box sx={{ paddingTop: "2%" }} id={"course-continue"}>
           <Button
             variant="outlined"
             color="info"
@@ -342,6 +367,13 @@ export default function CourseInput(props: {
           </Button>
         </Box>
       </TableContainer>
+      <IconButton
+        title={"Scroll to bottom"}
+        className="Scroll"
+        onClick={executeScroll}
+      >
+        <KeyboardArrowDownRoundedIcon color={"info"} />
+      </IconButton>
     </Box>
   );
 }

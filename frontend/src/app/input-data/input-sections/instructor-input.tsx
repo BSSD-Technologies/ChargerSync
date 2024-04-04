@@ -4,6 +4,7 @@ import {
   FilledInput,
   FormHelperText,
   Grid,
+  IconButton,
   OutlinedInput,
   Stack,
   Table,
@@ -18,6 +19,8 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import DisabledByDefaultRoundedIcon from "@mui/icons-material/DisabledByDefaultRounded";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Instructor, defaultInstructor } from "@/app/_types/Instructor";
@@ -188,11 +191,23 @@ function InstructorTableRow(props: { row: Instructor }) {
 export default function InstructorInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
+  /** Scroll to continue functionality */
+  const executeScroll = () => {
+    const section = document.querySelector("#instructor-continue");
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   /** Instructor list */
-  const [instructorList, addInstructorList, getHasErrors] = [
+  const [
+    instructorList,
+    addInstructorList,
+    getHasErrors,
+    deleteAllInstructorList,
+  ] = [
     useGlobalInstructorListStore((state) => state.instructorList),
     useGlobalInstructorListStore((state) => state.addInstructorList),
     useGlobalInstructorListStore((state) => state.getHasErrors),
+    useGlobalInstructorListStore((state) => state.deleteAllInstructorList),
   ];
 
   /** Check for errors regularly */
@@ -216,6 +231,14 @@ export default function InstructorInput(props: {
       sx={{
         marginTop: "2%",
         marginBottom: "2%",
+        padding: "2%",
+        border: "2px solid",
+        borderColor:
+          getHasErrors() && instructorList.length > 0
+            ? "#d32f2f"
+            : "transparent",
+        borderRadius: "15px",
+        transition: "all .5s ease",
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
@@ -242,7 +265,17 @@ export default function InstructorInput(props: {
               <TableCell>First Name *</TableCell>
               <TableCell>Last Name *</TableCell>
               <TableCell>Priority</TableCell>
-              <TableCell></TableCell>
+              <TableCell title="Clear All">
+                <Button
+                  fullWidth
+                  onClick={deleteAllInstructorList}
+                  sx={{
+                    display: instructorList.length > 0 ? "flex" : "none",
+                  }}
+                >
+                  <DisabledByDefaultRoundedIcon fontSize="medium" />
+                </Button>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -251,7 +284,7 @@ export default function InstructorInput(props: {
             ))}
           </TableBody>
         </Table>
-        <Box sx={{ paddingTop: "2%" }}>
+        <Box sx={{ paddingTop: "2%" }} id={"instructor-continue"}>
           <Button
             variant="outlined"
             color="info"
@@ -266,6 +299,13 @@ export default function InstructorInput(props: {
           </Button>
         </Box>
       </TableContainer>
+      <IconButton
+        title={"Scroll to bottom"}
+        className="Scroll"
+        onClick={executeScroll}
+      >
+        <KeyboardArrowDownRoundedIcon color={"info"} />
+      </IconButton>
     </Box>
   );
 }
