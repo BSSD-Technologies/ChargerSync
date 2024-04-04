@@ -39,11 +39,11 @@
 #     return names[1]
 
 
-def formatForOutput(schedule):
+def formatForOutput(sections):
     # List of sections
     section_list = []
 
-    for section in schedule.schedule:
+    for section in sections:
         
         try:   
             a = section.period.start_time
@@ -85,7 +85,7 @@ def formatForOutput(schedule):
 
         # Fill in the values for the course
         course_info["uuid"] = section.id
-        course_info["section_id"] = section.name
+        course_info["section_id"] = section.section_no
 
         # Fill in instructor information
         course_info["instructor"] = {

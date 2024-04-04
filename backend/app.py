@@ -3,7 +3,6 @@ from flask_cors import CORS
 from functions import *
 from extensions import db
 from Schedule import Schedule
-import DataGenerator
 from output import formatForOutput
 from models.Course import Section, Course
 from models.Instructor import Instructor
@@ -17,6 +16,8 @@ CORS(app)
 # Setting up the database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db.init_app(app)
+
+generated_schedule = None
 
 @app.route('/')
 def hello_world():
@@ -161,21 +162,24 @@ Error Codes:
 """
 @app.route('/generate/schedule',  methods=['POST'])
 def generate_schedule():
+    global generated_schedule
     # Ensure request contains JSON data
     if not request.is_json:
         return jsonify({'error': 'Request must be JSON'}), 400
     else:
         #return jsonify({'no error': 'Request was good'}), 200
         #DataGenerator.loadData()
+        global generated_schedule
 
-        db.drop_all()
-        db.create_all()
-        
+        if generated_schedule:
+            generated_schedule = None
+            db.drop_all()
+            db.create_all()
+
         # Read JSON data from request
         json_data = request.json
         
         # Parse data to put into database
-
         # Add Courses
         for course in json_data.get("courses"):
             new_course = Course(id=course.get("uuid"), department=course.get("department"), num=course.get("course_num"), max_enrollment=course.get("max_enrollment"))
@@ -215,7 +219,10 @@ def generate_schedule():
         
         schedule = Schedule()
         schedule.generate()
-        schedule_data = formatForOutput(schedule)
+        generated_schedule = schedule
+
+        
+        schedule_data = formatForOutput(schedule.schedule)
         return jsonify({'schedule': schedule_data}), 200
         #return jsonify({'schedule': "still testing"}), 200
 
