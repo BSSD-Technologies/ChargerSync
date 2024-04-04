@@ -18,6 +18,7 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import DisabledByDefaultRoundedIcon from "@mui/icons-material/DisabledByDefaultRounded";
 import { Room, defaultRoom } from "@/app/_types/Room";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -148,10 +149,11 @@ export default function RoomInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
   /** Room list */
-  const [roomList, addRoomList, getHasErrors] = [
+  const [roomList, addRoomList, getHasErrors, deleteAllRoomList] = [
     useGlobalRoomListStore((state) => state.roomList),
     useGlobalRoomListStore((state) => state.addRoomList),
     useGlobalRoomListStore((state) => state.getHasErrors),
+    useGlobalRoomListStore((state) => state.deleteAllRoomList),
   ];
 
   /** Check for errors regularly */
@@ -176,6 +178,12 @@ export default function RoomInput(props: {
       sx={{
         marginTop: "2%",
         marginBottom: "2%",
+        padding: "2%",
+        border: "2px solid",
+        borderColor:
+          getHasErrors() && roomList.length > 0 ? "#d32f2f" : "transparent",
+        borderRadius: "15px",
+        transition: "all .5s ease",
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
@@ -201,7 +209,17 @@ export default function RoomInput(props: {
             <TableRow>
               <TableCell>Room ID *</TableCell>
               <TableCell>Max Capacity *</TableCell>
-              <TableCell></TableCell>
+              <TableCell title="Clear All">
+                <Button
+                  fullWidth
+                  onClick={deleteAllRoomList}
+                  sx={{
+                    display: roomList.length > 0 ? "flex" : "none",
+                  }}
+                >
+                  <DisabledByDefaultRoundedIcon fontSize="medium" />
+                </Button>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

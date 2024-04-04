@@ -27,6 +27,7 @@ export const UseUploadCourses = async (file: File) => {
   formData.append("file", file);
 
   try {
+    toast.loading('Uploading...');
     const response = await axios.post(
       "http://localhost:5001/import/courses",
       formData,
@@ -37,10 +38,12 @@ export const UseUploadCourses = async (file: File) => {
       }
     );
     // 200: OK, success toast, return formatted data
+    toast.dismiss();
     toast.success("Upload successful!");
     const formattedData = readCourses(response.data);
     return formattedData;
   } catch (error: any) {
+    toast.dismiss();
     if (error.response) {
       const status = error.response.status;
       // File parameter not provided
@@ -69,6 +72,7 @@ export const UseUploadRooms = async (file: File) => {
   formData.append("file", file);
 
   try {
+    toast.loading('Uploading...');
     const response = await axios.post(
       "http://localhost:5001/import/rooms",
       formData,
@@ -79,10 +83,12 @@ export const UseUploadRooms = async (file: File) => {
       }
     );
     // 200: OK, success toast, return formatted data
+    toast.dismiss();
     toast.success("Upload successful!");
     const formattedData = readRooms(response.data);
     return formattedData;
   } catch (error: any) {
+    toast.dismiss();
     if (error.response) {
       const status = error.response.status;
       // File parameter not provided
@@ -111,6 +117,7 @@ export const UseUploadPeriods = async (file: File) => {
   formData.append("file", file);
 
   try {
+    toast.loading('Uploading...');
     const response = await axios.post(
       "http://localhost:5001/import/periods",
       formData,
@@ -121,10 +128,12 @@ export const UseUploadPeriods = async (file: File) => {
       }
     );
     // 200: OK, success toast, return formatted data
+    toast.dismiss();
     toast.success("Upload successful!");
     const formattedData = readPeriods(response.data);
     return formattedData;
   } catch (error: any) {
+    toast.dismiss();
     if (error.response) {
       const status = error.response.status;
       // File parameter not provided
@@ -153,6 +162,7 @@ export const UseUploadInstructors = async (file: File) => {
   formData.append("file", file);
 
   try {
+    toast.loading('Uploading...');
     const response = await axios.post(
       "http://localhost:5001/import/instructors",
       formData,
@@ -163,10 +173,12 @@ export const UseUploadInstructors = async (file: File) => {
       }
     );
     // 200: OK, success toast, return formatted data
+    toast.dismiss();
     toast.success("Upload successful!");
     const formattedData = readInstructors(response.data);
     return formattedData;
   } catch (error: any) {
+    toast.dismiss();
     if (error.response) {
       const status = error.response.status;
       // File parameter not provided
