@@ -18,6 +18,7 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import DisabledByDefaultRoundedIcon from "@mui/icons-material/DisabledByDefaultRounded";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Instructor, defaultInstructor } from "@/app/_types/Instructor";
@@ -189,10 +190,16 @@ export default function InstructorInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
   /** Instructor list */
-  const [instructorList, addInstructorList, getHasErrors] = [
+  const [
+    instructorList,
+    addInstructorList,
+    getHasErrors,
+    deleteAllInstructorList,
+  ] = [
     useGlobalInstructorListStore((state) => state.instructorList),
     useGlobalInstructorListStore((state) => state.addInstructorList),
     useGlobalInstructorListStore((state) => state.getHasErrors),
+    useGlobalInstructorListStore((state) => state.deleteAllInstructorList),
   ];
 
   /** Check for errors regularly */
@@ -216,6 +223,14 @@ export default function InstructorInput(props: {
       sx={{
         marginTop: "2%",
         marginBottom: "2%",
+        padding: "2%",
+        border: "2px solid",
+        borderColor:
+          getHasErrors() && instructorList.length > 0
+            ? "#d32f2f"
+            : "transparent",
+        borderRadius: "15px",
+        transition: "all .5s ease",
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
@@ -242,7 +257,17 @@ export default function InstructorInput(props: {
               <TableCell>First Name *</TableCell>
               <TableCell>Last Name *</TableCell>
               <TableCell>Priority</TableCell>
-              <TableCell></TableCell>
+              <TableCell title="Clear All">
+                <Button
+                  fullWidth
+                  onClick={deleteAllInstructorList}
+                  sx={{
+                    display: instructorList.length > 0 ? "flex" : "none",
+                  }}
+                >
+                  <DisabledByDefaultRoundedIcon fontSize="medium" />
+                </Button>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

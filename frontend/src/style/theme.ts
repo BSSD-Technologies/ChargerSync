@@ -108,6 +108,6 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
           }),
         }),
       },
-    },
+    }
   },
 });
