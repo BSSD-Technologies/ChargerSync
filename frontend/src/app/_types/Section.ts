@@ -31,4 +31,6 @@ export type FormattedSection = {
   end: string,
   location: string,
   instructor: string,
+  status: "Complete" | "Incomplete" | "Conflict",
+  section: string,
 }

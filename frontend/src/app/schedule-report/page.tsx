@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import Report from "./reports/report";
 import ConflictReport from "./reports/conflict-report";
-import NonConflictReport from "./reports/nonconflict-report";
+import IncompleteReport from "./reports/incomplete-report";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import { useState } from "react";
@@ -50,19 +50,10 @@ export default function ScheduleReport() {
       <br />
       <Report />
       <br />
-      <Grid
-        container
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-      >
-        <Grid item>
-          <ConflictReport />
-        </Grid>
-        <Grid item>
-          <NonConflictReport />
-        </Grid>
-      </Grid>
+      {/**
+      <ConflictReport />
+      <IncompleteReport />
+       */}
       <br />
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
         <Stack direction={"column"}>
