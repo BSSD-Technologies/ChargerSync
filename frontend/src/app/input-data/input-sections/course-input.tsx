@@ -22,7 +22,7 @@ import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import DisabledByDefaultRoundedIcon from "@mui/icons-material/DisabledByDefaultRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Course, defaultCourse } from "@/app/_types/Course";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
   useFirstRender,
@@ -367,7 +367,11 @@ export default function CourseInput(props: {
           </Button>
         </Box>
       </TableContainer>
-      <IconButton title={"Scroll to bottom"} className="Scroll" onClick={executeScroll}>
+      <IconButton
+        title={"Scroll to bottom"}
+        className="Scroll"
+        onClick={executeScroll}
+      >
         <KeyboardArrowDownRoundedIcon color={"info"} />
       </IconButton>
     </Box>

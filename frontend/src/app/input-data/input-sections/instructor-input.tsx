@@ -4,6 +4,7 @@ import {
   FilledInput,
   FormHelperText,
   Grid,
+  IconButton,
   OutlinedInput,
   Stack,
   Table,
@@ -19,6 +20,7 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import DisabledByDefaultRoundedIcon from "@mui/icons-material/DisabledByDefaultRounded";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Instructor, defaultInstructor } from "@/app/_types/Instructor";
@@ -189,6 +191,12 @@ function InstructorTableRow(props: { row: Instructor }) {
 export default function InstructorInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
+  /** Scroll to continue functionality */
+  const executeScroll = () => {
+    const section = document.querySelector("#instructor-continue");
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   /** Instructor list */
   const [
     instructorList,
@@ -276,7 +284,7 @@ export default function InstructorInput(props: {
             ))}
           </TableBody>
         </Table>
-        <Box sx={{ paddingTop: "2%" }}>
+        <Box sx={{ paddingTop: "2%" }} id={"instructor-continue"}>
           <Button
             variant="outlined"
             color="info"
@@ -291,6 +299,13 @@ export default function InstructorInput(props: {
           </Button>
         </Box>
       </TableContainer>
+      <IconButton
+        title={"Scroll to bottom"}
+        className="Scroll"
+        onClick={executeScroll}
+      >
+        <KeyboardArrowDownRoundedIcon color={"info"} />
+      </IconButton>
     </Box>
   );
 }
