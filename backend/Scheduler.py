@@ -117,12 +117,23 @@ class Scheduler:
         # Creates a tuple of course preferences for each course
         for course in courses:
             course_id = course.id
+            # get all course preference objects related to course in a list
             course_preferences = course.preferences
+
+            # Empty array to update course preferences in
             sorted_array = []
             for course_pref in course_preferences:
+                # Get instructor id
                 instructor = course_pref.instructor_id
+
+                # get priority of the instructor
                 priority = course_pref.instructor.priority
-                self.sortedInsert(sorted_array, instructor, priority)
+
+                # id and priority together
+                id_priority_tuple = (instructor, str(priority))
+
+                # put instructor in appropriate place (sorted by priority)
+                self.sortedInsert(sorted_array, id_priority_tuple)
             tuple_item = (course_id, sorted_array)
             self.course_preferences.append(tuple_item)
 
@@ -307,13 +318,14 @@ class Scheduler:
                 return course[1]
         return None
 
-    # Input: self, lst (list), id (int), priority(int)
+    # Input: self, lst (list) sorted_array, id (int) instructor_id, priority(int) instructor.priority
     # Output: n/a
-    def sortedInsert(self, lst, id, priority):
+    def sortedInsert(self, lst, id_priority_tuple):
         index = 0
-        while index < len(lst) and lst[index] < priority:
+        id, priority = id_priority_tuple
+        while index < len(lst) and lst[index][1] < priority:
             index += 1
-        lst.insert(index, id)
+        lst.insert(index, id_priority_tuple[0])
 
     # Input: self, instructor_id(int), course_id(int)
     # Output: true or false
