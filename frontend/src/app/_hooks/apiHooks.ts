@@ -27,7 +27,7 @@ export const UseUploadCourses = async (file: File) => {
   formData.append("file", file);
 
   try {
-    toast.loading('Uploading...');
+    toast.loading("Uploading...");
     const response = await axios.post(
       "http://localhost:5001/import/courses",
       formData,
@@ -72,7 +72,7 @@ export const UseUploadRooms = async (file: File) => {
   formData.append("file", file);
 
   try {
-    toast.loading('Uploading...');
+    toast.loading("Uploading...");
     const response = await axios.post(
       "http://localhost:5001/import/rooms",
       formData,
@@ -117,7 +117,7 @@ export const UseUploadPeriods = async (file: File) => {
   formData.append("file", file);
 
   try {
-    toast.loading('Uploading...');
+    toast.loading("Uploading...");
     const response = await axios.post(
       "http://localhost:5001/import/periods",
       formData,
@@ -162,7 +162,7 @@ export const UseUploadInstructors = async (file: File) => {
   formData.append("file", file);
 
   try {
-    toast.loading('Uploading...');
+    toast.loading("Uploading...");
     const response = await axios.post(
       "http://localhost:5001/import/instructors",
       formData,
@@ -235,7 +235,32 @@ export const UseGenerateSchedule = async (
     if (error.response) {
       const status = error.response.status;
       // JSON object parameter not provided
-      if (status === 400) toast.error("Error generating schedule. Please try again.");
+      if (status === 400)
+        toast.error("Error generating schedule. Please try again.");
+    }
+  }
+  return null;
+};
+
+/**
+ * UseGenerateConflicts
+ * Get all sections with conflicts from generated schedule
+ *
+ * @returns JSON object
+ */
+export const UseGenerateConflicts = async () => {
+  try {
+    const response = await axios.post(
+      "http://localhost:5001/generate/conflicts"
+    );
+    // 200: OK, return response data
+    return response.data["conflicts"];
+  } catch (error: any) {
+    if (error.response) {
+      const status = error.response.status;
+      // No schedule exists yet
+      //if (status === 400)
+        //toast.error("Error generating schedule. Please try again.");
     }
   }
   return null;
