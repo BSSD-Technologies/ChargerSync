@@ -162,7 +162,6 @@ Error Codes:
 """
 @app.route('/generate/schedule',  methods=['POST'])
 def generate_schedule():
-    #global generated_schedule
     # Ensure request contains JSON data
     if not request.is_json:
         return jsonify({'error': 'Request must be JSON'}), 400
@@ -227,39 +226,37 @@ def generate_schedule():
 
 """
 /generate/conflicts
+User requests all sections with conflicts, and data is returned as JSON
 
 Error Codes:
+200 - OK
+400 - No schedule exists yet
 """
 @app.route('/generate/conflicts',  methods=['GET'])
 def generate_conflicts():
-    #global generated_schedule
-    # Ensure request contains JSON data
+    # Ensure request happens after schedule is generated
     if not generated_schedule:
         return jsonify({'error': 'No schedule generated'}), 400
     else:
-        #DataGenerator.loadData() # Load test data for scheduler
-        #global generated_schedule
-
-        # Format output of schedule to be returned
+        # Format output of conflicts to be returned
         conflict_data = formatForOutput(generated_schedule.conflicts)
         return jsonify({'conflicts': conflict_data}), 200
     
 """
 /generate/incompletes
+User requests all sections with incompletes, and data is returned as JSON
 
 Error Codes:
+200 - OK
+400 - No schedule exists yet
 """
 @app.route('/generate/incompletes',  methods=['GET'])
 def generate_incompletes():
-    #global generated_schedule
-    # Ensure request contains JSON data
+    # Ensure request happens after schedule is generated
     if not generated_schedule:
         return jsonify({'error': 'No schedule generated'}), 400
     else:
-        #DataGenerator.loadData() # Load test data for scheduler
-        #global generated_schedule
-
-        # Format output of schedule to be returned
+        # Format output of incompletes to be returned
         incompletes_data = formatForOutput(generated_schedule.incompletes)
         return jsonify({'incompletes': incompletes_data}), 200
 
