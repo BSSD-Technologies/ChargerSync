@@ -3,6 +3,8 @@ import { Box, Container, Typography } from "@mui/material";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useGlobalConflictStore } from "@/app/_stores/store";
+import { UseGenerateConflicts } from "@/app/_hooks/apiHooks";
+import { useEffect } from "react";
 
 const columns: GridColDef[] = [
   { field: "section", headerName: "Section", minWidth: 150 },
@@ -14,9 +16,13 @@ const columns: GridColDef[] = [
 ];
 
 function ConflictTable() {
+  const [conflictList, setConflictList] = [
+    useGlobalConflictStore((state) => state.conflictList),
+    useGlobalConflictStore((state) => state.setConflictList),
+  ];
   return (
     <DataGrid
-      rows={}
+      rows={conflictList}
       columns={columns}
       initialState={{
         pagination: {
@@ -41,11 +47,22 @@ function ConflictTable() {
 
 export default function ConflictReport() {
   /** Conflict list store */
-  const [conflictList] = [
+  const [conflictList, setConflictList] = [
     useGlobalConflictStore((state) => state.conflictList),
+    useGlobalConflictStore((state) => state.setConflictList),
   ];
 
   /** API call for /generate/conflicts */
+  const generateConflicts = async () => {
+    const getData = await UseGenerateConflicts();
+    if (getData) {
+      setConflictList(getData);
+    }
+  };
+
+  useEffect(() => {
+    generateConflicts;
+  });
 
   return (
     <Container
