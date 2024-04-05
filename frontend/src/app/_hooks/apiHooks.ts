@@ -254,8 +254,31 @@ export const UseGenerateConflicts = async () => {
       "http://localhost:5001/generate/conflicts"
     );
     // 200: OK, return response data
-    console.log(response.data["conflicts"]);
     return response.data["conflicts"];
+  } catch (error: any) {
+    if (error.response) {
+      const status = error.response.status;
+      // No schedule exists yet
+      //if (status === 400)
+        //toast.error("Error generating schedule. Please try again.");
+    }
+  }
+  return null;
+};
+
+/**
+ * UseGenerateIncompletes
+ * Get all sections with incompletes from generated schedule
+ *
+ * @returns JSON object
+ */
+export const UseGenerateIncompletes = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5001/generate/incompletes"
+    );
+    // 200: OK, return response data
+    return response.data["incompletes"];
   } catch (error: any) {
     if (error.response) {
       const status = error.response.status;

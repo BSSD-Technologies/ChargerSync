@@ -1,20 +1,10 @@
 import { LoadingButton } from "@mui/lab";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Container,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useGlobalConflictStore } from "@/app/_stores/store";
 import { UseGenerateConflicts } from "@/app/_hooks/apiHooks";
 import { useEffect } from "react";
-import { FormattedSection } from "@/app/_types/Section";
 
 const columns: GridColDef[] = [
   { field: "course", headerName: "Course", minWidth: 150 },
