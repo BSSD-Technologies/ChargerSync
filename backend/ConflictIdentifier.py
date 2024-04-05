@@ -24,3 +24,6 @@ class ConflictIdentifier():
             else:
                 section.status = 'Complete'
                 continue
+
+    def clear(self):
+        self.sections = []

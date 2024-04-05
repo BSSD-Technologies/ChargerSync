@@ -31,12 +31,12 @@ class Instructor(db.Model):
     def addCoursePreference(self, course_id):
         new_preference = CoursePreference(id=str(uuid.uuid4()), instructor_id=self.id, course_id=course_id)
         db.session.add(new_preference)
-        db.session.commit()
+        #db.session.commit()
 
     def addPeriodPreference(self, period_id):
         new_preference = PeriodPreference(id=str(uuid.uuid4()), instructor_id=self.id, period_id=period_id)
         db.session.add(new_preference)
-        db.session.commit()
+        #db.session.commit()
     
     
 

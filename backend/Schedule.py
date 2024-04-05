@@ -41,6 +41,7 @@ class Schedule:
         self.generateConflicts()
 
     def generateConflicts(self):
+        print(self.sections)
         self.conflict_identifier = ConflictIdentifier(self.sections)
         self.conflict_identifier.labelSections()
         self.separateSections()
@@ -59,14 +60,25 @@ class Schedule:
                 continue
 
     def clear(self):
-        # Clear all arrays
+        # Courses used to generate schedule
         self.courses = []
+
+        # ALL sections generated from scheduler
         self.sections = []
+
+        # Only incompletes and complete type sections
         self.schedule = []
+
+        # All sections labeled as conflicts
         self.conflicts = []
+
+        # All incompletes
         self.incompletes = []
 
-        
+        self.scheduler.clear()
+
+        self.conflict_identifier.clear()
+
 
 
 
