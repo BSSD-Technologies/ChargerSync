@@ -162,15 +162,14 @@ Error Codes:
 """
 @app.route('/generate/schedule',  methods=['POST'])
 def generate_schedule():
-    global generated_schedule
     # Ensure request contains JSON data
     if not request.is_json:
         return jsonify({'error': 'Request must be JSON'}), 400
     else:
-        #return jsonify({'no error': 'Request was good'}), 200
-        #DataGenerator.loadData()
+        #DataGenerator.loadData() # Load test data for scheduler
         global generated_schedule
 
+        # Try to clear database before reloading
         if generated_schedule:
             generated_schedule = None
             db.drop_all()
@@ -179,7 +178,7 @@ def generate_schedule():
         # Read JSON data from request
         json_data = request.json
         
-        # Parse data to put into database
+        # PARSE DATA AND PUT INTO DATABASE
         # Add Courses
         for course in json_data.get("courses"):
             new_course = Course(id=course.get("uuid"), department=course.get("department"), num=course.get("course_num"), max_enrollment=course.get("max_enrollment"))
@@ -216,15 +215,50 @@ def generate_schedule():
             db.session.add(new_period_pref)
         db.session.commit()
 
-        
+        # Generate schedule
         schedule = Schedule()
         schedule.generate()
         generated_schedule = schedule
 
-        
+        # Format output of schedule to be returned
         schedule_data = formatForOutput(schedule.schedule)
         return jsonify({'schedule': schedule_data}), 200
-        #return jsonify({'schedule': "still testing"}), 200
+
+"""
+/generate/conflicts
+User requests all sections with conflicts, and data is returned as JSON
+
+Error Codes:
+200 - OK
+400 - No schedule exists yet
+"""
+@app.route('/generate/conflicts',  methods=['GET'])
+def generate_conflicts():
+    # Ensure request happens after schedule is generated
+    if not generated_schedule:
+        return jsonify({'error': 'No schedule generated'}), 400
+    else:
+        # Format output of conflicts to be returned
+        conflict_data = formatForOutput(generated_schedule.conflicts)
+        return jsonify({'conflicts': conflict_data}), 200
+    
+"""
+/generate/incompletes
+User requests all sections with incompletes, and data is returned as JSON
+
+Error Codes:
+200 - OK
+400 - No schedule exists yet
+"""
+@app.route('/generate/incompletes',  methods=['GET'])
+def generate_incompletes():
+    # Ensure request happens after schedule is generated
+    if not generated_schedule:
+        return jsonify({'error': 'No schedule generated'}), 400
+    else:
+        # Format output of incompletes to be returned
+        incompletes_data = formatForOutput(generated_schedule.incompletes)
+        return jsonify({'incompletes': incompletes_data}), 200
 
 if __name__ == '__main__':
     with app.app_context():
