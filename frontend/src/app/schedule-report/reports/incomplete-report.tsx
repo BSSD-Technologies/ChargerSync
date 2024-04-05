@@ -2,7 +2,7 @@ import { LoadingButton } from "@mui/lab";
 import { Box, Container, Typography } from "@mui/material";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useGlobalConflictStore } from "@/app/_stores/store";
+import { useGlobalIncompleteStore } from "@/app/_stores/store";
 
 const columns: GridColDef[] = [
   { field: "section", headerName: "Section", minWidth: 150 },
@@ -13,7 +13,7 @@ const columns: GridColDef[] = [
   { field: "instructor", headerName: "Instructor", minWidth: 300 },
 ];
 
-function ConflictTable() {
+function IncompleteTable() {
   return (
     <DataGrid
       rows={}
@@ -39,13 +39,13 @@ function ConflictTable() {
   );
 }
 
-export default function ConflictReport() {
-  /** Conflict list store */
-  const [conflictList] = [
-    useGlobalConflictStore((state) => state.conflictList),
+export default function IncompleteReport() {
+  /** Incomplete list store */
+  const [incompleteList] = [
+    useGlobalIncompleteStore((state) => state.incompleteList),
   ];
 
-  /** API call for /generate/conflicts */
+  /** API call for /generate/incompletes */
 
   return (
     <Container
@@ -53,12 +53,12 @@ export default function ConflictReport() {
         marginTop: "2%",
       }}
     >
-      <Typography variant="h5">Schedule Conflicts</Typography>
+      <Typography variant="h5">Schedule Non-Conflicts</Typography>
       <Typography variant="body1">
-        Insert a description about the conflicts in the scheduler.
+        Insert a description about the non-conflicts in the scheduler.
       </Typography>
       <Box sx={{ height: "100%", width: "100%" }}>
-        <ConflictTable />
+        <IncompleteTable />
       </Box>
       <LoadingButton
         variant="contained"
@@ -70,7 +70,7 @@ export default function ConflictReport() {
           paddingLeft: "15px",
         }}
       >
-        <span>Export Conflicts</span>
+        <span>Export Incompletes</span>
       </LoadingButton>
     </Container>
   );

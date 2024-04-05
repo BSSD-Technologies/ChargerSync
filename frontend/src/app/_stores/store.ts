@@ -344,10 +344,78 @@ export const useGlobalScheduleStore = create<GlobalScheduleState>()(
           end: convertTime12(section.period.end_time),
           location: section.room.id,
           instructor: section.instructor.fname + " " + section.instructor.lname,
+          status: section.status,
+          section: section.section_id
         });
       });
       set((state) => ({
         sectionList: formattedList,
+      }));
+    },
+  })
+);
+
+/** CONFLICT STORE */
+interface GlobalConflictState {
+  /** Array of conflict sections */
+  conflictList: FormattedSection[];
+  /** Populate conflict list with formatted data */
+  setConflictList: (list: Section[]) => void;
+}
+
+export const useGlobalConflictStore = create<GlobalConflictState>()(
+  (set, get) => ({
+    conflictList: [],
+    setConflictList: (list: Section[]) => {
+      let formattedList: FormattedSection[] = [];
+      list.map((section: Section) => {
+        formattedList.push({
+          id: section.uuid,
+          course: section.section_id,
+          days: section.period.day,
+          start: convertTime12(section.period.start_time),
+          end: convertTime12(section.period.end_time),
+          location: section.room.id,
+          instructor: section.instructor.fname + " " + section.instructor.lname,
+          status: section.status,
+          section: section.section_id
+        });
+      });
+      set((state) => ({
+        conflictList: formattedList,
+      }));
+    },
+  })
+);
+
+/** INCOMPLETE STORE */
+interface GlobalIncompleteState {
+  /** Array of incomplete sections */
+  incompleteList: FormattedSection[];
+  /** Populate incomplete list with formatted data */
+  setIncompleteList: (list: Section[]) => void;
+}
+
+export const useGlobalIncompleteStore = create<GlobalIncompleteState>()(
+  (set, get) => ({
+    incompleteList: [],
+    setIncompleteList: (list: Section[]) => {
+      let formattedList: FormattedSection[] = [];
+      list.map((section: Section) => {
+        formattedList.push({
+          id: section.uuid,
+          course: section.section_id,
+          days: section.period.day,
+          start: convertTime12(section.period.start_time),
+          end: convertTime12(section.period.end_time),
+          location: section.room.id,
+          instructor: section.instructor.fname + " " + section.instructor.lname,
+          status: section.status,
+          section: section.section_id
+        });
+      });
+      set((state) => ({
+        incompleteList: formattedList,
       }));
     },
   })
