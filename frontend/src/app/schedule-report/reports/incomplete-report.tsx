@@ -2,8 +2,8 @@ import { LoadingButton } from "@mui/lab";
 import { Box, Container, Typography } from "@mui/material";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useGlobalConflictStore } from "@/app/_stores/store";
-import { UseGenerateConflicts } from "@/app/_hooks/apiHooks";
+import { useGlobalIncompleteStore } from "@/app/_stores/store";
+import { UseGenerateIncompletes } from "@/app/_hooks/apiHooks";
 import { useEffect } from "react";
 
 const columns: GridColDef[] = [
@@ -15,22 +15,22 @@ const columns: GridColDef[] = [
   { field: "instructor", headerName: "Instructor", minWidth: 300 },
 ];
 
-export default function ConflictReport() {
-  /** Conflict list store */
-  const [conflictList, setConflictList] = [
-    useGlobalConflictStore((state) => state.conflictList),
-    useGlobalConflictStore((state) => state.setConflictList),
+export default function IncompleteReport() {
+  /** Incomplete list store */
+  const [incompleteList, setIncompleteList] = [
+    useGlobalIncompleteStore((state) => state.incompleteList),
+    useGlobalIncompleteStore((state) => state.setIncompleteList),
   ];
 
   useEffect(() => {
-    /** API call for /generate/conflicts */
-    const generateConflicts = async () => {
-      const getData = await UseGenerateConflicts();
+    /** API call for /generate/incompletes */
+    const generateIncompletes = async () => {
+      const getData = await UseGenerateIncompletes();
       if (getData) {
-        setConflictList(getData);
+        setIncompleteList(getData);
       }
     };
-    generateConflicts();
+    generateIncompletes();
   }, []);
 
   return (
@@ -39,13 +39,13 @@ export default function ConflictReport() {
         marginTop: "2%",
       }}
     >
-      <Typography variant="h5">Schedule Conflicts</Typography>
+      <Typography variant="h5">Schedule Incompletes</Typography>
       <Typography variant="body1">
-        Insert a description about the conflicts in the scheduler.
+        Insert a description about the incompletes in the scheduler.
       </Typography>
       <Box sx={{ height: "100%", width: "100%" }}>
         <DataGrid
-          rows={conflictList}
+          rows={incompleteList}
           columns={columns}
           initialState={{
             pagination: {
@@ -76,7 +76,7 @@ export default function ConflictReport() {
           paddingLeft: "15px",
         }}
       >
-        <span>Export Conflicts</span>
+        <span>Export Incompletes</span>
       </LoadingButton>
     </Container>
   );

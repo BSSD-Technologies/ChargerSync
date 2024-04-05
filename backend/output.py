@@ -45,6 +45,7 @@ def formatForOutput(sections):
 
     for section in sections:
         
+        # All "except" conditions should return "TBD", EXCEPT for Period properties.
         try:   
             a = section.period.start_time
         except:
@@ -53,17 +54,19 @@ def formatForOutput(sections):
         try:   
             b = section.period.day
         except:
+            # IMPORTANT - "day" MUST have the following value in order to work on the frontend:
+            # "No Period Assigned"
             b = "No Period Assigned"
 
         try:
             room_id = section.room.name
         except:
-            room_id = "No Room Assigned"
+            room_id = "TBD"
 
         try:
             c = section.room.max_occupancy
         except:
-            c = "No Room Assigned"
+            c = "TBD"
 
         try:   
             d = section.period.end_time
@@ -73,12 +76,12 @@ def formatForOutput(sections):
         try:
             instructor_fname_assignment = section.instructor.fname
         except:
-            instructor_fname_assignment = "No Instructor Assigned"
+            instructor_fname_assignment = "TBD"
         
         try:
             instructor_lname_assignment = section.instructor.lname
         except:
-            instructor_lname_assignment = "No Instructor Assigned"
+            instructor_lname_assignment = "TBD"
 
         # Create an empty dictionary to hold the course information
         course_info = {}

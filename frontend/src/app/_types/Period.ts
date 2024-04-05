@@ -9,7 +9,7 @@ export type Period = {
   uuid: string;
   start_time: string;
   end_time: string;
-  day: Day;
+  day: Day | "No Period Assigned";
 };
 
 /**
