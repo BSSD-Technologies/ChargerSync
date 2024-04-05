@@ -250,10 +250,11 @@ export const UseGenerateSchedule = async (
  */
 export const UseGenerateConflicts = async () => {
   try {
-    const response = await axios.post(
+    const response = await axios.get(
       "http://localhost:5001/generate/conflicts"
     );
     // 200: OK, return response data
+    console.log(response.data["conflicts"]);
     return response.data["conflicts"];
   } catch (error: any) {
     if (error.response) {

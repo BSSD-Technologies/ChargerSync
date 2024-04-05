@@ -18,7 +18,7 @@ export type Section = {
   period: {
     start_time: string;
     end_time: string;
-    day: Day;
+    day: Day | "No Period Assigned";
   }
   status: "Complete" | "Incomplete" | "Conflict"
 };
