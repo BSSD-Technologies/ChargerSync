@@ -259,6 +259,24 @@ def generate_incompletes():
         # Format output of incompletes to be returned
         incompletes_data = formatForOutput(generated_schedule.incompletes)
         return jsonify({'incompletes': incompletes_data}), 200
+    
+"""
+/countConflicts
+User requests number of sections with conflicts, and value is returned.
+
+Error Codes:
+200 - OK
+400 - No schedule exists yet
+"""
+@app.route('/countConflicts',  methods=['GET'])
+def count_conflicts():
+    # Ensure request happens after schedule is generated
+    if not generated_schedule:
+        return jsonify({'error': 'No schedule generated'}), 400
+    else:
+        # Get number of sections with conflicts
+        count = len(generated_schedule.conflicts)
+        return jsonify({'count': count}), 200
 
 if __name__ == '__main__':
     with app.app_context():
