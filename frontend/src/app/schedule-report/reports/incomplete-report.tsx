@@ -1,18 +1,16 @@
-import { LoadingButton } from "@mui/lab";
-import { Box, Container, Typography } from "@mui/material";
-import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
+import { Box, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useGlobalIncompleteStore } from "@/app/_stores/store";
 import { UseGenerateIncompletes } from "@/app/_hooks/apiHooks";
 import { useEffect } from "react";
 
 const columns: GridColDef[] = [
-  { field: "course", headerName: "Course", minWidth: 150 },
-  { field: "days", headerName: "Days", minWidth: 100 },
-  { field: "start", headerName: "Start Time", minWidth: 120 },
-  { field: "end", headerName: "End Time", minWidth: 120 },
-  { field: "location", headerName: "Location", minWidth: 150 },
-  { field: "instructor", headerName: "Instructor", minWidth: 300 },
+  { field: "course", headerName: "Course" },
+  { field: "days", headerName: "Days" },
+  { field: "start", headerName: "Start Time" },
+  { field: "end", headerName: "End Time" },
+  { field: "location", headerName: "Location" },
+  { field: "instructor", headerName: "Instructor" },
 ];
 
 export default function IncompleteReport() {
@@ -34,50 +32,32 @@ export default function IncompleteReport() {
   }, []);
 
   return (
-    <Container
-      sx={{
-        marginTop: "2%",
-      }}
-    >
-      <Typography variant="h5">Schedule Incompletes</Typography>
+    <Box>
       <Typography variant="body1">
         Insert a description about the incompletes in the scheduler.
       </Typography>
-      <Box sx={{ height: "100%", width: "100%" }}>
-        <DataGrid
-          rows={incompleteList}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 20,
-              },
+      <br />
+      <DataGrid
+        rows={incompleteList}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 20,
             },
-          }}
-          pageSizeOptions={[5]}
-          disableRowSelectionOnClick
-          sx={{
-            borderRadius: "10px",
-            "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: "grey",
-              color: "white",
-              borderRadius: "10px",
-            },
-          }}
-        />
-      </Box>
-      <LoadingButton
-        variant="contained"
-        color="success"
-        loading={false}
-        fullWidth
-        startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
-        sx={{
-          paddingLeft: "15px",
+          },
         }}
-      >
-        <span>Export Incompletes</span>
-      </LoadingButton>
-    </Container>
+        pageSizeOptions={[5]}
+        disableRowSelectionOnClick
+        sx={{
+          borderRadius: "10px",
+          "& .MuiDataGrid-columnHeaders": {
+            backgroundColor: "grey",
+            color: "white",
+            borderRadius: "10px",
+          },
+        }}
+      />
+    </Box>
   );
 }
