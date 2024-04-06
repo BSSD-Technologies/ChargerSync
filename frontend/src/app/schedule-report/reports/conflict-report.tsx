@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridColDef, gridClasses } from "@mui/x-data-grid";
 import { useGlobalConflictStore } from "@/app/_stores/store";
 import { UseGenerateConflicts } from "@/app/_hooks/apiHooks";
 import { useEffect } from "react";
@@ -37,27 +37,40 @@ export default function ConflictReport() {
         Insert a description about the conflicts in the scheduler.
       </Typography>
       <br />
-      <DataGrid
-        rows={conflictList}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 20,
-            },
-          },
-        }}
-        pageSizeOptions={[5]}
-        disableRowSelectionOnClick
+      <Box
         sx={{
-          borderRadius: "10px",
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: "grey",
-            color: "white",
-            borderRadius: "10px",
+          height: 300,
+          width: "100%",
+          [`.${gridClasses.cell}.highlight`]: {
+            backgroundColor: "#E57373",
           },
         }}
-      />
+      >
+        <DataGrid
+          rows={conflictList}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 20,
+              },
+            },
+          }}
+          getCellClassName={(params: GridCellParams<any, any, number>) => {
+            return params.value === "TBD" ? "highlight" : "";
+          }}
+          pageSizeOptions={[5]}
+          disableRowSelectionOnClick
+          sx={{
+            borderRadius: "10px",
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "grey",
+              color: "white",
+              borderRadius: "10px",
+            },
+          }}
+        />
+      </Box>
     </Box>
   );
 }
