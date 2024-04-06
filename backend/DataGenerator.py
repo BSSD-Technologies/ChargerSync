@@ -1,10 +1,9 @@
 from extensions import db
 
-from models.Course import Section, Course
+from models.Course import Course
 from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
-from datetime import time
 import uuid
 
 # Define times for MW and TR

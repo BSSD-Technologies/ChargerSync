@@ -1,5 +1,3 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
 from extensions import db
 from models.Preferences import CoursePreference, PeriodPreference
 from models.Course import Section

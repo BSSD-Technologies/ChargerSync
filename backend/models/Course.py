@@ -33,7 +33,7 @@ class Course(db.Model):
         new_section = Course.query.filter_by(id=course_id).first()
         new_section = new_section.newSection()
         db.session.add(new_section)
-        #db.session.commit()
+        db.session.commit()
         return new_section
 
 

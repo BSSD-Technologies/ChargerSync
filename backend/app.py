@@ -4,11 +4,7 @@ from functions import *
 from extensions import db
 from Schedule import Schedule
 from output import formatForOutput
-from models.Course import Section, Course
-from models.Instructor import Instructor
-from models.Room import Room
-from models.Period import Period
-from models.Preferences import CoursePreference, PeriodPreference
+import DatabaseManager
 
 app = Flask(__name__)
 # Enable CORS for all routes
@@ -166,58 +162,28 @@ def generate_schedule():
     if not request.is_json:
         return jsonify({'error': 'Request must be JSON'}), 400
     else:
-        #DataGenerator.loadData() # Load test data for scheduler
         global generated_schedule
 
+        schedule = None
+
+        print("Hello!")
+
         # Try to clear database before reloading
-        if generated_schedule:
+        if generated_schedule is not None:
             generated_schedule = None
-            db.drop_all()
-            db.create_all()
+            DatabaseManager.clear()
+            db.session.commit()
 
         # Read JSON data from request
         json_data = request.json
         
         # PARSE DATA AND PUT INTO DATABASE
-        # Add Courses
-        for course in json_data.get("courses"):
-            new_course = Course(id=course.get("uuid"), department=course.get("department"), num=course.get("course_num"), max_enrollment=course.get("max_enrollment"))
-            db.session.add(new_course)
-        db.session.commit()
-
-        # Add Rooms
-        for room in json_data.get("rooms"):
-            new_room = Room(id=room.get("uuid"), name=room.get("room_id"), max_occupancy=room.get("max_capacity"))
-            db.session.add(new_room)
-        db.session.commit()
-
-        # Add Periods
-        for period in json_data.get("periods"):
-            new_period = Period(id=period.get("uuid"), start_time=period.get("start_time"), end_time=period.get("end_time"), day=period.get("day"))
-            db.session.add(new_period)
-        db.session.commit()
-
-        # Add Instructors
-        for instructor in json_data.get("instructors"):
-            new_instructor = Instructor(id=instructor.get("uuid"), fname=instructor.get("fname"), lname=instructor.get("lname"), priority=instructor.get("priority"))
-            db.session.add(new_instructor)
-        db.session.commit()
-
-        # Add Course Preference
-        for course_pref in json_data.get("course_prefs"):
-            new_course_pref = CoursePreference(id=course_pref.get("uuid"), instructor_id=course_pref.get("instructor_uuid"), course_id=course_pref.get("course_uuid"))
-            db.session.add(new_course_pref)
-        db.session.commit()
-
-        # Add Period Preference
-        for period_pref in json_data.get("period_prefs"):
-            new_period_pref = PeriodPreference(id=period_pref.get("uuid"), instructor_id=period_pref.get("instructor_uuid"), period_id=period_pref.get("period_uuid"))
-            db.session.add(new_period_pref)
-        db.session.commit()
+        DatabaseManager.loadData(json_data)
 
         # Generate schedule
         schedule = Schedule()
         schedule.generate()
+
         generated_schedule = schedule
 
         # Format output of schedule to be returned

@@ -19,8 +19,25 @@ class Schedule:
     # All incompletes
     incompletes = []
 
+
     def __init__(self, input_courses=[]):
         # you can choose with courses are scheduled, or can do all in the database.
+        # Courses used to generate schedule
+        self.courses = []
+
+        # ALL sections generated from scheduler
+        self.sections = []
+
+        # Only incompletes and complete type sections
+        self.schedule = []
+
+        # All sections labeled as conflicts
+        self.conflicts = []
+
+        # All incompletes
+        self.incompletes = []
+
+        
         if not input_courses:
             self.courses = Course.query.all()
         else:
@@ -77,7 +94,7 @@ class Schedule:
 
         self.scheduler.clear()
 
-        self.conflict_identifier.clear()
+        #self.conflict_identifier.clear()
 
 
 
