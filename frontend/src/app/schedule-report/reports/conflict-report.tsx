@@ -1,18 +1,16 @@
-import { LoadingButton } from "@mui/lab";
-import { Box, Container, Typography } from "@mui/material";
-import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { Box, Typography } from "@mui/material";
+import { DataGrid, GridCellParams, GridColDef, gridClasses } from "@mui/x-data-grid";
 import { useGlobalConflictStore } from "@/app/_stores/store";
 import { UseGenerateConflicts } from "@/app/_hooks/apiHooks";
 import { useEffect } from "react";
 
 const columns: GridColDef[] = [
-  { field: "course", headerName: "Course", minWidth: 150 },
-  { field: "days", headerName: "Days", minWidth: 100 },
-  { field: "start", headerName: "Start Time", minWidth: 120 },
-  { field: "end", headerName: "End Time", minWidth: 120 },
-  { field: "location", headerName: "Location", minWidth: 150 },
-  { field: "instructor", headerName: "Instructor", minWidth: 300 },
+  { field: "course", headerName: "Course" },
+  { field: "days", headerName: "Days" },
+  { field: "start", headerName: "Start Time" },
+  { field: "end", headerName: "End Time" },
+  { field: "location", headerName: "Location" },
+  { field: "instructor", headerName: "Instructor" },
 ];
 
 export default function ConflictReport() {
@@ -34,16 +32,20 @@ export default function ConflictReport() {
   }, []);
 
   return (
-    <Container
-      sx={{
-        marginTop: "2%",
-      }}
-    >
-      <Typography variant="h5">Schedule Conflicts</Typography>
+    <Box>
       <Typography variant="body1">
         Insert a description about the conflicts in the scheduler.
       </Typography>
-      <Box sx={{ height: "100%", width: "100%" }}>
+      <br />
+      <Box
+        sx={{
+          height: 300,
+          width: "100%",
+          [`.${gridClasses.cell}.highlight`]: {
+            backgroundColor: "#E57373",
+          },
+        }}
+      >
         <DataGrid
           rows={conflictList}
           columns={columns}
@@ -53,6 +55,9 @@ export default function ConflictReport() {
                 pageSize: 20,
               },
             },
+          }}
+          getCellClassName={(params: GridCellParams<any, any, number>) => {
+            return params.value === "TBD" ? "highlight" : "";
           }}
           pageSizeOptions={[5]}
           disableRowSelectionOnClick
@@ -66,18 +71,6 @@ export default function ConflictReport() {
           }}
         />
       </Box>
-      <LoadingButton
-        variant="contained"
-        color="success"
-        loading={false}
-        fullWidth
-        startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
-        sx={{
-          paddingLeft: "15px",
-        }}
-      >
-        <span>Export Conflicts</span>
-      </LoadingButton>
-    </Container>
+    </Box>
   );
 }
