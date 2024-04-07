@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CoursePreference } from "../_types/CoursePreference";
 import { PeriodPreference } from "../_types/PeriodPreference";
 import { FormattedSection, Section } from "../_types/Section";
-import { convertTime12 } from "../_hooks/utilHooks";
+import { convertTime12, readSections } from "../_hooks/utilHooks";
 
 /** COURSE STORE */
 interface GlobalCourseListState {
@@ -19,6 +19,8 @@ interface GlobalCourseListState {
   addCourseList: (course: Course) => void;
   /** Delete a course by id */
   deleteCourseList: (id: string) => void;
+  /** Delete all courses */
+  deleteAllCourseList: () => void;
   /** Boolean stack of whether or not there are errors in the course list */
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
@@ -47,6 +49,12 @@ export const useGlobalCourseListStore = create<GlobalCourseListState>()(
           ...state.courseList.filter((course) => course.uuid !== id),
         ],
       })),
+    deleteAllCourseList: () => {
+      set((state) => ({
+        courseList: [],
+        hasErrors: [],
+      }));
+    },
     hasErrors: [],
     getHasErrors: () => {
       // If array (table) is empty, error
@@ -73,6 +81,8 @@ interface GlobalRoomListState {
   addRoomList: (room: Room) => void;
   /** Delete a room by id */
   deleteRoomList: (id: string) => void;
+  /** Delete all rooms */
+  deleteAllRoomList: () => void;
   /** Boolean stack of whether or not there are errors in the room list */
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
@@ -101,6 +111,12 @@ export const useGlobalRoomListStore = create<GlobalRoomListState>()(
           ...state.roomList.filter((room) => room.uuid !== id),
         ],
       })),
+    deleteAllRoomList: () => {
+      set((state) => ({
+        roomList: [],
+        hasErrors: [],
+      }));
+    },
     hasErrors: [],
     getHasErrors: () => {
       // If array (table) is empty, error
@@ -129,6 +145,8 @@ interface GlobalPeriodListState {
   addPeriodList: (period: Period) => void;
   /** Delete a period by id */
   deletePeriodList: (id: string) => void;
+  /** Delete all periods */
+  deleteAllPeriodList: () => void;
   /** Boolean stack of whether or not there are errors in the period list */
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
@@ -160,6 +178,12 @@ export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
           ...state.periodList.filter((period) => period.uuid !== id),
         ],
       })),
+    deleteAllPeriodList: () => {
+      set((state) => ({
+        periodList: [],
+        hasErrors: [],
+      }));
+    },
     hasErrors: [],
     getHasErrors: () => {
       // If array (table) is empty, error
@@ -199,6 +223,8 @@ interface GlobalInstructorListState {
   addInstructorList: (instructor: Instructor) => void;
   /** Delete an instructor by id */
   deleteInstructorList: (id: string) => void;
+  /** Delete all instructors */
+  deleteAllInstructorList: () => void;
   /** Boolean stack of whether or not there are errors in the instructor list */
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
@@ -229,6 +255,12 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
           ),
         ],
       })),
+    deleteAllInstructorList: () => {
+      set((state) => ({
+        instructorList: [],
+        hasErrors: [],
+      }));
+    },
     hasErrors: [],
     getHasErrors: () => {
       // If array (table) is empty, error
@@ -302,20 +334,46 @@ export const useGlobalScheduleStore = create<GlobalScheduleState>()(
   (set, get) => ({
     sectionList: [],
     setSectionList: (list: Section[]) => {
-      let formattedList: FormattedSection[] = [];
-      list.map((section: Section) => {
-        formattedList.push({
-          id: section.uuid,
-          course: section.section_id,
-          days: section.period.day,
-          start: convertTime12(section.period.start_time),
-          end: convertTime12(section.period.end_time),
-          location: section.room.id,
-          instructor: section.instructor.fname + " " + section.instructor.lname,
-        });
-      });
       set((state) => ({
-        sectionList: formattedList,
+        sectionList: readSections(list),
+      }));
+    },
+  })
+);
+
+/** CONFLICT STORE */
+interface GlobalConflictState {
+  /** Array of conflict sections */
+  conflictList: FormattedSection[];
+  /** Populate conflict list with formatted data */
+  setConflictList: (list: Section[]) => void;
+}
+
+export const useGlobalConflictStore = create<GlobalConflictState>()(
+  (set, get) => ({
+    conflictList: [],
+    setConflictList: (list: Section[]) => {
+      set((state) => ({
+        conflictList: readSections(list),
+      }));
+    },
+  })
+);
+
+/** INCOMPLETE STORE */
+interface GlobalIncompleteState {
+  /** Array of incomplete sections */
+  incompleteList: FormattedSection[];
+  /** Populate incomplete list with formatted data */
+  setIncompleteList: (list: Section[]) => void;
+}
+
+export const useGlobalIncompleteStore = create<GlobalIncompleteState>()(
+  (set, get) => ({
+    incompleteList: [],
+    setIncompleteList: (list: Section[]) => {
+      set((state) => ({
+        incompleteList: readSections(list),
       }));
     },
   })

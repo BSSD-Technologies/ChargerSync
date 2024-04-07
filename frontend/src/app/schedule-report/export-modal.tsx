@@ -20,20 +20,10 @@ import {
 import { useState } from "react";
 
 // Dummy department list data
-const departmentList = [
-  "CS",
-  "CPE",
-  "MAE",
-  "EE",
-];
+const departmentList = ["CS", "CPE", "MAE", "EE"];
 
 // Dummy room list data
-const roomList = [
-  "OKT N324",
-  "OKT N326",
-  "OKT N327",
-  "OKT N155",
-];
+const roomList = ["OKT N324", "OKT N326", "OKT N327", "OKT N155"];
 
 // Dummy instructor list data
 const instructorList = [
@@ -44,9 +34,13 @@ const instructorList = [
 ];
 
 function SelectDepartment() {
-  const [departmentSelectList, setDepartmentSelectList] = useState<string[]>([]);
+  const [departmentSelectList, setDepartmentSelectList] = useState<string[]>(
+    []
+  );
 
-  const handleChange = (event: SelectChangeEvent<typeof departmentSelectList>) => {
+  const handleChange = (
+    event: SelectChangeEvent<typeof departmentSelectList>
+  ) => {
     const {
       target: { value },
     } = event;
@@ -77,7 +71,9 @@ function SelectDepartment() {
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
-              <Typography variant="body1" key={value}>{value}</Typography>
+              <Typography variant="body1" key={value}>
+                {value}
+              </Typography>
             ))}
           </Box>
         )}
@@ -126,7 +122,9 @@ function SelectRoom() {
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
-              <Typography variant="body1" key={value}>{value}</Typography>
+              <Typography variant="body1" key={value}>
+                {value}
+              </Typography>
             ))}
           </Box>
         )}
@@ -142,9 +140,13 @@ function SelectRoom() {
 }
 
 function SelectInstructor() {
-  const [instructorSelectList, setInstructorSelectList] = useState<string[]>([]);
+  const [instructorSelectList, setInstructorSelectList] = useState<string[]>(
+    []
+  );
 
-  const handleChange = (event: SelectChangeEvent<typeof instructorSelectList>) => {
+  const handleChange = (
+    event: SelectChangeEvent<typeof instructorSelectList>
+  ) => {
     const {
       target: { value },
     } = event;
@@ -175,7 +177,9 @@ function SelectInstructor() {
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
-              <Typography variant="body1" key={value}>{value}</Typography>
+              <Typography variant="body1" key={value}>
+                {value}
+              </Typography>
             ))}
           </Box>
         )}
@@ -203,26 +207,38 @@ export default function ExportModal(props: ExportModalProps) {
   const [checkedRoom, setCheckedRoom] = useState(false);
   const [checkedInstructor, setCheckedInstructor] = useState(false);
 
-
   const handleSelect = (option: string) => {
     setCheckedFull(option == "full");
     setCheckedDepartment(option == "department");
     setCheckedRoom(option == "room");
     setCheckedInstructor(option == "instructor");
-  }
+  };
 
   const handleClose = () => {
     onClose();
   };
 
   return (
-    <Dialog onClose={handleClose} open={open} fullWidth maxWidth={"sm"}>
+    <Dialog
+      onClose={handleClose}
+      open={open}
+      fullWidth
+      maxWidth={"sm"}
+      sx={{
+        "& .MuiPaper-root": {
+          borderRadius: "20px",
+        },
+      }}
+    >
       <DialogTitle>
         <Typography variant="h5">Export Options</Typography>
       </DialogTitle>
       <DialogContent>
         <FormControl>
-          <RadioGroup defaultValue="full" onChange={(e: any) => handleSelect(e.target.value)}>
+          <RadioGroup
+            defaultValue="full"
+            onChange={(e: any) => handleSelect(e.target.value)}
+          >
             <FormControlLabel
               value="full"
               control={<Radio />}
@@ -242,7 +258,12 @@ export default function ExportModal(props: ExportModalProps) {
             {checkedRoom && <SelectRoom />}
             <FormControlLabel
               value="instructor"
-              control={<Radio checked={checkedInstructor} onChange={(e: any) => handleSelect(e.target.value)} />}
+              control={
+                <Radio
+                  checked={checkedInstructor}
+                  onChange={(e: any) => handleSelect(e.target.value)}
+                />
+              }
               label="Filter by Instructor"
             />
             {checkedInstructor && <SelectInstructor />}

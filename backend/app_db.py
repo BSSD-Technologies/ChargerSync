@@ -2,7 +2,13 @@ from flask import Flask
 from extensions import db
 import DataGenerator
 from Schedule import Schedule
+from models.Course import Course, Section
+from models.Instructor import Instructor
+from models.Room import Room
+from models.Period import Period
+from models.Preferences import PeriodPreference, CoursePreference
 from output import formatForOutput
+import uuid
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/schedule.db'
@@ -15,10 +21,12 @@ with app.app_context():
     db.drop_all()
     db.create_all()
     DataGenerator.loadData()
+    db.session.commit()
 
     
     schedule = Schedule()
     schedule.generate()
+    db.session.commit()
 
     print('\nALL SECTIONS\n')
     for section in schedule.sections:

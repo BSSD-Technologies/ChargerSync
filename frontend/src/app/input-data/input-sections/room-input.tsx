@@ -4,6 +4,7 @@ import {
   FilledInput,
   FormHelperText,
   Grid,
+  IconButton,
   OutlinedInput,
   Stack,
   Table,
@@ -18,6 +19,8 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Room, defaultRoom } from "@/app/_types/Room";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -147,11 +150,18 @@ function RoomTableRow(props: { row: Room }) {
 export default function RoomInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
+  /** Scroll to continue functionality */
+  const executeScroll = () => {
+    const section = document.querySelector("#room-continue");
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   /** Room list */
-  const [roomList, addRoomList, getHasErrors] = [
+  const [roomList, addRoomList, getHasErrors, deleteAllRoomList] = [
     useGlobalRoomListStore((state) => state.roomList),
     useGlobalRoomListStore((state) => state.addRoomList),
     useGlobalRoomListStore((state) => state.getHasErrors),
+    useGlobalRoomListStore((state) => state.deleteAllRoomList),
   ];
 
   /** Check for errors regularly */
@@ -176,6 +186,12 @@ export default function RoomInput(props: {
       sx={{
         marginTop: "2%",
         marginBottom: "2%",
+        padding: "2%",
+        border: "2px solid",
+        borderColor:
+          getHasErrors() && roomList.length > 0 ? "#d32f2f" : "transparent",
+        borderRadius: "15px",
+        transition: "all .5s ease",
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
@@ -201,7 +217,17 @@ export default function RoomInput(props: {
             <TableRow>
               <TableCell>Room ID *</TableCell>
               <TableCell>Max Capacity *</TableCell>
-              <TableCell></TableCell>
+              <TableCell title="Clear All">
+                <Button
+                  fullWidth
+                  onClick={deleteAllRoomList}
+                  sx={{
+                    display: roomList.length > 0 ? "flex" : "none",
+                  }}
+                >
+                  <HighlightOffRoundedIcon fontSize="medium" />
+                </Button>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -210,7 +236,7 @@ export default function RoomInput(props: {
             ))}
           </TableBody>
         </Table>
-        <Box sx={{ paddingTop: "2%" }}>
+        <Box sx={{ paddingTop: "2%" }} id={"room-continue"}>
           <Button
             variant="outlined"
             color="info"
@@ -225,6 +251,13 @@ export default function RoomInput(props: {
           </Button>
         </Box>
       </TableContainer>
+      <IconButton
+        title={"Scroll to bottom"}
+        className="Scroll"
+        onClick={executeScroll}
+      >
+        <KeyboardArrowDownRoundedIcon color={"info"} />
+      </IconButton>
     </Box>
   );
 }

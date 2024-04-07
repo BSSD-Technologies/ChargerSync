@@ -27,6 +27,7 @@ export const UseUploadCourses = async (file: File) => {
   formData.append("file", file);
 
   try {
+    toast.loading("Uploading...");
     const response = await axios.post(
       "http://localhost:5001/import/courses",
       formData,
@@ -37,10 +38,12 @@ export const UseUploadCourses = async (file: File) => {
       }
     );
     // 200: OK, success toast, return formatted data
+    toast.dismiss();
     toast.success("Upload successful!");
     const formattedData = readCourses(response.data);
     return formattedData;
   } catch (error: any) {
+    toast.dismiss();
     if (error.response) {
       const status = error.response.status;
       // File parameter not provided
@@ -69,6 +72,7 @@ export const UseUploadRooms = async (file: File) => {
   formData.append("file", file);
 
   try {
+    toast.loading("Uploading...");
     const response = await axios.post(
       "http://localhost:5001/import/rooms",
       formData,
@@ -79,10 +83,12 @@ export const UseUploadRooms = async (file: File) => {
       }
     );
     // 200: OK, success toast, return formatted data
+    toast.dismiss();
     toast.success("Upload successful!");
     const formattedData = readRooms(response.data);
     return formattedData;
   } catch (error: any) {
+    toast.dismiss();
     if (error.response) {
       const status = error.response.status;
       // File parameter not provided
@@ -111,6 +117,7 @@ export const UseUploadPeriods = async (file: File) => {
   formData.append("file", file);
 
   try {
+    toast.loading("Uploading...");
     const response = await axios.post(
       "http://localhost:5001/import/periods",
       formData,
@@ -121,10 +128,12 @@ export const UseUploadPeriods = async (file: File) => {
       }
     );
     // 200: OK, success toast, return formatted data
+    toast.dismiss();
     toast.success("Upload successful!");
     const formattedData = readPeriods(response.data);
     return formattedData;
   } catch (error: any) {
+    toast.dismiss();
     if (error.response) {
       const status = error.response.status;
       // File parameter not provided
@@ -153,6 +162,7 @@ export const UseUploadInstructors = async (file: File) => {
   formData.append("file", file);
 
   try {
+    toast.loading("Uploading...");
     const response = await axios.post(
       "http://localhost:5001/import/instructors",
       formData,
@@ -163,10 +173,12 @@ export const UseUploadInstructors = async (file: File) => {
       }
     );
     // 200: OK, success toast, return formatted data
+    toast.dismiss();
     toast.success("Upload successful!");
     const formattedData = readInstructors(response.data);
     return formattedData;
   } catch (error: any) {
+    toast.dismiss();
     if (error.response) {
       const status = error.response.status;
       // File parameter not provided
@@ -220,10 +232,108 @@ export const UseGenerateSchedule = async (
     // 200: OK, return response data
     return response.data["schedule"];
   } catch (error: any) {
+    console.error("Failed to fetch", error);
     if (error.response) {
       const status = error.response.status;
       // JSON object parameter not provided
-      if (status === 400) toast.error("Error generating schedule. Please try again.");
+      if (status === 400)
+        toast.error("Error generating schedule. Please try again.");
+    }
+  }
+  return null;
+};
+
+/**
+ * UseGenerateConflicts
+ * Get all sections with conflicts from generated schedule
+ *
+ * @returns JSON object
+ */
+export const UseGenerateConflicts = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5001/generate/conflicts"
+    );
+    // 200: OK, return response data
+    return response.data["conflicts"];
+  } catch (error: any) {
+    if (error.response) {
+      const status = error.response.status;
+      // No schedule exists yet
+      //if (status === 400)
+        //toast.error("Error generating schedule. Please try again.");
+    }
+  }
+  return null;
+};
+
+/**
+ * UseGenerateIncompletes
+ * Get all sections with incompletes from generated schedule
+ *
+ * @returns JSON object
+ */
+export const UseGenerateIncompletes = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5001/generate/incompletes"
+    );
+    // 200: OK, return response data
+    return response.data["incompletes"];
+  } catch (error: any) {
+    if (error.response) {
+      const status = error.response.status;
+      // No schedule exists yet
+      //if (status === 400)
+        //toast.error("Error generating schedule. Please try again.");
+    }
+  }
+  return null;
+};
+
+/**
+ * UseCountConflicts
+ * Get all sections with conflicts from generated schedule
+ *
+ * @returns JSON object
+ */
+export const UseCountConflicts = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5001/countConflicts"
+    );
+    // 200: OK, return response data
+    return response.data["count"];
+  } catch (error: any) {
+    if (error.response) {
+      const status = error.response.status;
+      // No schedule exists yet
+      //if (status === 400)
+        //toast.error("Error generating schedule. Please try again.");
+    }
+  }
+  return null;
+};
+
+/**
+ * UseCountIncompletes
+ * Get all sections with incompletes from generated schedule
+ *
+ * @returns JSON object
+ */
+export const UseCountIncompletes = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5001/countIncompletes"
+    );
+    // 200: OK, return response data
+    return response.data["count"];
+  } catch (error: any) {
+    if (error.response) {
+      const status = error.response.status;
+      // No schedule exists yet
+      //if (status === 400)
+        //toast.error("Error generating schedule. Please try again.");
     }
   }
   return null;

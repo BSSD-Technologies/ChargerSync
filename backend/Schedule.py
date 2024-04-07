@@ -19,6 +19,7 @@ class Schedule:
     # All incompletes
     incompletes = []
 
+
     def __init__(self, input_courses=[]):
         # you can choose with courses are scheduled, or can do all in the database.
         # Courses used to generate schedule
@@ -57,6 +58,7 @@ class Schedule:
         self.generateConflicts()
 
     def generateConflicts(self):
+        print(self.sections)
         self.conflict_identifier = ConflictIdentifier(self.sections)
         self.conflict_identifier.labelSections()
         self.separateSections()

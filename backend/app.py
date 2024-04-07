@@ -3,13 +3,8 @@ from flask_cors import CORS
 from functions import *
 from extensions import db
 from Schedule import Schedule
-import DataGenerator
 from output import formatForOutput
-from models.Course import Section, Course
-from models.Instructor import Instructor
-from models.Room import Room
-from models.Period import Period
-from models.Preferences import CoursePreference, PeriodPreference
+import DatabaseManager
 
 app = Flask(__name__)
 # Enable CORS for all routes
@@ -17,6 +12,8 @@ CORS(app)
 # Setting up the database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db.init_app(app)
+
+generated_schedule = None
 
 @app.route('/')
 def hello_world():
@@ -196,7 +193,78 @@ def generate_schedule():
         # Format output of schedule to be returned
         schedule_data = formatForOutput(schedule.schedule)
         return jsonify({'schedule': schedule_data}), 200
-        #return jsonify({'schedule': "still testing"}), 200
+
+"""
+/generate/conflicts
+User requests all sections with conflicts, and data is returned as JSON
+
+Error Codes:
+200 - OK
+400 - No schedule exists yet
+"""
+@app.route('/generate/conflicts',  methods=['GET'])
+def generate_conflicts():
+    # Ensure request happens after schedule is generated
+    if not generated_schedule:
+        return jsonify({'error': 'No schedule generated'}), 400
+    else:
+        # Format output of conflicts to be returned
+        conflict_data = formatForOutput(generated_schedule.conflicts)
+        return jsonify({'conflicts': conflict_data}), 200
+    
+"""
+/generate/incompletes
+User requests all sections with incompletes, and data is returned as JSON
+
+Error Codes:
+200 - OK
+400 - No schedule exists yet
+"""
+@app.route('/generate/incompletes',  methods=['GET'])
+def generate_incompletes():
+    # Ensure request happens after schedule is generated
+    if not generated_schedule:
+        return jsonify({'error': 'No schedule generated'}), 400
+    else:
+        # Format output of incompletes to be returned
+        incompletes_data = formatForOutput(generated_schedule.incompletes)
+        return jsonify({'incompletes': incompletes_data}), 200
+    
+"""
+/countConflicts
+User requests number of sections with conflicts, and value is returned.
+
+Error Codes:
+200 - OK
+400 - No schedule exists yet
+"""
+@app.route('/countConflicts',  methods=['GET'])
+def count_conflicts():
+    # Ensure request happens after schedule is generated
+    if not generated_schedule:
+        return jsonify({'error': 'No schedule generated'}), 400
+    else:
+        # Get number of sections with conflicts
+        count = len(generated_schedule.conflicts)
+        return jsonify({'count': count}), 200
+    
+"""
+/countIncompletes
+User requests number of sections with incompletes, and value is returned.
+
+Error Codes:
+200 - OK
+400 - No schedule exists yet
+"""
+@app.route('/countIncompletes',  methods=['GET'])
+def count_incompletes():
+    # Ensure request happens after schedule is generated
+    if not generated_schedule:
+        return jsonify({'error': 'No schedule generated'}), 400
+    else:
+        # Get number of sections with incompletes
+        count = len(generated_schedule.incompletes)
+        return jsonify({'count': count}), 200
 
 if __name__ == '__main__':
     with app.app_context():

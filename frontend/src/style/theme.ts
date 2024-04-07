@@ -103,8 +103,22 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
             paddingTop: "20px",
           },
           ...(ownerState.error === true && {
-            backgroundColor: theme.palette.error.light,
+            backgroundColor: "#E57373",
             color: "black",
+          }),
+        }),
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: ({ theme, ownerState }) => ({
+          ...(ownerState.className === "Scroll" && {
+            position: "fixed",
+            bottom: 0,
+            right: 0,
+            margin: "2%",
+            border: "1.5px solid",
+            borderColor: theme.palette.info.main,
           }),
         }),
       },

@@ -1,11 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Day, Period } from "../_types/Period";
 import { v4 as uuidv4 } from "uuid";
-import { Course } from "../_types/Course";
-import { Room } from "../_types/Room";
-import { Instructor } from "../_types/Instructor";
-import { CoursePreference } from "../_types/CoursePreference";
-import { PeriodPreference } from "../_types/PeriodPreference";
+import { FormattedSection, Section } from "../_types/Section";
 
 /**
  * Detect first render of a component
@@ -328,5 +324,35 @@ export function readInstructors(rawData: RawInstructorData[]) {
     fname: instructor.first_name.toString(),
     lname: instructor.last_name.toString(),
     priority: instructor.priority,
+  }));
+}
+
+/** Parse raw section data into FormattedSection array */
+export function readSections(rawData: Section[]) {
+  return rawData.map((section) => ({
+    id: section.uuid,
+    course:
+      section.course.department +
+      " " +
+      section.course.course_num +
+      "-" +
+      section.section_id,
+    days:
+      section.period.day === "No Period Assigned" ? "TBD" : section.period.day,
+    start:
+      section.period.start_time === "No Period Assigned"
+        ? "TBD"
+        : convertTime12(section.period.start_time),
+    end:
+      section.period.end_time === "No Period Assigned"
+        ? "TBD"
+        : convertTime12(section.period.end_time),
+    location: section.room.id,
+    instructor:
+      section.instructor.fname === "TBD"
+        ? "TBD"
+        : section.instructor.fname + " " + section.instructor.lname,
+    status: section.status,
+    section: section.section_id,
   }));
 }

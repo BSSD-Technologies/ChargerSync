@@ -7,6 +7,7 @@ import {
   FilledInput,
   FormControl,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   OutlinedInput,
@@ -17,6 +18,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -257,6 +259,12 @@ function InstructorListAccordion() {
 }
 
 export default function PreferenceInput() {
+  /** Scroll to continue functionality */
+  const executeScroll = () => {
+    const section = document.querySelector("#preference-continue");
+    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  
   return (
     <Box
       sx={{
