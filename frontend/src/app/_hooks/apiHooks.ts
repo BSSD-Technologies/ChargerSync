@@ -232,6 +232,7 @@ export const UseGenerateSchedule = async (
     // 200: OK, return response data
     return response.data["schedule"];
   } catch (error: any) {
+    console.error("Failed to fetch", error);
     if (error.response) {
       const status = error.response.status;
       // JSON object parameter not provided
