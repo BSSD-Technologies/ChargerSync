@@ -9,6 +9,7 @@ from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
 from models.Preferences import CoursePreference, PeriodPreference
+import time
 
 app = Flask(__name__)
 # Enable CORS for all routes
@@ -276,6 +277,24 @@ def count_conflicts():
     else:
         # Get number of sections with conflicts
         count = len(generated_schedule.conflicts)
+        return jsonify({'count': count}), 200
+    
+"""
+/countIncompletes
+User requests number of sections with incompletes, and value is returned.
+
+Error Codes:
+200 - OK
+400 - No schedule exists yet
+"""
+@app.route('/countIncompletes',  methods=['GET'])
+def count_incompletes():
+    # Ensure request happens after schedule is generated
+    if not generated_schedule:
+        return jsonify({'error': 'No schedule generated'}), 400
+    else:
+        # Get number of sections with incompletes
+        count = len(generated_schedule.incompletes)
         return jsonify({'count': count}), 200
 
 if __name__ == '__main__':

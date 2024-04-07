@@ -52,7 +52,7 @@ export default function SubmitInput() {
       setSectionList(getData);
       router.push("/schedule-report");
     }
-    setLoadingState(true);
+    setLoadingState(false);
   };
 
   return (
@@ -70,20 +70,18 @@ export default function SubmitInput() {
             Click here to generate a schedule based on the data you provided.
           </Typography>
         </Stack>
-        <Link passHref href="/schedule-report">
-          <LoadingButton
-            variant="contained"
-            color="success"
-            loading={loadingState}
-            startIcon={<SendRoundedIcon />}
-            sx={{
-              paddingLeft: "15px",
-            }}
-            onClick={generateSchedule}
-          >
-            <span>Generate</span>
-          </LoadingButton>
-        </Link>
+        <LoadingButton
+          variant="contained"
+          color="success"
+          loading={loadingState}
+          startIcon={<SendRoundedIcon />}
+          sx={{
+            paddingLeft: "15px",
+          }}
+          onClick={generateSchedule}
+        >
+          <span>Generate</span>
+        </LoadingButton>
       </Grid>
     </Box>
   );
