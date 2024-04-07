@@ -19,12 +19,12 @@ with app.app_context():
 
     
     schedule = Schedule()
-    schedule.generate()
+    schedule.generateCompleteSchedule()
 
     print('\nALL SECTIONS\n')
     for section in schedule.sections:
         section.printInfo()
-        print("\n")
+        print('\n')
 
     print('\nSCHEDULED\n')
     for section in schedule.schedule:
@@ -42,9 +42,8 @@ with app.app_context():
     csvOutput.return_fullSchedule_CSV(schedule)
     csvOutput.return_filtered_dept(schedule, "CS")
     csvOutput.return_filtered_prof(schedule, "Robert Preston")
-    csvOutput.return_filtered_room(schedule, "OKT 200")
-    #print(Course.query.all())
-    #print(Instructor.query.all())
+    csvOutput.return_filtered_room(schedule, "SST 107")
+
 
 
 

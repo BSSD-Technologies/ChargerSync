@@ -43,7 +43,7 @@ def formatForOutput(scheduler):
     # List of sections
     section_list = []
 
-    for section in scheduler.schedule:
+    for section in scheduler:
         
         try:   
             a = section.period.start_time

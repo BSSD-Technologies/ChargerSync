@@ -9,6 +9,7 @@ from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
 from models.Preferences import CoursePreference, PeriodPreference
+import csvOutput
 
 app = Flask(__name__)
 # Enable CORS for all routes
@@ -221,7 +222,11 @@ def generate_schedule():
         schedule.generate()
         generated_schedule = schedule
 
-        
+        csvOutput.return_fullSchedule_CSV(schedule)
+        csvOutput.return_filtered_dept(schedule, "CE")
+        csvOutput.return_filtered_prof(schedule, "Johnson David")
+        csvOutput.return_filtered_room(schedule, "SST-107")
+
         schedule_data = formatForOutput(schedule.schedule)
         return jsonify({'schedule': schedule_data}), 200
         #return jsonify({'schedule': "still testing"}), 200

@@ -1,32 +1,37 @@
 import csv
 
 def return_fullSchedule_CSV(scheduler):
-    for section in scheduler.schedule:
+    i = 0
 
+    with open("FullSchedule.csv", 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Course','Days', 'Start Time', 'End Time', 'Location', 'Instructor'])
+
+    for section in scheduler.schedule:
         try:   
             a = section.period.start_time
         except:
-            a = "No Period Assigned"
+            a = "TBD"
         
         try:   
             b = section.period.day
         except:
-            b = "No Period Assigned"
+            b = "TBD"
 
         try:
             c = section.room.max_occupancy
         except:
-            c = "No Room Assigned"
+            c = "TBD"
 
         try:   
             d = section.period.end_time
         except:
-            d = "No Period Assigned" 
+            d = "TBD" 
 
         try:
             instructor_assignment = section.instructor
         except:
-            instructor_assignment = "No Instructor Assigned"
+            instructor_assignment = "TBD"
 
 
         course = section.name
@@ -43,32 +48,38 @@ def return_fullSchedule_CSV(scheduler):
             writer.writerow([course, days, start_time, end_time, room2, instructor2])
 
 def return_filtered_dept(scheduler, filtered_department):
+    i = 0
+
+    with open("FilteredDepartmentSchedule.csv", 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Course','Days', 'Start Time', 'End Time', 'Location', 'Instructor'])
+
     for section in scheduler.schedule:
         if filtered_department == section.department:
             try:   
                 a = section.period.start_time
             except:
-                a = "No Period Assigned"
+                a = "TBD"
             
             try:   
                 b = section.period.day
             except:
-                b = "No Period Assigned"
+                b = "TBD"
 
             try:
                 c = section.room.max_occupancy
             except:
-                c = "No Room Assigned"
+                c = "TBD"
 
             try:   
                 d = section.period.end_time
             except:
-                d = "No Period Assigned" 
+                d = "TBD" 
 
             try:
                 instructor_assignment = section.instructor
             except:
-                instructor_assignment = "No Instructor Assigned"
+                instructor_assignment = "TBD"
 
 
             course = section.name
@@ -87,12 +98,18 @@ def return_filtered_dept(scheduler, filtered_department):
             continue
 
 def return_filtered_prof(scheduler, filtered_professor):
+    i = 0
+
+    with open("FilteredProfessorSchedule.csv", 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Course','Days', 'Start Time', 'End Time', 'Location', 'Instructor'])
+
     for section in scheduler.schedule:
 
         try:
             instructor_assignment = section.instructor
         except:
-            instructor_assignment = "No Instructor Assigned"
+            instructor_assignment = "TBD"
         instructor = str(instructor_assignment)
         instructor2 = instructor.replace("'", "").replace("<", "").replace(">", "").replace("Instructor ","").strip()
         if(filtered_professor == instructor2):
@@ -100,22 +117,22 @@ def return_filtered_prof(scheduler, filtered_professor):
             try:   
                 a = section.period.start_time
             except:
-                a = "No Period Assigned"
+                a = "TBD"
             
             try:   
                 b = section.period.day
             except:
-                b = "No Period Assigned"
+                b = "TBD"
 
             try:
                 c = section.room.max_occupancy
             except:
-                c = "No Room Assigned"
+                c = "TBD"
 
             try:   
                 d = section.period.end_time
             except:
-                d = "No Period Assigned" 
+                d = "TBD" 
 
 
             course = section.name
@@ -128,41 +145,48 @@ def return_filtered_prof(scheduler, filtered_professor):
             with open("FilteredProfessorSchedule.csv", 'a', newline='') as csvfile:
                 writer = csv.writer(csvfile)
                 writer.writerow([course, days, start_time, end_time, room2, instructor2])
+
         else:
             continue
 
 def return_filtered_room(scheduler, filtered_room):
+    i = 0
+
+    with open("FilteredRoomSchedule.csv", 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['Course','Days', 'Start Time', 'End Time', 'Location', 'Instructor'])
+
     for section in scheduler.schedule:
 
         room = str(section.room)
         room2 = room.replace("'", "").replace("<", "").replace(">", "").replace("Room ","")
-
+        
         if(filtered_room == room2):
 
             try:   
                 a = section.period.start_time
             except:
-                a = "No Period Assigned"
+                a = "TBD"
             
             try:   
                 b = section.period.day
             except:
-                b = "No Period Assigned"
+                b = "TBD"
 
             try:
                 c = section.room.max_occupancy
             except:
-                c = "No Room Assigned"
+                c = "TBD"
 
             try:   
                 d = section.period.end_time
             except:
-                d = "No Period Assigned" 
+                d = "TBD" 
 
             try:
                 instructor_assignment = section.instructor
             except:
-                instructor_assignment = "No Instructor Assigned"
+                instructor_assignment = "TBD"
 
 
             course = section.name
