@@ -24,7 +24,7 @@ import { useEffect, useState } from "react";
 import ExportModal from "./export-modal";
 import Link from "next/link";
 import { LoadingButton } from "@mui/lab";
-import { UseCountConflicts } from "../_hooks/apiHooks";
+import { UseCountConflicts, UseCountIncompletes } from "../_hooks/apiHooks";
 
 export default function ScheduleReport() {
   const [open, setOpen] = useState(false);
@@ -39,15 +39,16 @@ export default function ScheduleReport() {
         setCountConflicts(getData);
       }
     };
-    /** API call for /countConflicts */
-    // const getCountIncompletes = async () => {
-    //   const getData = await UseCountIncompletes();
-    //   if (getData) {
-    //     setCountConflicts(getData);
-    //   }
-    // };
+    /** API call for /countIncompletes */
+    const getCountIncompletes = async () => {
+      const getData = await UseCountIncompletes();
+      if (getData) {
+        setCountIncompletes(getData);
+      }
+    };
 
     getCountConflicts();
+    getCountIncompletes();
   }, []);
 
   return (
