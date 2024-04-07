@@ -9,6 +9,7 @@ import DatabaseManager
 app = Flask(__name__)
 # Enable CORS for all routes
 CORS(app)
+
 # Setting up the database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db.init_app(app)
@@ -158,40 +159,40 @@ Error Codes:
 """
 @app.route('/generate/schedule',  methods=['POST'])
 def generate_schedule():
+    global generated_schedule
+    
     # Ensure request contains JSON data
     if not request.is_json:
         return jsonify({'error': 'Request must be JSON'}), 400
     else:
-        global generated_schedule
-
-        schedule = None
-
-        print("Hello!")
-
-        # Try to clear database before reloading
-        if generated_schedule is not None:
-            generated_schedule = None
-            DatabaseManager.clear()
-            db.session.commit()
-
         # Read JSON data from request
         json_data = request.json
-        
-        # PARSE DATA AND PUT INTO DATABASE
-        DatabaseManager.loadData(json_data)
 
-        # Generate schedule
-        schedule = Schedule()
-
+        # Clear the database
+        DatabaseManager.clear()
         db.session.commit()
 
+        # Load data into the database
+        DatabaseManager.loadData(json_data)
+        db.session.commit()
+
+        if generated_schedule:
+            generated_schedule.scheduler.clear()
+            
+        # Initialize a new schedule
+        schedule = Schedule()
+       
         # Generate schedule
         schedule.generate()
 
-        generated_schedule = schedule
-
         # Format output of schedule to be returned
         schedule_data = formatForOutput(schedule.schedule)
+
+        # Store the schedule in the global variable
+        generated_schedule = schedule
+
+        schedule.clear()
+
         return jsonify({'schedule': schedule_data}), 200
 
 """
@@ -269,6 +270,5 @@ def count_incompletes():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-        generated_schedule = None
 
     app.run(debug=True, host="0.0.0.0")

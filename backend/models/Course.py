@@ -26,7 +26,7 @@ class Course(db.Model):
         new_name = self.department + self.num + "-" + str(new_number)
         new_section = Section(name=new_name, department=self.department, num=self.num, course_id=self.id, section_no=new_number)
         db.session.add(new_section)
-        #db.session.commit()
+        db.session.commit()
         return new_section
     
     def newSectionFromId(course_id):

@@ -12,8 +12,8 @@ mw_times = [
     #(time(hour=8), time(hour=9)),
     #(time(hour=9), time(hour=10)),
     ("10:00PM","11:00PM"),
-    ("11:00PM","12:00PM"),
-    ("12:00PM","1:00PM")
+    #("11:00PM","12:00PM"),
+    #("12:00PM","1:00PM")
 ]
 
 tr_times = [
@@ -21,8 +21,8 @@ tr_times = [
     #(time(hour=8), time(hour=9)),
     #(time(hour=9), time(hour=10)),
     ("10:00PM","11:00PM"),
-    ("11:00PM","12:00PM"),
-    ("12:00PM","1:00PM")
+    #("11:00PM","12:00PM"),
+    #("12:00PM","1:00PM")
 ]
 
 instructor_list = [
@@ -60,8 +60,8 @@ room_list = [
 
 course_list = [
     # Course name, max, preliminary
-    ('CS 101', 100, 100),
-    ('CS 221', 100, 0),
+    ('CS 101', 2, 100),
+    ('CS 221', 2, 0),
     # ('CS 453', 200, 50),
     # ('CS 200', 200, 0),
     # ('CS 390', 150, 25),
@@ -73,19 +73,19 @@ course_list = [
 
 course_preference_list = [
     # fname, lname, preference in array
-    ('Beth', 'Allen', ['CS 101', 'CS 221']),
-    ('Robert', 'Preston', ['CS 390']),
-    ('Super', 'Man', ['CS 200']),
-    ('Danny', 'Hardin', ['CS 317', 'CS 101']),
+    #('Beth', 'Allen', ['CS 101', 'CS 221']),
+    #('Robert', 'Preston', ['CS 390']),
+    #('Super', 'Man', ['CS 200']),
+    #('Danny', 'Hardin', ['CS 317', 'CS 101']),
 ]
 
 period_preference_list = [
     # fname, lname, preference in array
-    ('Beth', 'Allen', [1, 2, 3]),
-    ('Robert', 'Preston', [4, 5]),
-    ('Super', 'Man', [8, 9]),
-    ('John', 'Doe', [6, 8]),
-    ('Bat', 'Man', [4]),
+    #('Beth', 'Allen', [1, 2, 3]),
+    #('Robert', 'Preston', [4, 5]),
+    #('Super', 'Man', [8, 9]),
+    #('John', 'Doe', [6, 8]),
+    #('Bat', 'Man', [4]),
 ]
 
 def loadData():

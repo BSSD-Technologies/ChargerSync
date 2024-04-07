@@ -77,7 +77,7 @@ with app.app_context():
     for course_pref in course_prefs:
         db.session.delete(course_pref)
     
-    #db.session.commit()
+    db.session.commit()
 
     DataGenerator.loadData()
     db.session.commit()

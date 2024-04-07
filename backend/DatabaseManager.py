@@ -45,33 +45,26 @@ def loadData(json_data):
     db.session.commit()
 
 def clear():
-    # Query everything
-    courses = Course.query.all()
-    sections = Section.query.all()
-    instructors = Instructor.query.all()
-    periods = Period.query.all()
-    rooms = Room.query.all()
-    period_prefs = PeriodPreference.query.all()
-    course_prefs = CoursePreference.query.all()
+    # Delete period preferences
+    PeriodPreference.query.delete()
 
-    # delete everything 
-    for course in courses:
-        db.session.delete(course)
+    # Delete course preferences
+    CoursePreference.query.delete()
 
-    for section in sections: 
-        db.session.delete(section)
+    # Delete sections
+    Section.query.delete()
 
-    for instructor in instructors:
-        db.session.delete(instructor)
-    
-    for period in periods:
-        db.session.delete(period)
+    # Delete courses
+    Course.query.delete()
 
-    for room in rooms:
-        db.session.delete(room)
-    
-    for period_pref in period_prefs:
-        db.session.delete(period_pref)
+    # Delete instructors
+    Instructor.query.delete()
 
-    for course_pref in course_prefs:
-        db.session.delete(course_pref)
+    # Delete periods
+    Period.query.delete()
+
+    # Delete rooms
+    Room.query.delete()
+
+    db.session.commit()
+    db.session.flush()
