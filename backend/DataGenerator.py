@@ -1,10 +1,9 @@
 from extensions import db
 
-from models.Course import Section, Course
+from models.Course import Course
 from models.Instructor import Instructor
 from models.Room import Room
 from models.Period import Period
-from datetime import time
 import uuid
 
 # Define times for MW and TR
@@ -28,9 +27,9 @@ tr_times = [
 
 instructor_list = [
     # First name, Last name, priorty
-    ('Beth', 'Allen', 5),
-    ('Dan', 'Schrimpcher', 3),
-    ('Robert', 'Preston', 2),
+    #('Beth', 'Allen', 5),
+    #('Dan', 'Schrimpcher', 3),
+    #('Robert', 'Preston', 2),
     ('John', 'Doe', 1),
     ('Super', 'Man', 6),
     ('Danny', 'Hardin', 7),
@@ -63,13 +62,13 @@ course_list = [
     # Course name, max, preliminary
     ('CS 101', 100, 100),
     ('CS 221', 100, 0),
-    ('CS 453', 200, 50),
-    ('CS 200', 200, 0),
-    ('CS 390', 150, 25),
-    ('CS 317', 150, 0),
-    ('CS 102', 200, 100),
-    ('CS 222', 100, 0),
-    ('CS 454', 150, 50),
+    # ('CS 453', 200, 50),
+    # ('CS 200', 200, 0),
+    # ('CS 390', 150, 25),
+    # ('CS 317', 150, 0),
+    # ('CS 102', 200, 100),
+    # ('CS 222', 100, 0),
+    #('CS 454', 150, 50),
 ]
 
 course_preference_list = [
@@ -94,31 +93,31 @@ def loadData():
     for start, end in mw_times:
         period = Period(id=str(uuid.uuid4()), start_time=start, end_time=end, day='MW')
         db.session.add(period)
-    db.session.commit()
+    #db.session.commit()
 
     for start, end in tr_times:
         period = Period(id=str(uuid.uuid4()), start_time=start, end_time=end, day='TR')
         db.session.add(period)
-    db.session.commit()
+    #db.session.commit()
 
     # Add Instructors
     for first_name, last_name, priority in instructor_list:
         new_instructor = Instructor(id=str(uuid.uuid4()), fname=first_name, lname=last_name, priority=priority)
         db.session.add(new_instructor)
-    db.session.commit()
+    #db.session.commit()
 
     # Add Rooms
     for name, occupancy in room_list:
         new_room = Room(id=str(uuid.uuid4()), name=name, max_occupancy=occupancy)
         db.session.add(new_room)
-    db.session.commit()
+    #db.session.commit()
 
     # Add Courses
     for course, max, pre in course_list:
         course_div = course.split()
         new_course = Course(id=str(uuid.uuid4()), name=course, department=course_div[0], num=course_div[1], max_enrollment=max, preliminary_enrollment=pre)
         db.session.add(new_course)
-    db.session.commit()
+    #db.session.commit()
 
     # Add Preferences
     for fname, lname, preferences in course_preference_list:

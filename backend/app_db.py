@@ -2,7 +2,13 @@ from flask import Flask
 from extensions import db
 import DataGenerator
 from Schedule import Schedule
+from models.Course import Course, Section
+from models.Instructor import Instructor
+from models.Room import Room
+from models.Period import Period
+from models.Preferences import PeriodPreference, CoursePreference
 from output import formatForOutput
+import uuid
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/schedule.db'
@@ -15,10 +21,12 @@ with app.app_context():
     db.drop_all()
     db.create_all()
     DataGenerator.loadData()
+    db.session.commit()
 
     
     schedule = Schedule()
     schedule.generate()
+    db.session.commit()
 
     print('\nALL SECTIONS\n')
     for section in schedule.sections:
@@ -37,7 +45,53 @@ with app.app_context():
 
     print("TEST OF JSON OUTPUT BELOW")
 
-    formatForOutput(schedule)
+    print(formatForOutput(schedule.schedule))
+    
+    
+    courses = Course.query.all()
+    sections = Section.query.all()
+    instructors = Instructor.query.all()
+    periods = Period.query.all()
+    rooms = Room.query.all()
+    period_prefs = PeriodPreference.query.all()
+    course_prefs = CoursePreference.query.all()
+
+    for course in courses:
+        db.session.delete(course)
+
+    for section in sections: 
+        db.session.delete(section)
+
+    for instructor in instructors:
+        db.session.delete(instructor)
+    
+    for period in periods:
+        db.session.delete(period)
+
+    for room in rooms:
+        db.session.delete(room)
+    
+    for period_pref in period_prefs:
+        db.session.delete(period_pref)
+
+    for course_pref in course_prefs:
+        db.session.delete(course_pref)
+    
+    #db.session.commit()
+
+    DataGenerator.loadData()
+    db.session.commit()
+
+    schedule = None
+
+    schedule = Schedule()
+    schedule.generate()
+    
+
+    print("TEST OF JSON OUTPUT BELOW")
+
+    print(formatForOutput(schedule.schedule))
+
 
     #print(Course.query.all())
     #print(Instructor.query.all())

@@ -43,6 +43,31 @@ class Scheduler:
         self.getInstructorAvailability()
         self.getCoursePreferences(self.courses)
 
+    def clear(self):
+        # Course ID, Enrollment, Fulfillment
+        self.courses_and_enrollment = []
+
+        # Period ID, [Room IDs]
+        self.room_availability = []
+
+        # Room ID, Max Occupancy
+        self.room_occupancy = []
+
+        # Instructor ID, section count, [Period IDs]
+        self.instructor_availability = []
+        
+        # Course ID, [Instructor IDs]
+        self.course_preferences = []
+
+        # ----- Arrays ------
+        self.instructors_with_no_preferences = []
+        self.sections_to_be_assigned = []
+        self.all_sections = []
+        
+        # ----- Other Attributes ------
+        self.section_counter = 0
+        self.instructors_with_no_preferences_pos = 0
+
     # Constructor Functions ------
         
     # Input: self
@@ -268,6 +293,7 @@ class Scheduler:
             # if course enrollement is unfulfilled, add section to list of sections_to_be_assigned
             if course[2] == 0:
                 new_section = Course.newSectionFromId(course[0])
+                print(new_section)
                 self.sections_to_be_assigned.append(new_section)
     
     # Input: self
@@ -427,7 +453,7 @@ class Scheduler:
 
     def generateSchedule(self):
         # MAIN LOOP
-        while 1:
+        for i in range(10):
             self.prepareForMoreSections()
             self.createNewSections()
             self.scheduleSections()
