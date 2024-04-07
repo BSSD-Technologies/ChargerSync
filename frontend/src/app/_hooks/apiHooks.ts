@@ -220,37 +220,17 @@ export const UseGenerateSchedule = async (
   };
 
   try {
-    // const response = await axios.post(
-    //   "http://localhost:5001/generate/schedule",
-    //   formData,
-    //   {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //   }
-    // );
-
-    const fetchResponse = await fetch("http://localhost:5001/generate/schedule", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(formData)
-    });
-    console.log("Request returned!!")
-
-    if (fetchResponse.status == 400) {
-      toast.error("Error generating schedule. Please try again.");
-    }
-
-    const data = await fetchResponse.json();
-
-    console.log("Response Acquired");
-
-    return data["schedule"];
-
+    const response = await axios.post(
+      "http://localhost:5001/generate/schedule",
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     // 200: OK, return response data
-    // return response.data["schedule"];
+    return response.data["schedule"];
   } catch (error: any) {
     console.error("Failed to fetch", error);
     if (error.response) {

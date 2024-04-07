@@ -3,7 +3,6 @@
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { LoadingButton } from "@mui/lab";
-import Link from "next/link";
 import {
   useGlobalCourseListStore,
   useGlobalInstructorListStore,
@@ -40,7 +39,7 @@ export default function SubmitInput() {
 
   const generateSchedule = async () => {
     setLoadingState(true);
-    const getData = await UseGenerateSchedule(
+    const data = await UseGenerateSchedule(
       courseList,
       roomList,
       fullPeriodList,
@@ -48,11 +47,13 @@ export default function SubmitInput() {
       coursePrefList,
       periodPrefList
     );
-    if (getData) {
-      setSectionList(getData);
+    if (data) {
+      setSectionList(data);
       router.push("/schedule-report");
     }
-    setLoadingState(false);
+    else {
+      setLoadingState(false);
+    }
   };
 
   return (
