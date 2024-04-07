@@ -1,6 +1,10 @@
 "use client";
 
 import {
+  Accordion,
+  AccordionActions,
+  AccordionDetails,
+  AccordionSummary,
   Box,
   Button,
   Container,
@@ -11,23 +15,17 @@ import {
 } from "@mui/material";
 import Report from "./reports/report";
 import ConflictReport from "./reports/conflict-report";
-import NonConflictReport from "./reports/nonconflict-report";
+import IncompleteReport from "./reports/incomplete-report";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
 import ExportModal from "./export-modal";
 import Link from "next/link";
+import { LoadingButton } from "@mui/lab";
 
 export default function ScheduleReport() {
   const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   return (
     <Container
@@ -50,20 +48,6 @@ export default function ScheduleReport() {
       <br />
       <Report />
       <br />
-      <Grid
-        container
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-      >
-        <Grid item>
-          <ConflictReport />
-        </Grid>
-        <Grid item>
-          <NonConflictReport />
-        </Grid>
-      </Grid>
-      <br />
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
         <Stack direction={"column"}>
           <Typography variant="h4">Export Schedule</Typography>
@@ -76,12 +60,63 @@ export default function ScheduleReport() {
           variant="contained"
           color="success"
           startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
-          onClick={handleClickOpen}
+          onClick={() => setOpen(true)}
         >
           Download Schedule
         </Button>
       </Grid>
-      <ExportModal open={open} onClose={handleClose} />
+      <br />
+      <Accordion key={"conflict-report"}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h5">Conflict Report</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <ConflictReport />
+        </AccordionDetails>
+        <AccordionActions
+          sx={{
+            padding: "2%",
+          }}
+        >
+          <LoadingButton
+            variant="contained"
+            color="success"
+            loading={false}
+            startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+            sx={{
+              paddingLeft: "15px",
+            }}
+          >
+            <span>Export Conflicts</span>
+          </LoadingButton>
+        </AccordionActions>
+      </Accordion>
+      <Accordion key={"incomplete-report"}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography variant="h5">Incomplete Report</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <IncompleteReport />
+        </AccordionDetails>
+        <AccordionActions
+          sx={{
+            padding: "2%",
+          }}
+        >
+          <LoadingButton
+            variant="contained"
+            color="success"
+            loading={false}
+            startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+            sx={{
+              paddingLeft: "15px",
+            }}
+          >
+            <span>Export Incompletes</span>
+          </LoadingButton>
+        </AccordionActions>
+      </Accordion>
+      <ExportModal open={open} onClose={() => setOpen(false)} />
     </Container>
   );
 }

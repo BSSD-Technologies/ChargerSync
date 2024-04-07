@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { DataGrid, GridCellParams, GridColDef, gridClasses } from "@mui/x-data-grid";
-import { useGlobalConflictStore } from "@/app/_stores/store";
-import { UseGenerateConflicts } from "@/app/_hooks/apiHooks";
+import { useGlobalIncompleteStore } from "@/app/_stores/store";
+import { UseGenerateIncompletes } from "@/app/_hooks/apiHooks";
 import { useEffect } from "react";
 
 const columns: GridColDef[] = [
@@ -13,28 +13,28 @@ const columns: GridColDef[] = [
   { field: "instructor", headerName: "Instructor" },
 ];
 
-export default function ConflictReport() {
-  /** Conflict list store */
-  const [conflictList, setConflictList] = [
-    useGlobalConflictStore((state) => state.conflictList),
-    useGlobalConflictStore((state) => state.setConflictList),
+export default function IncompleteReport() {
+  /** Incomplete list store */
+  const [incompleteList, setIncompleteList] = [
+    useGlobalIncompleteStore((state) => state.incompleteList),
+    useGlobalIncompleteStore((state) => state.setIncompleteList),
   ];
 
   useEffect(() => {
-    /** API call for /generate/conflicts */
-    const generateConflicts = async () => {
-      const getData = await UseGenerateConflicts();
+    /** API call for /generate/incompletes */
+    const generateIncompletes = async () => {
+      const getData = await UseGenerateIncompletes();
       if (getData) {
-        setConflictList(getData);
+        setIncompleteList(getData);
       }
     };
-    generateConflicts();
+    generateIncompletes();
   }, []);
 
   return (
     <Box>
       <Typography variant="body1">
-        Insert a description about the conflicts in the scheduler.
+        Insert a description about the incompletes in the scheduler.
       </Typography>
       <br />
       <Box
@@ -42,12 +42,12 @@ export default function ConflictReport() {
           height: 300,
           width: "100%",
           [`.${gridClasses.cell}.highlight`]: {
-            backgroundColor: "#E57373",
+            backgroundColor: "#ffb74d",
           },
         }}
       >
         <DataGrid
-          rows={conflictList}
+          rows={incompleteList}
           columns={columns}
           initialState={{
             pagination: {

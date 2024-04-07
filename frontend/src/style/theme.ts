@@ -120,7 +120,7 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
             border: "1.5px solid",
             borderColor: theme.palette.info.main,
           }),
-        })
+        }),
       },
     },
   },
