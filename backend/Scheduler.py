@@ -30,7 +30,11 @@ class Scheduler:
     section_counter = 0
     instructors_with_no_preferences_pos = 0
 
+
     def __init__(self, input_courses=[]):
+        self.initialize(input_courses)
+
+    def initialize(self, input_courses=[]):
         # Setting up attributes
         if not input_courses:
             self.courses = Course.query.all()
@@ -42,6 +46,31 @@ class Scheduler:
         self.getRoomsAndOccupancy()
         self.getInstructorAvailability()
         self.getCoursePreferences(self.courses)
+
+    def clear(self):
+        # Course ID, Enrollment, Fulfillment
+        self.courses_and_enrollment = []
+
+        # Period ID, [Room IDs]
+        self.room_availability = []
+
+        # Room ID, Max Occupancy
+        self.room_occupancy = []
+
+        # Instructor ID, section count, [Period IDs]
+        self.instructor_availability = []
+        
+        # Course ID, [Instructor IDs]
+        self.course_preferences = []
+
+        # ----- Arrays ------
+        self.instructors_with_no_preferences = []
+        self.sections_to_be_assigned = []
+        self.all_sections = []
+        
+        # ----- Other Attributes ------
+        self.section_counter = 0
+        self.instructors_with_no_preferences_pos = 0
 
     # Constructor Functions ------
         
@@ -228,7 +257,7 @@ class Scheduler:
         for instructor in self.instructor_availability:
             if instructor[0] == instructor_id:
                 return instructor[2]    # return array of periods instructor is available
-        return None
+        return []
         
     # OTHER
         

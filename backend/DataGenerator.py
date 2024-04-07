@@ -11,18 +11,18 @@ mw_times = [
     # Start time, End time
     #(time(hour=8), time(hour=9)),
     #(time(hour=9), time(hour=10)),
-    (time(hour=10), time(hour=11)),
-    (time(hour=11), time(hour=12)),
-    (time(hour=13), time(hour=14))
+    ("10:00PM","11:00PM"),
+    ("11:00PM","12:00PM"),
+    ("12:00PM","1:00PM")
 ]
 
 tr_times = [
     # Start time, End time
     #(time(hour=8), time(hour=9)),
     #(time(hour=9), time(hour=10)),
-    (time(hour=10), time(hour=11)),
-    (time(hour=11), time(hour=12)),
-    (time(hour=13), time(hour=14))
+    ("10:00PM","11:00PM"),
+    ("11:00PM","12:00PM"),
+    ("12:00PM","1:00PM")
 ]
 
 instructor_list = [
@@ -31,8 +31,8 @@ instructor_list = [
     ('Dan', 'Schrimpcher', 3),
     ('Robert', 'Preston', 2),
     ('John', 'Doe', 1),
-    ('Super', 'Man', 6),
-    ('Danny', 'Hardin', 7),
+    #('Super', 'Man', 6),
+    #('Danny', 'Hardin', 7),
     #('Jake', 'Doe', 8),
     #('Bat', 'Man', 9),
     #('Elizabeth', 'Hardin', 10),
@@ -40,14 +40,14 @@ instructor_list = [
 
 room_list = [
     # Name, Occupancy
-    ('OKT 200', 100),
-    ('OKT 307', 50),
+    ('OKT 200', 2),
+    #('OKT 307', 50),
     #('OKT 155', 10),
-    ('LIB 201', 20),
+    #('LIB 201', 20),
     #('OKT 105', 100),
     #('OKT 201', 120),
     #('OKT 308', 20),
-    ('OKT 156', 20),
+    #('OKT 156', 20),
     #('OKT 158', 65),
     #('LIB 202', 60),
     #('OKT 106', 100),
@@ -62,13 +62,13 @@ course_list = [
     # Course name, max, preliminary
     ('CS 101', 100, 100),
     ('CS 221', 100, 0),
-    ('CS 453', 200, 50),
-    ('CS 200', 200, 0),
-    ('CS 390', 150, 25),
-    ('CS 317', 150, 0),
-    ('CS 102', 200, 100),
-    ('CS 222', 100, 0),
-    ('CS 454', 150, 50),
+    # ('CS 453', 200, 50),
+    # ('CS 200', 200, 0),
+    # ('CS 390', 150, 25),
+    # ('CS 317', 150, 0),
+    # ('CS 102', 200, 100),
+    # ('CS 222', 100, 0),
+    #('CS 454', 150, 50),
 ]
 
 course_preference_list = [
