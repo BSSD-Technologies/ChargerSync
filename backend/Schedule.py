@@ -80,14 +80,14 @@ class Schedule:
                 continue
 
     def clear(self):
-        self.courses = []
-        self.sections = []
-        self.schedule = []
-        self.conflicts = []
-        self.incompletes = []
+        self.courses.clear()   
+        self.sections.clear()
+        self.schedule.clear()
+        self.conflicts.clear()
+        self.incompletes.clear()
 
-        if self.scheduler:
-            self.scheduler.clear()
+        #if self.scheduler:
+        #    self.scheduler.clear()
         
 
 
