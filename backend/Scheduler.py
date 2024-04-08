@@ -30,7 +30,11 @@ class Scheduler:
     section_counter = 0
     instructors_with_no_preferences_pos = 0
 
+
     def __init__(self, input_courses=[]):
+        self.initialize(input_courses)
+
+    def initialize(self, input_courses=[]):
         # Setting up attributes
         if not input_courses:
             self.courses = Course.query.all()
@@ -44,44 +48,37 @@ class Scheduler:
         self.getCoursePreferences(self.courses)
 
     def clear(self):
-        # Course ID, Enrollment, Fulfillment
         self.courses_and_enrollment = []
-
-        # Period ID, [Room IDs]
         self.room_availability = []
-
-        # Room ID, Max Occupancy
         self.room_occupancy = []
-
-        # Instructor ID, section count, [Period IDs]
         self.instructor_availability = []
-        
-        # Course ID, [Instructor IDs]
         self.course_preferences = []
 
-        # ----- Arrays ------
         self.instructors_with_no_preferences = []
         self.sections_to_be_assigned = []
         self.all_sections = []
         
-        # ----- Other Attributes ------
         self.section_counter = 0
         self.instructors_with_no_preferences_pos = 0
+
+        self.initialize()
 
     # Constructor Functions ------
         
     # Input: self
     # Output: n/a - changes values in self
     def getCoursesAndEnrollment(self, courses):
+        self.courses_and_enrollment = []
         # Creating a tuple to represent course, max enrollment, and fulfilled/not fulfilled
         for course in courses:
-            pull_course = course.id
-            tuple_item = (pull_course, course.max_enrollment, 0)
-            self.courses_and_enrollment.append(tuple_item)
+                pull_course = course.id
+                tuple_item = (pull_course, course.max_enrollment, 0)
+                self.courses_and_enrollment.append(tuple_item)
     
     # Input: self
     # Output: n/a - changes values in self
     def getRoomsAndAvailability(self):
+        self.room_availability = []
         # Creating a tuple to represent room and availabily
         periods = Period.query.all()
         rooms = Room.query.all()
@@ -94,6 +91,7 @@ class Scheduler:
     # Input: self
     # Output: n/a - changes values in self
     def getRoomsAndOccupancy(self):
+        self.room_occupancy = []
         # Creating a tuple of all the rooms and occupancy
         rooms = Room.query.all()
         for room in rooms:
@@ -105,6 +103,7 @@ class Scheduler:
     # Input: self
     # Output: n/a - changes values in self
     def getInstructorAvailability(self):
+        self.instructor_availability = []
         # Creating a Tuple with instructor id and period ids
         instructors = Instructor.query.all()
         periods = Period.query.all()
@@ -125,6 +124,7 @@ class Scheduler:
     # Input: self
     # Output: n/a - changes values in self
     def getInstructorsWithNoPref(self, course_id):
+        self.instructors_with_no_preferences = []
         # Just an array of instructors with no preferences - sorted by priority
         self.instructors_with_no_preferences = []
         instructors = Instructor.query.order_by(Instructor.priority).all()
@@ -264,7 +264,7 @@ class Scheduler:
         for instructor in self.instructor_availability:
             if instructor[0] == instructor_id:
                 return instructor[2]    # return array of periods instructor is available
-        return None
+        return []
         
     # OTHER
         
@@ -392,8 +392,8 @@ class Scheduler:
 
             # Assigning room
             self.assignRoom(section)
+            section.printInfo
                 
-
         self.getAllSections()
 
     # Input: self, section
@@ -455,10 +455,52 @@ class Scheduler:
         # MAIN LOOP
         for i in range(10):
             self.prepareForMoreSections()
+            self.print()
             self.createNewSections()
             self.scheduleSections()
             # If all courses are fulfilled - end loop
             if self.checkCoursesFulfillment() == True:
                 self.getAllSections()
                 break
+
+    def print(self):
+        print("Scheduler Debug Information:")
+        print("Courses and Enrollment:")
+        for course in self.courses_and_enrollment:
+            print(f"Course ID: {course[0]}, Enrollment: {course[1]}, Fulfilled: {course[2]}")
+        print()
+
+        print("Room Availability:")
+        for room in self.room_availability:
+            print(f"Period ID: {room[0]}, Available Rooms: {room[1]}")
+        print()
+
+        print("Room Occupancy:")
+        for room in self.room_occupancy:
+            print(f"Room ID: {room[0]}, Max Occupancy: {room[1]}")
+        print()
+
+        print("Instructor Availability:")
+        for instructor in self.instructor_availability:
+            print(f"Instructor ID: {instructor[0]}, Section Count: {instructor[1]}, Available Periods: {instructor[2]}")
+        print()
+
+        print("Course Preferences:")
+        for course in self.course_preferences:
+            print(f"Course ID: {course[0]}, Instructor Preferences: {course[1]}")
+        print()
+
+        print("Instructors with No Preferences:")
+        print(self.instructors_with_no_preferences)
+        print()
+
+        print("Sections to be Assigned:")
+        for section in self.sections_to_be_assigned:
+            print(f"Section ID: {section.id}, Course ID: {section.course_id}")
+        print()
+
+        print("All Sections:")
+        for section in self.all_sections:
+            print(f"Section ID: {section.id}, Course ID: {section.course_id}, Instructor ID: {section.instructor_id}, Period ID: {section.period_id}, Room ID: {section.room_id}")
+        print()
         

@@ -10,6 +10,7 @@ import csvOutput
 app = Flask(__name__)
 # Enable CORS for all routes
 CORS(app)
+
 # Setting up the database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 db.init_app(app)
@@ -159,40 +160,39 @@ Error Codes:
 """
 @app.route('/generate/schedule',  methods=['POST'])
 def generate_schedule():
+    global generated_schedule
+    
     # Ensure request contains JSON data
     if not request.is_json:
         return jsonify({'error': 'Request must be JSON'}), 400
     else:
-        global generated_schedule
-
-        schedule = None
-
-        print("Hello!")
-
-        # Try to clear database before reloading
-        if generated_schedule is not None:
-            generated_schedule = None
-            DatabaseManager.clear()
-            db.session.commit()
-
         # Read JSON data from request
         json_data = request.json
-        
-        # PARSE DATA AND PUT INTO DATABASE
+
+        # Clear the database
+        DatabaseManager.clear()
+        db.session.commit()
+
+        # Load data into the database
         DatabaseManager.loadData(json_data)
+        db.session.commit()
 
-        # Generate schedule
+        if generated_schedule:
+            generated_schedule.scheduler.clear()
+            
+        # Initialize a new schedule
         schedule = Schedule()
+       
+        # Generate schedule
         schedule.generate()
+        
+        schedule_data = formatForOutput(schedule.schedule)
 
+        # Store the schedule in the global variable
         generated_schedule = schedule
 
-        csvOutput.return_fullSchedule_CSV(schedule)
-        csvOutput.return_filtered_dept(schedule, "CE")
-        csvOutput.return_filtered_prof(schedule, "Johnson David")
-        csvOutput.return_filtered_room(schedule, "SST-107")
+        schedule.clear()
 
-        schedule_data = formatForOutput(schedule.schedule)
         return jsonify({'schedule': schedule_data}), 200
 
 """
@@ -269,7 +269,6 @@ def count_incompletes():
 
 if __name__ == '__main__':
     with app.app_context():
-        db.drop_all()
         db.create_all()
 
     app.run(debug=True, host="0.0.0.0")

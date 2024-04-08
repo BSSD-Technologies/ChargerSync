@@ -36,12 +36,14 @@ class Schedule:
 
         # All incompletes
         self.incompletes = []
-
         
+
         if not input_courses:
             self.courses = Course.query.all()
         else:
             self.courses = input_courses
+
+    
         self.scheduler = Scheduler(self.courses)
 
     def getSections(self):
@@ -54,6 +56,7 @@ class Schedule:
     def generate(self):
         # fills everything in the class arrays
         self.scheduler.generateSchedule()
+        self.scheduler.print()
         self.getSections()
         self.generateConflicts()
 
@@ -77,24 +80,15 @@ class Schedule:
                 continue
 
     def clear(self):
-        # Courses used to generate schedule
-        self.courses = []
+        self.courses.clear()   
+        self.sections.clear()
+        self.schedule.clear()
+        self.conflicts.clear()
+        self.incompletes.clear()
 
-        # ALL sections generated from scheduler
-        self.sections = []
-
-        # Only incompletes and complete type sections
-        self.schedule = []
-
-        # All sections labeled as conflicts
-        self.conflicts = []
-
-        # All incompletes
-        self.incompletes = []
-
-        self.scheduler.clear()
-
-        #self.conflict_identifier.clear()
+        #if self.scheduler:
+        #    self.scheduler.clear()
+        
 
 
 
