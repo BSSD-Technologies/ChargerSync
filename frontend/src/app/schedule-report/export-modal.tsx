@@ -18,6 +18,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useState } from "react";
+import { UseExportSchedule } from "../_hooks/apiHooks";
 
 // Dummy department list data
 const departmentList = ["CS", "CPE", "MAE", "EE"];
@@ -218,6 +219,10 @@ export default function ExportModal(props: ExportModalProps) {
     onClose();
   };
 
+  const handleExport = async () => {
+    const getData = await UseExportSchedule();
+  };
+
   return (
     <Dialog
       onClose={handleClose}
@@ -280,6 +285,7 @@ export default function ExportModal(props: ExportModalProps) {
             sx={{
               paddingLeft: "15px",
             }}
+            onClick={handleExport}
           >
             <span>Export</span>
           </LoadingButton>

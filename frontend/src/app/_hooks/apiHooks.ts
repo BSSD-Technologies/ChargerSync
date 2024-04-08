@@ -338,3 +338,27 @@ export const UseCountIncompletes = async () => {
   }
   return null;
 };
+
+/**
+ * UseExportSchedule
+ * Export a schedule as a CSV, with any filters if desired
+ *
+ * @returns JSON object
+ */
+export const UseExportSchedule = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5001/export/schedule"
+    );
+    // 200: OK, return response data
+    return response.data;
+  } catch (error: any) {
+    if (error.response) {
+      const status = error.response.status;
+      // No schedule exists yet
+      //if (status === 400)
+        //toast.error("Error generating schedule. Please try again.");
+    }
+  }
+  return null;
+};

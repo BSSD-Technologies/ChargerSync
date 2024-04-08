@@ -1,11 +1,11 @@
-from flask import Flask, jsonify, request
+from flask import Flask, Response, jsonify, request
 from flask_cors import CORS  
 from functions import *
 from extensions import db
 from Schedule import Schedule
 from output import formatForOutput
 import DatabaseManager
-import csvOutput
+from csvOutput import return_fullSchedule_CSV, return_filtered_dept, return_filtered_prof, return_filtered_room
 
 app = Flask(__name__)
 # Enable CORS for all routes
@@ -266,6 +266,39 @@ def count_incompletes():
         # Get number of sections with incompletes
         count = len(generated_schedule.incompletes)
         return jsonify({'count': count}), 200
+    
+"""
+/export/schedule
+User requests to export the complete/incomplete sections schedule with filters if
+applicable, and the .csv file is returned.
+
+Error Codes:
+200 - OK
+400 - Not JSON data
+"""
+@app.route('/export/schedule',  methods=['GET'])
+def export_schedule():
+    global generated_schedule
+    
+    # Ensure request contains JSON data
+    # if not request.is_json:
+    #     return jsonify({'error': 'Request must be JSON'}), 400
+    # else:
+    # Read JSON data from request
+    # json_data = request.json
+
+    # Store the schedule in the global variable
+    if generated_schedule:
+        schedule_csv = return_fullSchedule_CSV(generated_schedule)
+
+    # Set response headers
+    response = Response(
+        schedule_csv,
+        mimetype="text/csv",
+        headers={"Content-disposition":
+                 "attachment; filename=data.csv"})
+
+    return jsonify(schedule_csv), 200
 
 if __name__ == '__main__':
     with app.app_context():
