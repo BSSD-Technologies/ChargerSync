@@ -19,7 +19,7 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import DisabledByDefaultRoundedIcon from "@mui/icons-material/DisabledByDefaultRounded";
+import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Period, defaultPeriod } from "@/app/_types/Period";
 import { useEffect, useState } from "react";
@@ -246,7 +246,7 @@ export default function PeriodInput(props: {
                     display: periodList.length > 0 ? "flex" : "none",
                   }}
                 >
-                  <DisabledByDefaultRoundedIcon fontSize="medium" />
+                  <HighlightOffRoundedIcon fontSize="medium" />
                 </Button>
               </TableCell>
             </TableRow>

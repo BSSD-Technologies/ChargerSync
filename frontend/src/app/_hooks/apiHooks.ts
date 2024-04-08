@@ -232,6 +232,7 @@ export const UseGenerateSchedule = async (
     // 200: OK, return response data
     return response.data["schedule"];
   } catch (error: any) {
+    console.error("Failed to fetch", error);
     if (error.response) {
       const status = error.response.status;
       // JSON object parameter not provided
@@ -279,6 +280,54 @@ export const UseGenerateIncompletes = async () => {
     );
     // 200: OK, return response data
     return response.data["incompletes"];
+  } catch (error: any) {
+    if (error.response) {
+      const status = error.response.status;
+      // No schedule exists yet
+      //if (status === 400)
+        //toast.error("Error generating schedule. Please try again.");
+    }
+  }
+  return null;
+};
+
+/**
+ * UseCountConflicts
+ * Get all sections with conflicts from generated schedule
+ *
+ * @returns JSON object
+ */
+export const UseCountConflicts = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5001/countConflicts"
+    );
+    // 200: OK, return response data
+    return response.data["count"];
+  } catch (error: any) {
+    if (error.response) {
+      const status = error.response.status;
+      // No schedule exists yet
+      //if (status === 400)
+        //toast.error("Error generating schedule. Please try again.");
+    }
+  }
+  return null;
+};
+
+/**
+ * UseCountIncompletes
+ * Get all sections with incompletes from generated schedule
+ *
+ * @returns JSON object
+ */
+export const UseCountIncompletes = async () => {
+  try {
+    const response = await axios.get(
+      "http://localhost:5001/countIncompletes"
+    );
+    // 200: OK, return response data
+    return response.data["count"];
   } catch (error: any) {
     if (error.response) {
       const status = error.response.status;
