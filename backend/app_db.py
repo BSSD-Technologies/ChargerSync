@@ -8,6 +8,7 @@ from models.Room import Room
 from models.Period import Period
 from models.Preferences import PeriodPreference, CoursePreference
 from output import formatForOutput
+import csvOutput
 import uuid
 
 app = Flask(__name__)
@@ -25,13 +26,14 @@ with app.app_context():
 
     
     schedule = Schedule()
+
     schedule.generate()
     db.session.commit()
 
     print('\nALL SECTIONS\n')
     for section in schedule.sections:
         section.printInfo()
-        print("\n")
+        print('\n')
 
     print('\nSCHEDULED\n')
     for section in schedule.schedule:
@@ -44,6 +46,10 @@ with app.app_context():
         print('\n')
 
     print("TEST OF JSON OUTPUT BELOW")
+
+    csvOutput.return_fullSchedule_CSV(schedule)
+    csvOutput.return_filtered_dept(schedule, "CS")
+    csvOutput.return_filtered_prof(schedule, "Robert Preston")
 
     print(formatForOutput(schedule.schedule))
     
@@ -93,8 +99,6 @@ with app.app_context():
     print(formatForOutput(schedule.schedule))
 
 
-    #print(Course.query.all())
-    #print(Instructor.query.all())
 
 
 

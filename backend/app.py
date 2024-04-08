@@ -5,6 +5,7 @@ from extensions import db
 from Schedule import Schedule
 from output import formatForOutput
 import DatabaseManager
+import csvOutput
 
 app = Flask(__name__)
 # Enable CORS for all routes
@@ -184,8 +185,7 @@ def generate_schedule():
        
         # Generate schedule
         schedule.generate()
-
-        # Format output of schedule to be returned
+        
         schedule_data = formatForOutput(schedule.schedule)
 
         # Store the schedule in the global variable
