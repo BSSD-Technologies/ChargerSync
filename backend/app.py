@@ -186,7 +186,11 @@ def generate_schedule():
 
         generated_schedule = schedule
 
-        # Format output of schedule to be returned
+        csvOutput.return_fullSchedule_CSV(schedule)
+        csvOutput.return_filtered_dept(schedule, "CE")
+        csvOutput.return_filtered_prof(schedule, "Johnson David")
+        csvOutput.return_filtered_room(schedule, "SST-107")
+
         schedule_data = formatForOutput(schedule.schedule)
         return jsonify({'schedule': schedule_data}), 200
 
