@@ -53,49 +53,49 @@ def return_filtered_dept(scheduler, filtered_department):
     with open("FilteredDepartmentSchedule.csv", 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['Course','Days', 'Start Time', 'End Time', 'Location', 'Instructor'])
+    for i in filtered_department:
+        for section in scheduler.schedule:
+            if i == section.department:
+                try:   
+                    a = section.period.start_time
+                except:
+                    a = "TBD"
+                
+                try:   
+                    b = section.period.day
+                except:
+                    b = "TBD"
 
-    for section in scheduler.schedule:
-        if filtered_department == section.department:
-            try:   
-                a = section.period.start_time
-            except:
-                a = "TBD"
-            
-            try:   
-                b = section.period.day
-            except:
-                b = "TBD"
+                try:
+                    c = section.room.max_occupancy
+                except:
+                    c = "TBD"
 
-            try:
-                c = section.room.max_occupancy
-            except:
-                c = "TBD"
+                try:   
+                    d = section.period.end_time
+                except:
+                    d = "TBD" 
 
-            try:   
-                d = section.period.end_time
-            except:
-                d = "TBD" 
-
-            try:
-                instructor_assignment = section.instructor
-            except:
-                instructor_assignment = "TBD"
+                try:
+                    instructor_assignment = section.instructor
+                except:
+                    instructor_assignment = "TBD"
 
 
-            course = section.name
-            days = b
-            start_time = a
-            end_time = d
-            room = str(section.room)
-            room2 = room.replace("'", "").replace("<", "").replace(">", "").replace("Room ","")
-            instructor = str(instructor_assignment)
-            instructor2 = instructor.replace("'", "").replace("<", "").replace(">", "").replace("Instructor ","")
-            
-            with open("FilteredDepartmentSchedule.csv", 'a', newline='') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow([course, days, start_time, end_time, room2, instructor2])
-        else:
-            continue
+                course = section.name
+                days = b
+                start_time = a
+                end_time = d
+                room = str(section.room)
+                room2 = room.replace("'", "").replace("<", "").replace(">", "").replace("Room ","")
+                instructor = str(instructor_assignment)
+                instructor2 = instructor.replace("'", "").replace("<", "").replace(">", "").replace("Instructor ","")
+                
+                with open("FilteredDepartmentSchedule.csv", 'a', newline='') as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerow([course, days, start_time, end_time, room2, instructor2])
+            else:
+                continue
 
 def return_filtered_prof(scheduler, filtered_professor):
     i = 0
@@ -104,50 +104,51 @@ def return_filtered_prof(scheduler, filtered_professor):
         writer = csv.writer(csvfile)
         writer.writerow(['Course','Days', 'Start Time', 'End Time', 'Location', 'Instructor'])
 
-    for section in scheduler.schedule:
-
-        try:
-            instructor_assignment = section.instructor
-        except:
-            instructor_assignment = "TBD"
-        instructor = str(instructor_assignment)
-        instructor2 = instructor.replace("'", "").replace("<", "").replace(">", "").replace("Instructor ","").strip()
-        if(filtered_professor == instructor2):
-
-            try:   
-                a = section.period.start_time
-            except:
-                a = "TBD"
-            
-            try:   
-                b = section.period.day
-            except:
-                b = "TBD"
+    for i in filtered_professor:
+        for section in scheduler.schedule:
 
             try:
-                c = section.room.max_occupancy
+                instructor_assignment = section.instructor
             except:
-                c = "TBD"
+                instructor_assignment = "TBD"
+            instructor = str(instructor_assignment)
+            instructor2 = instructor.replace("'", "").replace("<", "").replace(">", "").replace("Instructor ","").strip()
+            if(i == instructor2):
 
-            try:   
-                d = section.period.end_time
-            except:
-                d = "TBD" 
+                try:   
+                    a = section.period.start_time
+                except:
+                    a = "TBD"
+                
+                try:   
+                    b = section.period.day
+                except:
+                    b = "TBD"
+
+                try:
+                    c = section.room.max_occupancy
+                except:
+                    c = "TBD"
+
+                try:   
+                    d = section.period.end_time
+                except:
+                    d = "TBD" 
 
 
-            course = section.name
-            days = b
-            start_time = a
-            end_time = d
-            room = str(section.room)
-            room2 = room.replace("'", "").replace("<", "").replace(">", "").replace("Room ","")
-            
-            with open("FilteredProfessorSchedule.csv", 'a', newline='') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow([course, days, start_time, end_time, room2, instructor2])
+                course = section.name
+                days = b
+                start_time = a
+                end_time = d
+                room = str(section.room)
+                room2 = room.replace("'", "").replace("<", "").replace(">", "").replace("Room ","")
+                
+                with open("FilteredProfessorSchedule.csv", 'a', newline='') as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerow([course, days, start_time, end_time, room2, instructor2])
 
-        else:
-            continue
+            else:
+                continue
 
 def return_filtered_room(scheduler, filtered_room):
     i = 0
@@ -156,48 +157,49 @@ def return_filtered_room(scheduler, filtered_room):
         writer = csv.writer(csvfile)
         writer.writerow(['Course','Days', 'Start Time', 'End Time', 'Location', 'Instructor'])
 
-    for section in scheduler.schedule:
+    for i in filtered_room:
+        for section in scheduler.schedule:
 
-        room = str(section.room)
-        room2 = room.replace("'", "").replace("<", "").replace(">", "").replace("Room ","")
-        
-        if(filtered_room == room2):
-
-            try:   
-                a = section.period.start_time
-            except:
-                a = "TBD"
+            room = str(section.room)
+            room2 = room.replace("'", "").replace("<", "").replace(">", "").replace("Room ","")
             
-            try:   
-                b = section.period.day
-            except:
-                b = "TBD"
+            if(i == room2):
 
-            try:
-                c = section.room.max_occupancy
-            except:
-                c = "TBD"
+                try:   
+                    a = section.period.start_time
+                except:
+                    a = "TBD"
+                
+                try:   
+                    b = section.period.day
+                except:
+                    b = "TBD"
 
-            try:   
-                d = section.period.end_time
-            except:
-                d = "TBD" 
+                try:
+                    c = section.room.max_occupancy
+                except:
+                    c = "TBD"
 
-            try:
-                instructor_assignment = section.instructor
-            except:
-                instructor_assignment = "TBD"
+                try:   
+                    d = section.period.end_time
+                except:
+                    d = "TBD" 
+
+                try:
+                    instructor_assignment = section.instructor
+                except:
+                    instructor_assignment = "TBD"
 
 
-            course = section.name
-            days = b
-            start_time = a
-            end_time = d
-            instructor = str(instructor_assignment)
-            instructor2 = instructor.replace("'", "").replace("<", "").replace(">", "").replace("Instructor ","")
-            
-            with open("FilteredRoomSchedule.csv", 'a', newline='') as csvfile:
-                writer = csv.writer(csvfile)
-                writer.writerow([course, days, start_time, end_time, room2, instructor2])
-        else:
-            continue
+                course = section.name
+                days = b
+                start_time = a
+                end_time = d
+                instructor = str(instructor_assignment)
+                instructor2 = instructor.replace("'", "").replace("<", "").replace(">", "").replace("Instructor ","")
+                
+                with open("FilteredRoomSchedule.csv", 'a', newline='') as csvfile:
+                    writer = csv.writer(csvfile)
+                    writer.writerow([course, days, start_time, end_time, room2, instructor2])
+            else:
+                continue
