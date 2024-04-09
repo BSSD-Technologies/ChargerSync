@@ -22,6 +22,7 @@ import { useState } from "react";
 import PreferenceInput from "./input-sections/preference-input";
 import { useGlobalCourseListStore, useGlobalInstructorListStore, useGlobalPeriodListStore, useGlobalRoomListStore } from "../_stores/store";
 import { downloadInputCsv } from "../_hooks/utilHooks";
+import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 
 export default function InputData() {
   /** Stepper state */
@@ -103,6 +104,7 @@ export default function InputData() {
                       downloadInputCsv(getRawCourses(), "CourseInput.csv");
                     }}
                     sx={{ mt: 1, mr: 1 }}
+                    startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
                   >
                     Download Inputs
                   </Button>
@@ -133,6 +135,7 @@ export default function InputData() {
                       downloadInputCsv(getRawRooms(), "RoomInput.csv");
                     }}
                     sx={{ mt: 1, mr: 1 }}
+                    startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
                   >
                     Download Inputs
                   </Button>
@@ -169,6 +172,7 @@ export default function InputData() {
                       downloadInputCsv(getRawPeriods(), "PeriodInput.csv");
                     }}
                     sx={{ mt: 1, mr: 1 }}
+                    startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
                   >
                     Download Inputs
                   </Button>
@@ -205,6 +209,7 @@ export default function InputData() {
                       downloadInputCsv(getRawInstructors(), "InstructorInput.csv");
                     }}
                     sx={{ mt: 1, mr: 1 }}
+                    startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
                   >
                     Download Inputs
                   </Button>
