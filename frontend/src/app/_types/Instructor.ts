@@ -17,3 +17,9 @@ export const defaultInstructor = {
   lname: "",
   priority: NaN,
 }
+
+export type ExportInstructor = {
+  "First Name": string;
+  "Last Name": string;
+  "Priority"?: number | "";
+};

@@ -395,7 +395,24 @@ export const downloadCsv = (data: Section[], filename: string) => {
   const url = window.URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'data.csv';
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+};
+
+/** JSON to CSV -> INPUTS
+ * Given some input data, format to desired CSV format with proper
+ * headers and then prompt download of csv
+ */
+export const downloadInputCsv = (data: any[], filename: string) => {
+  const csvData = Papa.unparse(data);
+  const blob = new Blob([csvData], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
   document.body.appendChild(a);
   a.click();
   window.URL.revokeObjectURL(url);

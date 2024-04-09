@@ -14,3 +14,8 @@ export const defaultRoom = {
   room_id: "",
   max_capacity: NaN,
 };
+
+export type ExportRoom = {
+  "Room ID": string;
+  "Max Capacity": number;
+};
