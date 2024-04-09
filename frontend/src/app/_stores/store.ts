@@ -75,7 +75,7 @@ export const useGlobalCourseListStore = create<GlobalCourseListState>()(
         "Department": course.department,
         "Course Number": course.course_num,
         "Max Enrollment": course.max_enrollment,
-        "Preliminary Enrollment": course.prelim_enrollment,
+        "Preliminary Enrollment": (course.prelim_enrollment ? course.prelim_enrollment : ""),
       }))
     },
   })
@@ -306,7 +306,7 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
       return get().instructorList.map((instructor) => ({
         "First Name": instructor.fname,
         "Last Name": instructor.lname,
-        "Priority": instructor.priority,
+        "Priority": (instructor.priority ? instructor.priority : ""),
       }))
     },
   })

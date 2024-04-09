@@ -21,5 +21,5 @@ export const defaultInstructor = {
 export type ExportInstructor = {
   "First Name": string;
   "Last Name": string;
-  "Priority": number;
+  "Priority"?: number | "";
 };

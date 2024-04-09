@@ -24,5 +24,5 @@ export type ExportCourse = {
   "Department": string;
   "Course Number": string;
   "Max Enrollment": number;
-  "Preliminary Enrollment"?: number;
+  "Preliminary Enrollment"?: number | "";
 };
