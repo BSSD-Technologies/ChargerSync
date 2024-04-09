@@ -7,14 +7,33 @@ from models.Preferences import CoursePreference, PeriodPreference
 from extensions import db
 from sqlalchemy import or_, and_
 
+# *********************************************************
+# Filter by department
+# 
+# @param: List of department names to filter by
+# *********************************************************
 def filter_by_department(departments):
     filteredSections = Section.query.filter(or_(Section.status=='Complete', Section.status=='Incomplete'), and_(Section.department.in_(departments))).all()
     formattedSections = formatForOutput(filteredSections)
     return formattedSections
 
-# Needs an ID
+# *********************************************************
+# Filter by room
+# 
+# @param: List of room uuids to filter by
+# *********************************************************
 def filter_by_room(rooms):
     filteredSections = Section.query.filter(or_(Section.status=='Complete', Section.status=='Incomplete'), and_(Section.room_id.in_(rooms))).all()
+    formattedSections = formatForOutput(filteredSections)
+    return formattedSections
+
+# *********************************************************
+# Filter by instructor
+# 
+# @param: List of instructor uuids to filter by
+# *********************************************************
+def filter_by_instructor(instructors):
+    filteredSections = Section.query.filter(or_(Section.status=='Complete', Section.status=='Incomplete'), and_(Section.instructor_id.in_(instructors))).all()
     formattedSections = formatForOutput(filteredSections)
     return formattedSections
 

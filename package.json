@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "react-export-json-csv": "^1.0.1-3.1"
+  }
+}
