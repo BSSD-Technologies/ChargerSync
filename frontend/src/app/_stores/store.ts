@@ -430,6 +430,8 @@ export const useGlobalScheduleStore = create<GlobalScheduleState>()(
 interface GlobalConflictState {
   /** Array of conflict sections */
   conflictList: FormattedSection[];
+  /** Array of raw conflict sections */
+  rawConflictList: Section[];
   /** Populate conflict list with formatted data */
   setConflictList: (list: Section[]) => void;
 }
@@ -437,8 +439,10 @@ interface GlobalConflictState {
 export const useGlobalConflictStore = create<GlobalConflictState>()(
   (set, get) => ({
     conflictList: [],
+    rawConflictList: [],
     setConflictList: (list: Section[]) => {
       set((state) => ({
+        rawConflictList: list,
         conflictList: readSections(list),
       }));
     },
@@ -449,6 +453,8 @@ export const useGlobalConflictStore = create<GlobalConflictState>()(
 interface GlobalIncompleteState {
   /** Array of incomplete sections */
   incompleteList: FormattedSection[];
+  /** Array of raw incomplete sections */
+  rawIncompleteList: Section[];
   /** Populate incomplete list with formatted data */
   setIncompleteList: (list: Section[]) => void;
 }
@@ -456,8 +462,10 @@ interface GlobalIncompleteState {
 export const useGlobalIncompleteStore = create<GlobalIncompleteState>()(
   (set, get) => ({
     incompleteList: [],
+    rawIncompleteList: [],
     setIncompleteList: (list: Section[]) => {
       set((state) => ({
+        rawIncompleteList: list,
         incompleteList: readSections(list),
       }));
     },

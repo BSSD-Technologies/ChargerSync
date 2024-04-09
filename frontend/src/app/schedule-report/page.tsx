@@ -19,17 +19,35 @@ import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import { useEffect, useState } from "react";
 import ExportModal from "./export-modal";
 import Link from "next/link";
 import { LoadingButton } from "@mui/lab";
 import { UseCountConflicts, UseCountIncompletes } from "../_hooks/apiHooks";
+import { downloadCsv } from "../_hooks/utilHooks";
+import { useGlobalConflictStore, useGlobalIncompleteStore } from "../_stores/store";
 
 export default function ScheduleReport() {
   const [open, setOpen] = useState(false);
   const [countConflicts, setCountConflicts] = useState(0);
   const [countIncompletes, setCountIncompletes] = useState(0);
+
+  /** Conflict/incomplete list store */
+  const [rawConflictList, rawIncompleteList] = [
+    useGlobalConflictStore((state) => state.rawConflictList),
+    useGlobalIncompleteStore((state) => state.rawIncompleteList),
+  ];
+
+  /** Export conflicts to CSV and prompt download */
+  const handleConflictExport = async () => {
+    downloadCsv(rawConflictList, "ConflictSections.csv");
+  };
+
+  /** Export incompletes to CSV and prompt download */
+  const handleIncompleteExport = async () => {
+    downloadCsv(rawIncompleteList, "IncompleteSections.csv");
+  };
 
   useEffect(() => {
     /** API call for /countConflicts */
@@ -117,6 +135,7 @@ export default function ScheduleReport() {
             sx={{
               paddingLeft: "15px",
             }}
+            onClick={handleConflictExport}
           >
             <span>Export Conflicts</span>
           </LoadingButton>
@@ -149,6 +168,7 @@ export default function ScheduleReport() {
             sx={{
               paddingLeft: "15px",
             }}
+            onClick={handleIncompleteExport}
           >
             <span>Export Incompletes</span>
           </LoadingButton>

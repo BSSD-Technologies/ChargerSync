@@ -1,5 +1,10 @@
 import { Box, Typography } from "@mui/material";
-import { DataGrid, GridCellParams, GridColDef, gridClasses } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCellParams,
+  GridColDef,
+  gridClasses,
+} from "@mui/x-data-grid";
 import { useGlobalConflictStore } from "@/app/_stores/store";
 import { UseGenerateConflicts } from "@/app/_hooks/apiHooks";
 import { useEffect } from "react";
@@ -29,7 +34,7 @@ export default function ConflictReport() {
       }
     };
     generateConflicts();
-  }, []);
+  }, [setConflictList]);
 
   return (
     <Box>
