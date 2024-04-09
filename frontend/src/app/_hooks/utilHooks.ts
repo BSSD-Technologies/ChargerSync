@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Day, Period } from "../_types/Period";
 import { v4 as uuidv4 } from "uuid";
-import { FormattedSection, Section } from "../_types/Section";
+import { ExportSection, FormattedSection, Section } from "../_types/Section";
+import Papa from 'papaparse';
 
 /**
  * Detect first render of a component
@@ -328,7 +329,7 @@ export function readInstructors(rawData: RawInstructorData[]) {
 }
 
 /** Parse raw section data into FormattedSection array */
-export function readSections(rawData: Section[]) {
+export function readSections(rawData: Section[]): FormattedSection[] {
   return rawData.map((section) => ({
     id: section.uuid,
     course:
@@ -356,3 +357,47 @@ export function readSections(rawData: Section[]) {
     section: section.section_id,
   }));
 }
+
+/** Parse raw section data into exportable section array */
+export function formatCSVSections(rawData: Section[]): ExportSection[] {
+  return rawData.map((section) => ({
+    "Course":
+      section.course.department +
+      " " +
+      section.course.course_num +
+      "-" +
+      section.section_id,
+    "Days":
+      section.period.day === "No Period Assigned" ? "TBD" : section.period.day,
+    "Start Time":
+      section.period.start_time === "No Period Assigned"
+        ? "TBD"
+        : convertTime12(section.period.start_time),
+    "End Time":
+      section.period.end_time === "No Period Assigned"
+        ? "TBD"
+        : convertTime12(section.period.end_time),
+    "Location": section.room.id,
+    "Instructor":
+      section.instructor.fname === "TBD"
+        ? "TBD"
+        : section.instructor.fname + " " + section.instructor.lname,
+  }));
+}
+
+/** JSON to CSV
+ * Given some schedule data, format to desired CSV format with proper
+ * headers and then prompt download of csv
+ */
+export const downloadCsv = (data: Section[], filename: string) => {
+  const csvData = Papa.unparse(formatCSVSections(data));
+  const blob = new Blob([csvData], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'data.csv';
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+};

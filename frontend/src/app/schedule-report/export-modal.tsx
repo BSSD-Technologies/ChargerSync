@@ -22,6 +22,7 @@ import { useEffect, useState } from "react";
 import { UseExportSchedule } from "../_hooks/apiHooks";
 import { useGlobalScheduleStore } from "../_stores/store";
 import toast from "react-hot-toast";
+import { downloadCsv, readSections } from "../_hooks/utilHooks";
 
 function SelectDepartment() {
   const [departmentSelectList, setDepartmentSelectList] = useState<string[]>(
@@ -279,7 +280,8 @@ export default function ExportModal(props: ExportModalProps) {
   const [checkedInstructor, setCheckedInstructor] = useState(false);
   const [currentChecked, setCurrentChecked] = useState("");
 
-  const [selectedDepartments, selectedRooms, selectedInstructors] = [
+  const [rawSectionList, selectedDepartments, selectedRooms, selectedInstructors] = [
+    useGlobalScheduleStore((state) => state.rawSectionList),
     useGlobalScheduleStore((state) => state.selectedDepartments),
     useGlobalScheduleStore((state) => state.selectedRooms),
     useGlobalScheduleStore((state) => state.selectedInstructors),
@@ -303,27 +305,31 @@ export default function ExportModal(props: ExportModalProps) {
   };
 
   const handleExport = async () => {
-    if (currentChecked == "department") {
+    if (currentChecked == "full") {
+      downloadCsv(rawSectionList, "FullSchedule.csv");
+    }
+    else if (currentChecked == "department") {
       const data = await UseExportSchedule(currentChecked, selectedDepartments);
       if (data) {
-        handleClose();
+        downloadCsv(data, ("FilterDeptSchedule-" + selectedDepartments.join("_") + ".csv"));
       }
     }
     else if (currentChecked == "room") {
       const data = await UseExportSchedule(currentChecked, selectedRooms);
       if (data) {
-        handleClose();
+        downloadCsv(data, ("FilterRoomSchedule-" + selectedRooms.join("_") + ".csv"));
       }
     }
     else if (currentChecked == "instructor") {
       const data = await UseExportSchedule(currentChecked, selectedInstructors);
       if (data) {
-        handleClose();
+        downloadCsv(data, ("FilterInstructorSchedule-" + selectedInstructors.join("_") + ".csv"));
       }
     }
     else {
       toast.error("An error occurred. Please try again.");
     }
+    handleClose();
   };
 
   return (
