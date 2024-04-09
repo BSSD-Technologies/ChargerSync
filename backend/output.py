@@ -70,10 +70,20 @@ def formatForOutput(scheduler):
         except:
             c = "TBD"
 
+        try:
+            roomUuid = section.room_id
+        except:
+            roomUuid = ""
+
         try:   
             d = section.period.end_time
         except:
             d = "No Period Assigned"
+
+        try:
+            instructorUuid = section.instructor_id
+        except:
+            instructorUuid = ""
 
         try:
             instructor_fname_assignment = section.instructor.fname
@@ -94,7 +104,7 @@ def formatForOutput(scheduler):
 
         # Fill in instructor information
         course_info["instructor"] = {
-            "uuid": section.instructor_id,
+            "uuid": instructorUuid,
             "fname": instructor_fname_assignment,
             "lname": instructor_lname_assignment
         }
@@ -107,7 +117,7 @@ def formatForOutput(scheduler):
 
         # Fill in room information
         course_info["room"] = {
-            "uuid": section.room_id,
+            "uuid": roomUuid,
             "id": room_id,
             "max_capacity": c
         }

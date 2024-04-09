@@ -19,25 +19,16 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { UseExportSchedule } from "../_hooks/apiHooks";
-
-// Dummy department list data
-const departmentList = ["CS", "CPE", "MAE", "EE"];
-
-// Dummy room list data
-const roomList = ["OKT N324", "OKT N326", "OKT N327", "OKT N155"];
-
-// Dummy instructor list data
-const instructorList = [
-  "Dan Schrimpsher",
-  "Beth Allen",
-  "Danny Hardin",
-  "Kevin Preston",
-];
+import { useGlobalScheduleStore } from "../_stores/store";
 
 function SelectDepartment() {
   const [departmentSelectList, setDepartmentSelectList] = useState<string[]>(
     []
   );
+
+  const [currentDepartments] = [
+    useGlobalScheduleStore((state) => state.currentDepartments),
+  ];
 
   const handleChange = (
     event: SelectChangeEvent<typeof departmentSelectList>
@@ -79,7 +70,7 @@ function SelectDepartment() {
           </Box>
         )}
       >
-        {departmentList.map((department) => (
+        {currentDepartments.map((department) => (
           <MenuItem key={department} value={department}>
             {department}
           </MenuItem>
@@ -91,6 +82,11 @@ function SelectDepartment() {
 
 function SelectRoom() {
   const [roomSelectList, setRoomSelectList] = useState<string[]>([]);
+
+  const [currentRooms, currentRoomsID] = [
+    useGlobalScheduleStore((state) => state.currentRooms),
+    useGlobalScheduleStore((state) => state.currentRoomsID),
+  ];
 
   const handleChange = (event: SelectChangeEvent<typeof roomSelectList>) => {
     const {
@@ -130,8 +126,8 @@ function SelectRoom() {
           </Box>
         )}
       >
-        {roomList.map((room) => (
-          <MenuItem key={room} value={room}>
+        {currentRooms.map((room, index) => (
+          <MenuItem key={room} value={currentRoomsID[index]}>
             {room}
           </MenuItem>
         ))}
@@ -144,6 +140,11 @@ function SelectInstructor() {
   const [instructorSelectList, setInstructorSelectList] = useState<string[]>(
     []
   );
+
+  const [currenInstructors, currentInstructorsID] = [
+    useGlobalScheduleStore((state) => state.currentInstructors),
+    useGlobalScheduleStore((state) => state.currentInstructorsID),
+  ];
 
   const handleChange = (
     event: SelectChangeEvent<typeof instructorSelectList>
@@ -185,8 +186,8 @@ function SelectInstructor() {
           </Box>
         )}
       >
-        {instructorList.map((instructor) => (
-          <MenuItem key={instructor} value={instructor}>
+        {currenInstructors.map((instructor, index) => (
+          <MenuItem key={instructor} value={currentInstructorsID[index]}>
             {instructor}
           </MenuItem>
         ))}
@@ -214,7 +215,7 @@ export default function ExportModal(props: ExportModalProps) {
     setCheckedDepartment(option == "department");
     setCheckedRoom(option == "room");
     setCheckedInstructor(option == "instructor");
-    setCurrentChecked(option)
+    setCurrentChecked(option);
   };
 
   const handleClose = () => {
@@ -222,9 +223,9 @@ export default function ExportModal(props: ExportModalProps) {
   };
 
   const handleExport = async () => {
-    if (currentChecked != "full") {
-      const getData = await UseExportSchedule(currentChecked, roomList);
-    }
+    // if (currentChecked != "full") {
+    //   const getData = await UseExportSchedule(currentChecked, );
+    // }
   };
 
   return (

@@ -328,34 +328,76 @@ interface GlobalScheduleState {
   sectionList: FormattedSection[];
   /** Raw array of sections */
   rawSectionList: Section[];
+  /** List of departments */
+  currentDepartments: string[];
+  /** List of rooms */
+  currentRooms: string[];
+  /** List of instructors */
+  currentInstructors: string[];
+  /** List of rooms UUIDs */
+  currentRoomsID: string[];
+  /** List of instructors UUIDs */
+  currentInstructorsID: string[];
   /** Populate section list with formatted data */
   setSectionList: (list: Section[]) => void;
-  /** Get list of departments in sectionList */
-  getCurrentDepartments: () => string[]
-  /** Get list of rooms in sectionList */
-  getCurrentRooms: () => string[]
-  /** Get list of instructors in sectionList */
-  getCurrentInstructors: () => string[]
+  /** Generate list of departments in sectionList */
+  getCurrentDepartments: () => void;
+  /** Generate list of rooms in sectionList */
+  getCurrentRooms: () => void;
+  /** Generate list of instructors in sectionList */
+  getCurrentInstructors: () => void;
 }
 
 export const useGlobalScheduleStore = create<GlobalScheduleState>()(
   (set, get) => ({
     sectionList: [],
     rawSectionList: [],
+    currentDepartments: [],
+    currentRooms: [],
+    currentInstructors: [],
+    currentRoomsID: [],
+    currentInstructorsID: [],
     setSectionList: (list: Section[]) => {
       set((state) => ({
         rawSectionList: list,
         sectionList: readSections(list),
       }));
+      get().getCurrentDepartments();
+      get().getCurrentRooms();
+      get().getCurrentInstructors();
     },
-    getCurrentDepartments() {
-      const uniqueDepartmentsSet = new Set<string>();
+    getCurrentDepartments: () => {
+      const uniqueSet = new Set<string>();
       get().rawSectionList.forEach((obj) => {
         if (obj.course.department) {
-          uniqueDepartmentsSet.add(obj.course.department);
+          uniqueSet.add(obj.course.department);
         }
       });
-      return Array.from(uniqueDepartmentsSet);
+      set((state) => ({ currentDepartments: Array.from(uniqueSet) }));
+    },
+    getCurrentRooms: () => {
+      const uniqueSet = new Set<string>();
+      const uniqueIdSet = new Set<string>();
+      get().rawSectionList.forEach((obj) => {
+        if (obj.room.uuid) {
+          uniqueSet.add(obj.room.id); // Room ID, as in name
+          uniqueIdSet.add(obj.room.uuid)  // UUID for room object
+        }
+      });
+      set((state) => ({ currentRooms: Array.from(uniqueSet) }));
+      set((state) => ({ currentRoomsID: Array.from(uniqueIdSet) }));
+    },
+    getCurrentInstructors: () => {
+      const uniqueSet = new Set<string>();
+      const uniqueIdSet = new Set<string>();
+      get().rawSectionList.forEach((obj) => {
+        if (obj.instructor.uuid) {
+          uniqueSet.add(obj.instructor.fname + " " + obj.instructor.lname); // Instructor full name
+          uniqueIdSet.add(obj.instructor.uuid)  // UUID for instructor object
+        }
+      });
+      set((state) => ({ currentInstructors: Array.from(uniqueSet) }));
+      set((state) => ({ currentInstructorsID: Array.from(uniqueIdSet) }));
     },
   })
 );
