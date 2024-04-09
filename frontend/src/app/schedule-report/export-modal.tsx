@@ -207,12 +207,14 @@ export default function ExportModal(props: ExportModalProps) {
   const [checkedDepartment, setCheckedDepartment] = useState(false);
   const [checkedRoom, setCheckedRoom] = useState(false);
   const [checkedInstructor, setCheckedInstructor] = useState(false);
+  const [currentChecked, setCurrentChecked] = useState("");
 
   const handleSelect = (option: string) => {
     setCheckedFull(option == "full");
     setCheckedDepartment(option == "department");
     setCheckedRoom(option == "room");
     setCheckedInstructor(option == "instructor");
+    setCurrentChecked(option)
   };
 
   const handleClose = () => {
@@ -220,7 +222,9 @@ export default function ExportModal(props: ExportModalProps) {
   };
 
   const handleExport = async () => {
-    const getData = await UseExportSchedule();
+    if (currentChecked != "full") {
+      const getData = await UseExportSchedule(currentChecked, roomList);
+    }
   };
 
   return (

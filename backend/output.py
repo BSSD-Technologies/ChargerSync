@@ -7,6 +7,7 @@
 #  "section_id": "string",
 #  "instructor":
 #      {
+#       "uuid": "string",
 #       "fname": "string",
 #       "lname": "string"
 #      },
@@ -17,6 +18,7 @@
 #      },
 #  "room":
 #      {
+#       "uuid": "string",
 #       "id": "string",
 #       "max_capacity": "string"
 #      },
@@ -92,6 +94,7 @@ def formatForOutput(scheduler):
 
         # Fill in instructor information
         course_info["instructor"] = {
+            "uuid": section.instructor_id,
             "fname": instructor_fname_assignment,
             "lname": instructor_lname_assignment
         }
@@ -104,6 +107,7 @@ def formatForOutput(scheduler):
 
         # Fill in room information
         course_info["room"] = {
+            "uuid": section.room_id,
             "id": room_id,
             "max_capacity": c
         }

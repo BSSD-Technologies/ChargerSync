@@ -326,17 +326,36 @@ export const useGlobalPreferenceListStore = create<GlobalPreferenceListState>()(
 interface GlobalScheduleState {
   /** Array of sections */
   sectionList: FormattedSection[];
+  /** Raw array of sections */
+  rawSectionList: Section[];
   /** Populate section list with formatted data */
   setSectionList: (list: Section[]) => void;
+  /** Get list of departments in sectionList */
+  getCurrentDepartments: () => string[]
+  /** Get list of rooms in sectionList */
+  getCurrentRooms: () => string[]
+  /** Get list of instructors in sectionList */
+  getCurrentInstructors: () => string[]
 }
 
 export const useGlobalScheduleStore = create<GlobalScheduleState>()(
   (set, get) => ({
     sectionList: [],
+    rawSectionList: [],
     setSectionList: (list: Section[]) => {
       set((state) => ({
+        rawSectionList: list,
         sectionList: readSections(list),
       }));
+    },
+    getCurrentDepartments() {
+      const uniqueDepartmentsSet = new Set<string>();
+      get().rawSectionList.forEach((obj) => {
+        if (obj.course.department) {
+          uniqueDepartmentsSet.add(obj.course.department);
+        }
+      });
+      return Array.from(uniqueDepartmentsSet);
     },
   })
 );
