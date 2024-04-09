@@ -1,15 +1,4 @@
 import csv
-from models.Course import Section
-from sqlalchemy import or_
-from extensions import db
-from output import formatForOutput
-
-
-def test_filter():
-    listOfSections = Section.query.filter((Section.status=='Complete') or (Section.status=='Incomplete')).all()
-    print(listOfSections)
-    newList = formatForOutput(listOfSections)
-    return newList
 
 def return_fullSchedule_CSV(scheduler):
     i = 0
