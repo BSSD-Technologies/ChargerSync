@@ -1,4 +1,5 @@
 from models.Course import Section
+from extensions import db
 
 class ConflictIdentifier():
 
@@ -24,6 +25,7 @@ class ConflictIdentifier():
             else:
                 section.status = 'Complete'
                 continue
+        db.session.commit()
 
     def clear(self):
         self.sections = []

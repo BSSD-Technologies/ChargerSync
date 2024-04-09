@@ -35,6 +35,7 @@ def return_fullSchedule_CSV(scheduler):
 
 
         course = section.name
+        print(course)
         days = b
         start_time = a
         end_time = d

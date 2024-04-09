@@ -4,6 +4,7 @@ export type Section = {
   uuid: string;
   section_id: string;
   instructor: {
+    uuid: string,
     fname: string;
     lname: string;
   }
@@ -12,6 +13,7 @@ export type Section = {
     course_num: string;
   }
   room: {
+    uuid: string,
     id: string;
     max_capacity: number;
   }
@@ -33,4 +35,13 @@ export type FormattedSection = {
   instructor: string,
   status: "Complete" | "Incomplete" | "Conflict",
   section: string,
+}
+
+export type ExportSection = {
+  "Course": string,
+  "Days": string,
+  "Start Time": string,
+  "End Time": string,
+  "Location": string,
+  "Instructor": string,
 }

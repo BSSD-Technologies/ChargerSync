@@ -261,7 +261,7 @@ export const UseGenerateConflicts = async () => {
       const status = error.response.status;
       // No schedule exists yet
       //if (status === 400)
-        //toast.error("Error generating schedule. Please try again.");
+      //toast.error("Error generating schedule. Please try again.");
     }
   }
   return null;
@@ -285,7 +285,7 @@ export const UseGenerateIncompletes = async () => {
       const status = error.response.status;
       // No schedule exists yet
       //if (status === 400)
-        //toast.error("Error generating schedule. Please try again.");
+      //toast.error("Error generating schedule. Please try again.");
     }
   }
   return null;
@@ -299,9 +299,7 @@ export const UseGenerateIncompletes = async () => {
  */
 export const UseCountConflicts = async () => {
   try {
-    const response = await axios.get(
-      "http://localhost:5001/countConflicts"
-    );
+    const response = await axios.get("http://localhost:5001/countConflicts");
     // 200: OK, return response data
     return response.data["count"];
   } catch (error: any) {
@@ -309,7 +307,7 @@ export const UseCountConflicts = async () => {
       const status = error.response.status;
       // No schedule exists yet
       //if (status === 400)
-        //toast.error("Error generating schedule. Please try again.");
+      //toast.error("Error generating schedule. Please try again.");
     }
   }
   return null;
@@ -323,9 +321,7 @@ export const UseCountConflicts = async () => {
  */
 export const UseCountIncompletes = async () => {
   try {
-    const response = await axios.get(
-      "http://localhost:5001/countIncompletes"
-    );
+    const response = await axios.get("http://localhost:5001/countIncompletes");
     // 200: OK, return response data
     return response.data["count"];
   } catch (error: any) {
@@ -333,7 +329,43 @@ export const UseCountIncompletes = async () => {
       const status = error.response.status;
       // No schedule exists yet
       //if (status === 400)
-        //toast.error("Error generating schedule. Please try again.");
+      //toast.error("Error generating schedule. Please try again.");
+    }
+  }
+  return null;
+};
+
+/**
+ * UseExportSchedule
+ * Export a schedule as a CSV, with any filters if desired
+ *
+ * @params Filter types (string) and filter options (string[])
+ * @returns JSON object
+ */
+export const UseExportSchedule = async (filter: string, data: string[]) => {
+  const formData = {
+    filter: filter,
+    data: data,
+  };
+
+  try {
+    const response = await axios.post(
+      "http://localhost:5001/export/schedule",
+      { filter, data },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    // 200: OK, return response data
+    return response.data["response"];
+  } catch (error: any) {
+    if (error.response) {
+      const status = error.response.status;
+      // No schedule exists yet
+      //if (status === 400)
+      //toast.error("Error generating schedule. Please try again.");
     }
   }
   return null;

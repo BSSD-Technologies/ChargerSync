@@ -5,7 +5,8 @@ from extensions import db
 from Schedule import Schedule
 from output import formatForOutput
 import DatabaseManager
-import csvOutput
+#from csvOutput import return_fullSchedule_CSV, return_filtered_dept, return_filtered_prof, return_filtered_room
+from models.Course import Section
 
 app = Flask(__name__)
 # Enable CORS for all routes
@@ -266,6 +267,43 @@ def count_incompletes():
         # Get number of sections with incompletes
         count = len(generated_schedule.incompletes)
         return jsonify({'count': count}), 200
+    
+"""
+/export/schedule
+User requests to export the complete/incomplete sections schedule with filters if
+applicable, and the .csv file is returned.
+
+Accepted filters: "department", "room", "instructor"
+
+Error Codes:
+200 - OK
+400 - Not JSON data
+412 - Invalid filter type
+"""
+@app.route('/export/schedule',  methods=['POST'])
+def export_schedule():
+    global generated_schedule
+    
+    # Ensure request contains JSON data
+    if not request.is_json:
+        return jsonify({'error': 'Request must be JSON'}), 400
+    else:
+        # Read JSON data from request
+        json_data = request.json
+
+        # Perform filters based on specified filter type
+        if json_data["filter"] == "department":
+            filteredList = DatabaseManager.filter_by_department(json_data["data"])
+            return jsonify({"response": filteredList}), 200
+        elif json_data["filter"] == "room":
+            filteredList = DatabaseManager.filter_by_room(json_data["data"])
+            return jsonify({"response": filteredList}), 200
+        elif json_data["filter"] == "instructor":
+            filteredList = DatabaseManager.filter_by_instructor(json_data["data"])
+            return jsonify({"response": filteredList}), 200
+        
+        return jsonify({"error": "Invalid filter parameter"}), 412
+
 
 if __name__ == '__main__':
     with app.app_context():

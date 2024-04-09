@@ -6,3 +6,4 @@ backend/__pycache__
 backend/models/__pycache__
 backend/.DS_Store
 runBackendSH.bat
+node_modules
