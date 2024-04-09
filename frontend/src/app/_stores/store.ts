@@ -346,6 +346,18 @@ interface GlobalScheduleState {
   getCurrentRooms: () => void;
   /** Generate list of instructors in sectionList */
   getCurrentInstructors: () => void;
+  /** Selected departments */
+  selectedDepartments: string[];
+  /** Selected rooms */
+  selectedRooms: string[];
+  /** Selected instructors */
+  selectedInstructors: string[];
+  /** Update selected departments */
+  updateSelectedDepartments: (list: string[]) => void;
+  /** Update selected rooms */
+  updateSelectedRooms: (list: string[]) => void;
+  /** Update selected instructors */
+  updateSelectedInstructors: (list: string[]) => void;
 }
 
 export const useGlobalScheduleStore = create<GlobalScheduleState>()(
@@ -381,7 +393,7 @@ export const useGlobalScheduleStore = create<GlobalScheduleState>()(
       get().rawSectionList.forEach((obj) => {
         if (obj.room.uuid) {
           uniqueSet.add(obj.room.id); // Room ID, as in name
-          uniqueIdSet.add(obj.room.uuid)  // UUID for room object
+          uniqueIdSet.add(obj.room.uuid); // UUID for room object
         }
       });
       set((state) => ({ currentRooms: Array.from(uniqueSet) }));
@@ -393,11 +405,23 @@ export const useGlobalScheduleStore = create<GlobalScheduleState>()(
       get().rawSectionList.forEach((obj) => {
         if (obj.instructor.uuid) {
           uniqueSet.add(obj.instructor.fname + " " + obj.instructor.lname); // Instructor full name
-          uniqueIdSet.add(obj.instructor.uuid)  // UUID for instructor object
+          uniqueIdSet.add(obj.instructor.uuid); // UUID for instructor object
         }
       });
       set((state) => ({ currentInstructors: Array.from(uniqueSet) }));
       set((state) => ({ currentInstructorsID: Array.from(uniqueIdSet) }));
+    },
+    selectedDepartments: [],
+    selectedRooms: [],
+    selectedInstructors: [],
+    updateSelectedDepartments: (list: string[]) => {
+      set((state) => ({ selectedDepartments: list }));
+    },
+    updateSelectedRooms: (list: string[]) => {
+      set((state) => ({ selectedRooms: list }));
+    },
+    updateSelectedInstructors: (list: string[]) => {
+      set((state) => ({ selectedInstructors: list }));
     },
   })
 );

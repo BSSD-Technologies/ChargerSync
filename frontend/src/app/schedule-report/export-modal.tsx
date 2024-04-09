@@ -1,6 +1,7 @@
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
+  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -17,19 +18,22 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UseExportSchedule } from "../_hooks/apiHooks";
 import { useGlobalScheduleStore } from "../_stores/store";
+import toast from "react-hot-toast";
 
 function SelectDepartment() {
   const [departmentSelectList, setDepartmentSelectList] = useState<string[]>(
     []
   );
 
-  const [currentDepartments] = [
+  const [currentDepartments, updateSelectedDepartments] = [
     useGlobalScheduleStore((state) => state.currentDepartments),
+    useGlobalScheduleStore((state) => state.updateSelectedDepartments),
   ];
 
+  /** Update select list for UI */
   const handleChange = (
     event: SelectChangeEvent<typeof departmentSelectList>
   ) => {
@@ -41,6 +45,12 @@ function SelectDepartment() {
       typeof value === "string" ? value.split(",") : value
     );
   };
+
+  /** Update selected departments */
+  useEffect(() => {
+    updateSelectedDepartments(departmentSelectList);
+    console.log(departmentSelectList)
+  }, [departmentSelectList, updateSelectedDepartments])
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -82,12 +92,16 @@ function SelectDepartment() {
 
 function SelectRoom() {
   const [roomSelectList, setRoomSelectList] = useState<string[]>([]);
+  const [currentSelectList, setCurrentSelectList] = useState<string[]>([]);
 
-  const [currentRooms, currentRoomsID] = [
+  const [currentRooms, currentRoomsID, selectedRooms, updateSelectedRooms] = [
     useGlobalScheduleStore((state) => state.currentRooms),
     useGlobalScheduleStore((state) => state.currentRoomsID),
+    useGlobalScheduleStore((state) => state.selectedRooms),
+    useGlobalScheduleStore((state) => state.updateSelectedRooms),
   ];
 
+  /** Update select list for UI */
   const handleChange = (event: SelectChangeEvent<typeof roomSelectList>) => {
     const {
       target: { value },
@@ -97,6 +111,25 @@ function SelectRoom() {
       typeof value === "string" ? value.split(",") : value
     );
   };
+
+  /** Add/remove selected room based on ID */
+  const handleSelectedID = (value: string) => {
+    const index = selectedRooms.indexOf(value);
+    if (index === -1) {
+      // If item is not already in the array, add it
+      setCurrentSelectList([...selectedRooms, value]);
+    } else {
+      // If item is already in the array, remove it
+      const newArr = [...selectedRooms];
+      newArr.splice(index, 1);
+      setCurrentSelectList(newArr);
+    }
+  };
+
+  /** Update selected rooms */
+  useEffect(() => {
+    updateSelectedRooms(currentSelectList);
+  }, [currentSelectList, updateSelectedRooms])
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -127,7 +160,11 @@ function SelectRoom() {
         )}
       >
         {currentRooms.map((room, index) => (
-          <MenuItem key={room} value={currentRoomsID[index]}>
+          <MenuItem
+            key={room}
+            value={room}
+            onClick={(e: any) => handleSelectedID(currentRoomsID[index])}
+          >
             {room}
           </MenuItem>
         ))}
@@ -140,12 +177,21 @@ function SelectInstructor() {
   const [instructorSelectList, setInstructorSelectList] = useState<string[]>(
     []
   );
+  const [currentSelectList, setCurrentSelectList] = useState<string[]>([]);
 
-  const [currenInstructors, currentInstructorsID] = [
+  const [
+    currenInstructors,
+    currentInstructorsID,
+    selectedInstructors,
+    updateSelectedInstructors,
+  ] = [
     useGlobalScheduleStore((state) => state.currentInstructors),
     useGlobalScheduleStore((state) => state.currentInstructorsID),
+    useGlobalScheduleStore((state) => state.selectedInstructors),
+    useGlobalScheduleStore((state) => state.updateSelectedInstructors),
   ];
 
+  /** Update select list for UI */
   const handleChange = (
     event: SelectChangeEvent<typeof instructorSelectList>
   ) => {
@@ -157,6 +203,25 @@ function SelectInstructor() {
       typeof value === "string" ? value.split(",") : value
     );
   };
+
+  /** Add/remove selected instructor based on ID */
+  const handleSelectedID = (value: string) => {
+    const index = selectedInstructors.indexOf(value);
+    if (index === -1) {
+      // If item is not already in the array, add it
+      setCurrentSelectList([...selectedInstructors, value]);
+    } else {
+      // If item is already in the array, remove it
+      const newArr = [...selectedInstructors];
+      newArr.splice(index, 1);
+      setCurrentSelectList(newArr);
+    }
+  };
+
+  /** Update selected instructors */
+  useEffect(() => {
+    updateSelectedInstructors(currentSelectList);
+  }, [currentSelectList, updateSelectedInstructors])
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -187,7 +252,11 @@ function SelectInstructor() {
         )}
       >
         {currenInstructors.map((instructor, index) => (
-          <MenuItem key={instructor} value={currentInstructorsID[index]}>
+          <MenuItem
+            key={instructor}
+            value={instructor}
+            onClick={(e: any) => handleSelectedID(currentInstructorsID[index])}
+          >
             {instructor}
           </MenuItem>
         ))}
@@ -210,6 +279,12 @@ export default function ExportModal(props: ExportModalProps) {
   const [checkedInstructor, setCheckedInstructor] = useState(false);
   const [currentChecked, setCurrentChecked] = useState("");
 
+  const [selectedDepartments, selectedRooms, selectedInstructors] = [
+    useGlobalScheduleStore((state) => state.selectedDepartments),
+    useGlobalScheduleStore((state) => state.selectedRooms),
+    useGlobalScheduleStore((state) => state.selectedInstructors),
+  ];
+
   const handleSelect = (option: string) => {
     setCheckedFull(option == "full");
     setCheckedDepartment(option == "department");
@@ -219,13 +294,36 @@ export default function ExportModal(props: ExportModalProps) {
   };
 
   const handleClose = () => {
+    setCheckedFull(false);
+    setCheckedDepartment(false);
+    setCheckedRoom(false);
+    setCheckedInstructor(false);
+    setCurrentChecked("full");
     onClose();
   };
 
   const handleExport = async () => {
-    // if (currentChecked != "full") {
-    //   const getData = await UseExportSchedule(currentChecked, );
-    // }
+    if (currentChecked == "department") {
+      const data = await UseExportSchedule(currentChecked, selectedDepartments);
+      if (data) {
+        handleClose();
+      }
+    }
+    else if (currentChecked == "room") {
+      const data = await UseExportSchedule(currentChecked, selectedRooms);
+      if (data) {
+        handleClose();
+      }
+    }
+    else if (currentChecked == "instructor") {
+      const data = await UseExportSchedule(currentChecked, selectedInstructors);
+      if (data) {
+        handleClose();
+      }
+    }
+    else {
+      toast.error("An error occurred. Please try again.");
+    }
   };
 
   return (
