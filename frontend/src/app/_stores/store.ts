@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { Course } from "../_types/Course";
-import { Room } from "../_types/Room";
-import { Day, Period } from "../_types/Period";
-import { Instructor } from "../_types/Instructor";
+import { Course, ExportCourse } from "../_types/Course";
+import { ExportRoom, Room } from "../_types/Room";
+import { Day, ExportPeriod, Period } from "../_types/Period";
+import { ExportInstructor, Instructor } from "../_types/Instructor";
 import { v4 as uuidv4 } from "uuid";
 import { CoursePreference } from "../_types/CoursePreference";
 import { PeriodPreference } from "../_types/PeriodPreference";
@@ -25,6 +25,8 @@ interface GlobalCourseListState {
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
   getHasErrors: () => boolean;
+  /** Get formatted courses for export */
+  getRawCourses: () => ExportCourse[];
 }
 
 export const useGlobalCourseListStore = create<GlobalCourseListState>()(
@@ -68,6 +70,14 @@ export const useGlobalCourseListStore = create<GlobalCourseListState>()(
         return false;
       }
     },
+    getRawCourses: () => {
+      return get().courseList.map((course) => ({
+        "Department": course.department,
+        "Course Number": course.course_num,
+        "Max Enrollment": course.max_enrollment,
+        "Preliminary Enrollment": (course.prelim_enrollment ? course.prelim_enrollment : ""),
+      }))
+    },
   })
 );
 
@@ -87,6 +97,8 @@ interface GlobalRoomListState {
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
   getHasErrors: () => boolean;
+  /** Get formatted room for export */
+  getRawRooms: () => ExportRoom[];
 }
 
 export const useGlobalRoomListStore = create<GlobalRoomListState>()(
@@ -130,6 +142,12 @@ export const useGlobalRoomListStore = create<GlobalRoomListState>()(
         return false;
       }
     },
+    getRawRooms: () => {
+      return get().roomList.map((room) => ({
+        "Room ID": room.room_id,
+        "Max Capacity": room.max_capacity,
+      }))
+    },
   })
 );
 
@@ -153,6 +171,8 @@ interface GlobalPeriodListState {
   getHasErrors: () => boolean;
   /** Populate FULL period list */
   populateFullPeriodList: () => void;
+  /** Get formatted periods for export */
+  getRawPeriods: () => ExportPeriod[];
 }
 
 export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
@@ -210,6 +230,12 @@ export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
       // Set fullPeriodList to the duplicated periods AND original
       set({ fullPeriodList: [...get().periodList, ...duplicatedPeriods] });
     },
+    getRawPeriods: () => {
+      return get().periodList.map((period) => ({
+        "Start Time": period.start_time,
+        "End Time": period.end_time,
+      }))
+    },
   })
 );
 
@@ -229,6 +255,8 @@ interface GlobalInstructorListState {
   hasErrors: boolean[];
   /** Custom getter for hasErrors */
   getHasErrors: () => boolean;
+  /** Get formatted instructors for export */
+  getRawInstructors: () => ExportInstructor[];
 }
 
 export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
@@ -273,6 +301,13 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
       } else {
         return false;
       }
+    },
+    getRawInstructors: () => {
+      return get().instructorList.map((instructor) => ({
+        "First Name": instructor.fname,
+        "Last Name": instructor.lname,
+        "Priority": (instructor.priority ? instructor.priority : ""),
+      }))
     },
   })
 );

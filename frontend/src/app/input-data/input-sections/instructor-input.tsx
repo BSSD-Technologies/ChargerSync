@@ -110,7 +110,8 @@ function InstructorTableRow(props: { row: Instructor }) {
     if (isFirstRender) {
       validateFname(fname);
       validateLname(lname);
-      validatePriority(priority.toString());
+      if (priority)
+        validatePriority(priority?.toString());
     }
   }, [
     fname,

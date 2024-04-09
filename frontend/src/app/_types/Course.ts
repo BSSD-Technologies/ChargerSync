@@ -19,3 +19,10 @@ export const defaultCourse = {
   course_num: "",
   max_enrollment: NaN,
 };
+
+export type ExportCourse = {
+  "Department": string;
+  "Course Number": string;
+  "Max Enrollment": number;
+  "Preliminary Enrollment"?: number | "";
+};

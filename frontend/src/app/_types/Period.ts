@@ -27,3 +27,8 @@ export const defaultPeriod = {
   end_time: "",
   day: Day["MW"],
 };
+
+export type ExportPeriod = {
+  "Start Time": string;
+  "End Time": string;
+};

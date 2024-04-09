@@ -20,6 +20,9 @@ import DownloadTemplates from "./input-sections/download-templates";
 import SubmitInput from "./input-sections/submit-input";
 import { useState } from "react";
 import PreferenceInput from "./input-sections/preference-input";
+import { useGlobalCourseListStore, useGlobalInstructorListStore, useGlobalPeriodListStore, useGlobalRoomListStore } from "../_stores/store";
+import { downloadInputCsv } from "../_hooks/utilHooks";
+import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 
 export default function InputData() {
   /** Stepper state */
@@ -30,6 +33,14 @@ export default function InputData() {
   const [hasRoomErrors, setHasRoomErrors] = useState(true);
   const [hasPeriodErrors, setHasPeriodErrors] = useState(true);
   const [hasInstructorErrors, setHasInstructorErrors] = useState(true);
+
+  /** States for all section data, raw for export */
+  const [getRawCourses, getRawRooms, getRawPeriods, getRawInstructors] = [
+    useGlobalCourseListStore((state) => state.getRawCourses),
+    useGlobalRoomListStore((state) => state.getRawRooms),
+    useGlobalPeriodListStore((state) => state.getRawPeriods),
+    useGlobalInstructorListStore((state) => state.getRawInstructors),
+  ];
 
   /** Course error handling */
   const courseErrors = (value: boolean) => {
@@ -86,6 +97,17 @@ export default function InputData() {
                   >
                     Continue
                   </Button>
+                  <Button
+                    variant="outlined"
+                    disabled={hasCourseErrors}
+                    onClick={() => {
+                      downloadInputCsv(getRawCourses(), "CourseInput.csv");
+                    }}
+                    sx={{ mt: 1, mr: 1 }}
+                    startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+                  >
+                    Download Inputs
+                  </Button>
                 </div>
               </Box>
             </StepContent>
@@ -105,6 +127,17 @@ export default function InputData() {
                     sx={{ mt: 1, mr: 1 }}
                   >
                     Continue
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    disabled={hasRoomErrors}
+                    onClick={() => {
+                      downloadInputCsv(getRawRooms(), "RoomInput.csv");
+                    }}
+                    sx={{ mt: 1, mr: 1 }}
+                    startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+                  >
+                    Download Inputs
                   </Button>
                   <Button
                     onClick={() => setActiveStep(activeStep - 1)}
@@ -133,6 +166,17 @@ export default function InputData() {
                     Continue
                   </Button>
                   <Button
+                    variant="outlined"
+                    disabled={hasPeriodErrors}
+                    onClick={() => {
+                      downloadInputCsv(getRawPeriods(), "PeriodInput.csv");
+                    }}
+                    sx={{ mt: 1, mr: 1 }}
+                    startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+                  >
+                    Download Inputs
+                  </Button>
+                  <Button
                     onClick={() => setActiveStep(activeStep - 1)}
                     sx={{ mt: 1, mr: 1 }}
                   >
@@ -157,6 +201,17 @@ export default function InputData() {
                     sx={{ mt: 1, mr: 1 }}
                   >
                     Continue
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    disabled={hasInstructorErrors}
+                    onClick={() => {
+                      downloadInputCsv(getRawInstructors(), "InstructorInput.csv");
+                    }}
+                    sx={{ mt: 1, mr: 1 }}
+                    startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+                  >
+                    Download Inputs
                   </Button>
                   <Button
                     onClick={() => setActiveStep(activeStep - 1)}
