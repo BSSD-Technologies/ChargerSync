@@ -55,7 +55,7 @@ class Section(db.Model):
     course = db.relationship('Course', backref='sections', lazy=True)
 
     # one to one relationship w/ Room
-    room = db.relationship('Room', uselist=False, backref='section', lazy=True)
+    room = db.relationship('Room', uselist=False, backref='section')
 
     # one to one relationship w/ Period
     period = db.relationship('Period', uselist=False, backref='section', lazy=True)

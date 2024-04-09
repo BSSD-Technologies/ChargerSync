@@ -5,7 +5,8 @@ from extensions import db
 from Schedule import Schedule
 from output import formatForOutput
 import DatabaseManager
-from csvOutput import return_fullSchedule_CSV, return_filtered_dept, return_filtered_prof, return_filtered_room
+from csvOutput import return_fullSchedule_CSV, return_filtered_dept, return_filtered_prof, return_filtered_room, test_filter
+from models.Course import Section
 
 app = Flask(__name__)
 # Enable CORS for all routes
@@ -276,7 +277,7 @@ Error Codes:
 200 - OK
 400 - Not JSON data
 """
-@app.route('/export/schedule',  methods=['GET'])
+@app.route('/export/schedule',  methods=['POST'])
 def export_schedule():
     global generated_schedule
     
@@ -285,20 +286,13 @@ def export_schedule():
     #     return jsonify({'error': 'Request must be JSON'}), 400
     # else:
     # Read JSON data from request
-    # json_data = request.json
+    json_data = request.json
 
-    # Store the schedule in the global variable
-    if generated_schedule:
-        schedule_csv = return_fullSchedule_CSV(generated_schedule)
 
-    # Set response headers
-    response = Response(
-        schedule_csv,
-        mimetype="text/csv",
-        headers={"Content-disposition":
-                 "attachment; filename=data.csv"})
+    # newList = DatabaseManager.filter_by_department(["CS", "CPE"])
+    newList = DatabaseManager.filter_by_room(json_data)
 
-    return jsonify(schedule_csv), 200
+    return jsonify({"response": newList}), 200
 
 if __name__ == '__main__':
     with app.app_context():
