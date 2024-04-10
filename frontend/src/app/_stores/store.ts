@@ -72,11 +72,13 @@ export const useGlobalCourseListStore = create<GlobalCourseListState>()(
     },
     getRawCourses: () => {
       return get().courseList.map((course) => ({
-        "Department": course.department,
+        Department: course.department,
         "Course Number": course.course_num,
         "Max Enrollment": course.max_enrollment,
-        "Preliminary Enrollment": (course.prelim_enrollment ? course.prelim_enrollment : ""),
-      }))
+        "Preliminary Enrollment": course.prelim_enrollment
+          ? course.prelim_enrollment
+          : "",
+      }));
     },
   })
 );
@@ -146,7 +148,7 @@ export const useGlobalRoomListStore = create<GlobalRoomListState>()(
       return get().roomList.map((room) => ({
         "Room ID": room.room_id,
         "Max Capacity": room.max_capacity,
-      }))
+      }));
     },
   })
 );
@@ -234,7 +236,7 @@ export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
       return get().periodList.map((period) => ({
         "Start Time": period.start_time,
         "End Time": period.end_time,
-      }))
+      }));
     },
   })
 );
@@ -306,8 +308,8 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
       return get().instructorList.map((instructor) => ({
         "First Name": instructor.fname,
         "Last Name": instructor.lname,
-        "Priority": (instructor.priority ? instructor.priority : ""),
-      }))
+        Priority: instructor.priority ? instructor.priority : "",
+      }));
     },
   })
 );
@@ -321,6 +323,8 @@ interface GlobalPreferenceListState {
     list: CoursePreference[],
     instructor_uuid: string
   ) => void;
+  /** Empty entire coursePrefList */
+  emptyCoursePrefList: () => void;
   /** Array of period preferences */
   periodPrefList: PeriodPreference[];
   /** Add a period preference to list based on uuid */
@@ -328,10 +332,12 @@ interface GlobalPreferenceListState {
     list: PeriodPreference[],
     instructor_uuid: string
   ) => void;
+  /** Empty entire periodPrefList */
+  emptyPeriodPrefList: () => void;
 }
 
 export const useGlobalPreferenceListStore = create<GlobalPreferenceListState>()(
-  (set) => ({
+  (set, get) => ({
     coursePrefList: [],
     setCoursePrefList: (list: CoursePreference[], instructor_uuid: string) =>
       set((state) => ({
@@ -343,6 +349,7 @@ export const useGlobalPreferenceListStore = create<GlobalPreferenceListState>()(
           ...list,
         ],
       })),
+    emptyCoursePrefList: () => set((state) => ({ coursePrefList: [] })),
     periodPrefList: [],
     setPeriodPrefList: (list: PeriodPreference[], instructor_uuid: string) =>
       set((state) => ({
@@ -354,6 +361,7 @@ export const useGlobalPreferenceListStore = create<GlobalPreferenceListState>()(
           ...list,
         ],
       })),
+    emptyPeriodPrefList: () => set((state) => ({ periodPrefList: [] })),
   })
 );
 
