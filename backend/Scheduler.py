@@ -132,6 +132,8 @@ class Scheduler:
             instructor_section_count = self.getInstructorSectionCount(instructor.id)
             if (self.hasCoursePreferences(instructor.id, course_id) == False) and (instructor_section_count != 0):
                 self.instructors_with_no_preferences.append(instructor.id)
+
+        # When the list changes size, the position needs to be moved
         if self.instructors_with_no_preferences_pos > len(self.instructors_with_no_preferences):
             self.instructors_with_no_preferences_pos = 0
 
