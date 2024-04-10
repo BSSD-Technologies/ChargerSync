@@ -192,7 +192,7 @@ def generate_schedule():
         # Store the schedule in the global variable
         generated_schedule = schedule
 
-        schedule.clear()
+        #schedule.clear()
 
         return jsonify({'schedule': schedule_data}), 200
 
@@ -206,6 +206,7 @@ Error Codes:
 """
 @app.route('/generate/conflicts',  methods=['GET'])
 def generate_conflicts():
+    global generated_schedule
     # Ensure request happens after schedule is generated
     if not generated_schedule:
         return jsonify({'error': 'No schedule generated'}), 400

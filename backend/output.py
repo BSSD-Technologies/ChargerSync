@@ -136,6 +136,6 @@ def formatForOutput(scheduler):
         section_list.append(course_info)
 
         #To Do: replace with funciton to pass to front-end
-        #print(course_info)
+        section.printInfo()
     
     return(section_list)
