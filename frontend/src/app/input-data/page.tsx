@@ -20,7 +20,12 @@ import DownloadTemplates from "./input-sections/download-templates";
 import SubmitInput from "./input-sections/submit-input";
 import { useState } from "react";
 import PreferenceInput from "./input-sections/preference-input";
-import { useGlobalCourseListStore, useGlobalInstructorListStore, useGlobalPeriodListStore, useGlobalRoomListStore } from "../_stores/store";
+import {
+  useGlobalCourseListStore,
+  useGlobalInstructorListStore,
+  useGlobalPeriodListStore,
+  useGlobalRoomListStore,
+} from "../_stores/store";
 import { downloadInputCsv } from "../_hooks/utilHooks";
 import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
 
@@ -85,6 +90,13 @@ export default function InputData() {
             <StepLabel>List of Courses</StepLabel>
             <StepContent TransitionProps={{ unmountOnExit: false }}>
               <CourseInput handleErrors={courseErrors} />
+              {hasCourseErrors ? (
+                <Typography variant="body1">
+                  <i>Please fix all errors before continuing.</i>
+                </Typography>
+              ) : (
+                <></>
+              )}
               <Box sx={{ mb: 2 }}>
                 <div>
                   <Button
@@ -104,7 +116,9 @@ export default function InputData() {
                       downloadInputCsv(getRawCourses(), "CourseInput.csv");
                     }}
                     sx={{ mt: 1, mr: 1 }}
-                    startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+                    startIcon={
+                      <DownloadRoundedIcon sx={{ marginLeft: "5px" }} />
+                    }
                   >
                     Download Inputs
                   </Button>
@@ -116,6 +130,13 @@ export default function InputData() {
             <StepLabel>List of Rooms</StepLabel>
             <StepContent TransitionProps={{ unmountOnExit: false }}>
               <RoomInput handleErrors={roomErrors} />
+              {hasRoomErrors ? (
+                <Typography variant="body1">
+                  <i>Please fix all errors before continuing.</i>
+                </Typography>
+              ) : (
+                <></>
+              )}
               <Box sx={{ mb: 2 }}>
                 <div>
                   <Button
@@ -135,7 +156,9 @@ export default function InputData() {
                       downloadInputCsv(getRawRooms(), "RoomInput.csv");
                     }}
                     sx={{ mt: 1, mr: 1 }}
-                    startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+                    startIcon={
+                      <DownloadRoundedIcon sx={{ marginLeft: "5px" }} />
+                    }
                   >
                     Download Inputs
                   </Button>
@@ -153,6 +176,13 @@ export default function InputData() {
             <StepLabel>List of Periods</StepLabel>
             <StepContent TransitionProps={{ unmountOnExit: false }}>
               <PeriodInput handleErrors={periodErrors} />
+              {hasPeriodErrors ? (
+                <Typography variant="body1">
+                  <i>Please fix all errors before continuing.</i>
+                </Typography>
+              ) : (
+                <></>
+              )}
               <Box sx={{ mb: 2 }}>
                 <div>
                   <Button
@@ -172,7 +202,9 @@ export default function InputData() {
                       downloadInputCsv(getRawPeriods(), "PeriodInput.csv");
                     }}
                     sx={{ mt: 1, mr: 1 }}
-                    startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+                    startIcon={
+                      <DownloadRoundedIcon sx={{ marginLeft: "5px" }} />
+                    }
                   >
                     Download Inputs
                   </Button>
@@ -190,6 +222,13 @@ export default function InputData() {
             <StepLabel>List of Instructors</StepLabel>
             <StepContent TransitionProps={{ unmountOnExit: false }}>
               <InstructorInput handleErrors={instructorErrors} />
+              {hasInstructorErrors ? (
+                <Typography variant="body1">
+                  <i>Please fix all errors before continuing.</i>
+                </Typography>
+              ) : (
+                <></>
+              )}
               <Box sx={{ mb: 2 }}>
                 <div>
                   <Button
@@ -206,10 +245,15 @@ export default function InputData() {
                     variant="outlined"
                     disabled={hasInstructorErrors}
                     onClick={() => {
-                      downloadInputCsv(getRawInstructors(), "InstructorInput.csv");
+                      downloadInputCsv(
+                        getRawInstructors(),
+                        "InstructorInput.csv"
+                      );
                     }}
                     sx={{ mt: 1, mr: 1 }}
-                    startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+                    startIcon={
+                      <DownloadRoundedIcon sx={{ marginLeft: "5px" }} />
+                    }
                   >
                     Download Inputs
                   </Button>
