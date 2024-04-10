@@ -52,19 +52,19 @@ class Section(db.Model):
     status = db.Column(db.Enum('Complete', 'Conflict', 'Incomplete'), default=None)
 
     # one to many relationship w/ Course
-    course = db.relationship('Course', backref='sections', lazy=True)
+    course = db.relationship('Course', backref='sections', lazy=False)
 
     # one to one relationship w/ Room
-    room = db.relationship('Room', uselist=False, backref='section')
+    room = db.relationship('Room', uselist=False, backref='section', lazy=False)
 
     # one to one relationship w/ Period
-    period = db.relationship('Period', uselist=False, backref='section', lazy=True)
+    period = db.relationship('Period', uselist=False, backref='section', lazy=False)
 
     # one to one relationship w/ Intructor
-    instructor = db.relationship('Instructor', uselist=False, backref='section', lazy=True)
+    instructor = db.relationship('Instructor', uselist=False, backref='section', lazy=False)
 
     def __repr__(self):
-        return '<Section %r>' % self.name
+        return '<Section %r >' % (self.name)
     
     def setInstructor(self, instructor):
         self.instructor_id = instructor.id
@@ -77,12 +77,16 @@ class Section(db.Model):
 
     def setRoomByID(self, room_id):
         self.room_id = room_id
+        db.session.commit()
 
     def setPeriodByID(self, period_id):
         self.period_id = period_id  
+        db.session.commit()
 
     def setInstructorByID(self, instructor_id):
         self.instructor_id = instructor_id
+        db.session.commit()
+
 
     def printInfo(self):
         print("Section Information:")
