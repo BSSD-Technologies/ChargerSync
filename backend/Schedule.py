@@ -61,7 +61,7 @@ class Schedule:
         self.generateConflicts()
 
     def generateConflicts(self):
-        print(self.sections)
+        print("sections : " , self.sections)
         self.conflict_identifier = ConflictIdentifier(self.sections)
         self.conflict_identifier.labelSections()
         self.separateSections()
@@ -70,10 +70,12 @@ class Schedule:
         for section in self.sections:
             if section.status == 'Conflict':
                 self.conflicts.append(section)
+                print("conflict: ", section)
                 continue
             elif section.status == 'Incomplete':
                 self.schedule.append(section)
                 self.incompletes.append(section)
+                print("incomplete: ", section)
                 continue
             else:
                 self.schedule.append(section)
