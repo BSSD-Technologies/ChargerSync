@@ -3,6 +3,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  Button,
   Chip,
   FilledInput,
   FormControl,
@@ -37,7 +38,8 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
   /** Course list and course preference list */
   const [courseList] = [useGlobalCourseListStore((state) => state.courseList)];
   const [coursePrefList, setCoursePrefList] = useState<CoursePreference[]>([]);
-  const [populateCoursePrefList] = [
+  const [globalCoursePrefList, populateCoursePrefList] = [
+    useGlobalPreferenceListStore((state) => state.coursePrefList),
     useGlobalPreferenceListStore((state) => state.setCoursePrefList),
   ];
 
@@ -83,6 +85,13 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
   useEffect(() => {
     populateCoursePrefList(coursePrefList, props.instructorId);
   }, [coursePrefList, populateCoursePrefList, props.instructorId]);
+
+  useEffect(() => {
+    if (globalCoursePrefList.length <= 0) {
+      console.log("It should be empty")
+      setSelectList([])
+    }
+  }, [globalCoursePrefList.length])
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
