@@ -86,11 +86,10 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
     populateCoursePrefList(coursePrefList, props.instructorId);
   }, [coursePrefList, populateCoursePrefList, props.instructorId]);
 
+  /** Clear selectList when global coursePrefList is empty  */
   useEffect(() => {
-    if (globalCoursePrefList.length <= 0) {
-      console.log("It should be empty")
+    if (globalCoursePrefList.length <= 0)
       setSelectList([])
-    }
   }, [globalCoursePrefList.length])
 
   return (
@@ -139,7 +138,8 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
   /** Period list and period preference list */
   const [periodList] = [useGlobalPeriodListStore((state) => state.periodList)];
   const [periodPrefList, setPeriodPrefList] = useState<PeriodPreference[]>([]);
-  const [populatePeriodPrefList] = [
+  const [globalPeriodPrefList, populatePeriodPrefList] = [
+    useGlobalPreferenceListStore((state) => state.periodPrefList),
     useGlobalPreferenceListStore((state) => state.setPeriodPrefList),
   ];
 
@@ -197,6 +197,12 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
   useEffect(() => {
     populateFullPeriodList();
   }, [isFirstRender, populateFullPeriodList]);
+
+  /** Clear selectList when global periodPrefList is empty  */
+  useEffect(() => {
+    if (globalPeriodPrefList.length <= 0)
+      setSelectList([])
+  }, [globalPeriodPrefList.length])
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
