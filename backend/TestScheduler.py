@@ -138,13 +138,52 @@ def test_updateCoursePreferences_preference_unfulfilled():
         test.updateCoursePreferences('c1','p2')
         assert(test.course_preferences[0] == ('c1',['p4','p1']))
 
-def test_updateCoursePreferences_preference_fulfilled():
+def test_updateCoursePreferences_preference_partially_fulfilled():
     app = buildApp()
     with app.app_context():
         buildDatabase(db)        
         test = Scheduler()
         test.updateCoursePreferences('c1','p1')
         assert(test.course_preferences[0] == ('c1',['p4']))
+
+def test_updateCoursePreferences_preference_fully_fulfilled():
+    app = buildApp()
+    with app.app_context():
+        buildDatabase(db)        
+        test = Scheduler()
+        test.updateCoursePreferences('c1','p1')
+        test.updateCoursePreferences('c1','p4')
+        assert(test.course_preferences[0] == ('c1',[]))
+
+def test_checkCoursesFulfillment_all_fulfilled():
+    app = buildApp()
+    with app.app_context():
+        buildDatabase(db)        
+        test = Scheduler()
+        class RoomTemp:
+            max_occupancy = 1000
+        assignedRoom = RoomTemp()
+
+        test.updateCourseEnrollmentGivenRoom('c1',assignedRoom)
+        test.updateCourseEnrollmentGivenRoom('c2',assignedRoom)
+        test.updateCourseEnrollmentGivenRoom('c3',assignedRoom)
+        test.updateCourseEnrollmentGivenRoom('c4',assignedRoom)
+        test.updateCourseEnrollmentGivenRoom('c5',assignedRoom)
+
+        assert(test.checkCoursesFulfillment() == True)
+
+def test_checkCoursesFulfillment_not_all_fulfilled():
+    app = buildApp()
+    with app.app_context():
+        buildDatabase(db)        
+        test = Scheduler()
+        class RoomTemp:
+            max_occupancy = 1000
+        assignedRoom = RoomTemp()
+
+        test.updateCourseEnrollmentGivenRoom('c1',assignedRoom)
+        test.updateCourseEnrollmentGivenRoom('c2',assignedRoom)
+        assert(test.checkCoursesFulfillment() == False)
 
 def test_findRoomAvailability_room_findable():
     app = buildApp()
@@ -165,8 +204,20 @@ def test_findInstructorAvailability_instructor_findable():
     with app.app_context():
         buildDatabase(db)        
         test = Scheduler()
-        temp = Instructor.query.filter_by(fname = "Beth").first().id
-        print(temp)
-        assert(test.findInstructorAvailability(temp) == ["t1m","t2m","t3m","t4m","t5m","t1t","t2t","t3t","t4t","t5t"])
+        assert(test.findInstructorAvailability('p1') == ["t1m","t2m","t3m","t4m","t5m","t1t","t2t","t3t","t4t","t5t"])
 
 
+def test_findInstructorAvailability_instructor_not_findable():
+    app = buildApp()
+    with app.app_context():
+        buildDatabase(db)        
+        test = Scheduler()
+        assert(test.findInstructorAvailability('p20') == [])
+
+def test_getNextAvailableInstructor():
+    app = buildApp()
+    with app.app_context():
+        buildDatabase(db)        
+        test = Scheduler()
+        test.getInstructorsWithNoPref('c4')
+        assert(test.getNextAvailableInstructor() == 'p3')

@@ -45,6 +45,7 @@ instructor_list = [
     ('p2','Dan', 'Schrimpcher', 3),
     ('p3','Robert', 'Preston', 2),
     ('p4','Curt', 'Lawson', 1),
+    ('p5', 'Danny','Hardin',6)
 ]
 
 room_list = [
@@ -74,8 +75,8 @@ course_preference_list = [
 
 period_preference_list = [
     # fname, lname, preference in array
-    ('p1','Beth', 'Allen', [1, 2, 3]),
-    ('p2','Robert', 'Preston', [4, 5]),
+    ('p1','Beth', 'Allen', ['t1m', 't2t', 't3m']),
+    ('p2','Robert', 'Preston', ['t4m', 't5m']),
 ]
 
 
