@@ -68,7 +68,7 @@ export const UseUploadRooms = async (file: File) => {
   // Format file as form data object
   const formData = new FormData();
   formData.append("file", file);
-  
+
   const toastId = toast.loading("Uploading...");
   try {
     const response = await axios.post(
@@ -154,7 +154,7 @@ export const UseUploadInstructors = async (file: File) => {
   // Format file as form data object
   const formData = new FormData();
   formData.append("file", file);
-  
+
   const toastId = toast.loading("Uploading...");
   try {
     const response = await axios.post(
@@ -252,8 +252,7 @@ export const UseGenerateConflicts = async () => {
     if (error.response) {
       const status = error.response.status;
       // No schedule exists yet
-      //if (status === 400)
-      //toast.error("Error generating schedule. Please try again.");
+      if (status === 400) console.error("Error:", error.response.data["error"]);
     }
   }
   return null;
@@ -276,8 +275,7 @@ export const UseGenerateIncompletes = async () => {
     if (error.response) {
       const status = error.response.status;
       // No schedule exists yet
-      //if (status === 400)
-      //toast.error("Error generating schedule. Please try again.");
+      if (status === 400) console.error("Error:", error.response.data["error"]);
     }
   }
   return null;
@@ -298,8 +296,7 @@ export const UseCountConflicts = async () => {
     if (error.response) {
       const status = error.response.status;
       // No schedule exists yet
-      //if (status === 400)
-      //toast.error("Error generating schedule. Please try again.");
+      if (status === 400) console.error("Error:", error.response.data["error"]);
     }
   }
   return null;
@@ -320,8 +317,7 @@ export const UseCountIncompletes = async () => {
     if (error.response) {
       const status = error.response.status;
       // No schedule exists yet
-      //if (status === 400)
-      //toast.error("Error generating schedule. Please try again.");
+      if (status === 400) console.error("Error:", error.response.data["error"]);
     }
   }
   return null;
@@ -340,6 +336,7 @@ export const UseExportSchedule = async (filter: string, data: string[]) => {
     data: data,
   };
 
+  const toastId = toast.loading("Generating report...");
   try {
     const response = await axios.post(
       "http://localhost:5001/export/schedule",
@@ -351,13 +348,21 @@ export const UseExportSchedule = async (filter: string, data: string[]) => {
       }
     );
     // 200: OK, return response data
+    toast.success("Report generated!", { id: toastId });
     return response.data["response"];
   } catch (error: any) {
     if (error.response) {
       const status = error.response.status;
-      // No schedule exists yet
-      //if (status === 400)
-      //toast.error("Error generating schedule. Please try again.");
+      // Not proper parameter format
+      if (status === 400) {
+        console.error("Error:", error.response.data["error"]);
+        toast.error("Something went wrong. Please try again.", { id: toastId });
+      }
+      // Invalid filter type
+      if (status === 412) {
+        console.error("Error:", error.response.data["error"]);
+        toast.error("Something went wrong. Please try again.", { id: toastId });
+      }
     }
   }
   return null;
