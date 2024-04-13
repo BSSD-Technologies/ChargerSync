@@ -26,8 +26,8 @@ export const UseUploadCourses = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
 
+  const toastId = toast.loading("Uploading...");
   try {
-    toast.loading("Uploading...");
     const response = await axios.post(
       "http://localhost:5001/import/courses",
       formData,
@@ -38,21 +38,19 @@ export const UseUploadCourses = async (file: File) => {
       }
     );
     // 200: OK, success toast, return formatted data
-    toast.dismiss();
-    toast.success("Upload successful!");
+    toast.success("Upload successful!", { id: toastId });
     const formattedData = readCourses(response.data);
     return formattedData;
   } catch (error: any) {
-    toast.dismiss();
     if (error.response) {
       const status = error.response.status;
       // File parameter not provided
-      if (status === 400) toast.error("No file uploaded.");
+      if (status === 400) toast.error("No file uploaded.", { id: toastId });
       // File does not match CSV extension
       if (status === 415)
-        toast.error("Invalid file format. Must be a CSV file.");
+        toast.error("Invalid file type. Must be a CSV file.", { id: toastId });
       // File does not match expected template
-      if (status === 412) toast.error("Invalid template.");
+      if (status === 412) toast.error("Invalid template.", { id: toastId });
     }
   }
   return null;
@@ -71,8 +69,8 @@ export const UseUploadRooms = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
 
+  const toastId = toast.loading("Uploading...");
   try {
-    toast.loading("Uploading...");
     const response = await axios.post(
       "http://localhost:5001/import/rooms",
       formData,
@@ -83,21 +81,19 @@ export const UseUploadRooms = async (file: File) => {
       }
     );
     // 200: OK, success toast, return formatted data
-    toast.dismiss();
-    toast.success("Upload successful!");
+    toast.success("Upload successful!", { id: toastId });
     const formattedData = readRooms(response.data);
     return formattedData;
   } catch (error: any) {
-    toast.dismiss();
     if (error.response) {
       const status = error.response.status;
       // File parameter not provided
-      if (status === 400) toast.error("No file uploaded.");
+      if (status === 400) toast.error("No file uploaded.", { id: toastId });
       // File does not match CSV extension
       if (status === 415)
-        toast.error("Invalid file format. Must be a CSV file.");
+        toast.error("Invalid file type. Must be a CSV file.", { id: toastId });
       // File does not match expected template
-      if (status === 412) toast.error("Invalid template.");
+      if (status === 412) toast.error("Invalid template.", { id: toastId });
     }
   }
   return null;
@@ -116,8 +112,8 @@ export const UseUploadPeriods = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
 
+  const toastId = toast.loading("Uploading...");
   try {
-    toast.loading("Uploading...");
     const response = await axios.post(
       "http://localhost:5001/import/periods",
       formData,
@@ -128,21 +124,19 @@ export const UseUploadPeriods = async (file: File) => {
       }
     );
     // 200: OK, success toast, return formatted data
-    toast.dismiss();
-    toast.success("Upload successful!");
+    toast.success("Upload successful!", { id: toastId });
     const formattedData = readPeriods(response.data);
     return formattedData;
   } catch (error: any) {
-    toast.dismiss();
     if (error.response) {
       const status = error.response.status;
       // File parameter not provided
-      if (status === 400) toast.error("No file uploaded.");
+      if (status === 400) toast.error("No file uploaded.", { id: toastId });
       // File does not match CSV extension
       if (status === 415)
-        toast.error("Invalid file format. Must be a CSV file.");
+        toast.error("Invalid file type. Must be a CSV file.", { id: toastId });
       // File does not match expected template
-      if (status === 412) toast.error("Invalid template.");
+      if (status === 412) toast.error("Invalid template.", { id: toastId });
     }
   }
   return null;
@@ -161,8 +155,8 @@ export const UseUploadInstructors = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
 
+  const toastId = toast.loading("Uploading...");
   try {
-    toast.loading("Uploading...");
     const response = await axios.post(
       "http://localhost:5001/import/instructors",
       formData,
@@ -173,21 +167,19 @@ export const UseUploadInstructors = async (file: File) => {
       }
     );
     // 200: OK, success toast, return formatted data
-    toast.dismiss();
-    toast.success("Upload successful!");
+    toast.success("Upload successful!", { id: toastId });
     const formattedData = readInstructors(response.data);
     return formattedData;
   } catch (error: any) {
-    toast.dismiss();
     if (error.response) {
       const status = error.response.status;
       // File parameter not provided
-      if (status === 400) toast.error("No file uploaded.");
+      if (status === 400) toast.error("No file uploaded.", { id: toastId });
       // File does not match CSV extension
       if (status === 415)
-        toast.error("Invalid file format. Must be a CSV file.");
+        toast.error("Invalid file type. Must be a CSV file.", { id: toastId });
       // File does not match expected template
-      if (status === 412) toast.error("Invalid template.");
+      if (status === 412) toast.error("Invalid template.", { id: toastId });
     }
   }
   return null;
@@ -260,8 +252,7 @@ export const UseGenerateConflicts = async () => {
     if (error.response) {
       const status = error.response.status;
       // No schedule exists yet
-      //if (status === 400)
-      //toast.error("Error generating schedule. Please try again.");
+      if (status === 400) console.error("Error:", error.response.data["error"]);
     }
   }
   return null;
@@ -284,8 +275,7 @@ export const UseGenerateIncompletes = async () => {
     if (error.response) {
       const status = error.response.status;
       // No schedule exists yet
-      //if (status === 400)
-      //toast.error("Error generating schedule. Please try again.");
+      if (status === 400) console.error("Error:", error.response.data["error"]);
     }
   }
   return null;
@@ -306,8 +296,7 @@ export const UseCountConflicts = async () => {
     if (error.response) {
       const status = error.response.status;
       // No schedule exists yet
-      //if (status === 400)
-      //toast.error("Error generating schedule. Please try again.");
+      if (status === 400) console.error("Error:", error.response.data["error"]);
     }
   }
   return null;
@@ -328,8 +317,7 @@ export const UseCountIncompletes = async () => {
     if (error.response) {
       const status = error.response.status;
       // No schedule exists yet
-      //if (status === 400)
-      //toast.error("Error generating schedule. Please try again.");
+      if (status === 400) console.error("Error:", error.response.data["error"]);
     }
   }
   return null;
@@ -348,6 +336,7 @@ export const UseExportSchedule = async (filter: string, data: string[]) => {
     data: data,
   };
 
+  const toastId = toast.loading("Generating report...");
   try {
     const response = await axios.post(
       "http://localhost:5001/export/schedule",
@@ -359,13 +348,21 @@ export const UseExportSchedule = async (filter: string, data: string[]) => {
       }
     );
     // 200: OK, return response data
+    toast.success("Report generated!", { id: toastId });
     return response.data["response"];
   } catch (error: any) {
     if (error.response) {
       const status = error.response.status;
-      // No schedule exists yet
-      //if (status === 400)
-      //toast.error("Error generating schedule. Please try again.");
+      // Not proper parameter format
+      if (status === 400) {
+        console.error("Error:", error.response.data["error"]);
+        toast.error("Something went wrong. Please try again.", { id: toastId });
+      }
+      // Invalid filter type
+      if (status === 412) {
+        console.error("Error:", error.response.data["error"]);
+        toast.error("Something went wrong. Please try again.", { id: toastId });
+      }
     }
   }
   return null;
