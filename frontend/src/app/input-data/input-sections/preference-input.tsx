@@ -3,6 +3,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  Button,
   Chip,
   FilledInput,
   FormControl,
@@ -37,7 +38,8 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
   /** Course list and course preference list */
   const [courseList] = [useGlobalCourseListStore((state) => state.courseList)];
   const [coursePrefList, setCoursePrefList] = useState<CoursePreference[]>([]);
-  const [populateCoursePrefList] = [
+  const [globalCoursePrefList, populateCoursePrefList] = [
+    useGlobalPreferenceListStore((state) => state.coursePrefList),
     useGlobalPreferenceListStore((state) => state.setCoursePrefList),
   ];
 
@@ -83,6 +85,12 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
   useEffect(() => {
     populateCoursePrefList(coursePrefList, props.instructorId);
   }, [coursePrefList, populateCoursePrefList, props.instructorId]);
+
+  /** Clear selectList when global coursePrefList is empty  */
+  useEffect(() => {
+    if (globalCoursePrefList.length <= 0)
+      setSelectList([])
+  }, [globalCoursePrefList.length])
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -130,14 +138,16 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
   /** Period list and period preference list */
   const [periodList] = [useGlobalPeriodListStore((state) => state.periodList)];
   const [periodPrefList, setPeriodPrefList] = useState<PeriodPreference[]>([]);
-  const [populatePeriodPrefList] = [
+  const [globalPeriodPrefList, populatePeriodPrefList] = [
+    useGlobalPreferenceListStore((state) => state.periodPrefList),
     useGlobalPreferenceListStore((state) => state.setPeriodPrefList),
   ];
 
   /** Period list */
-  const [fullPeriodList, populateFullPeriodList] = [
+  const [fullPeriodList, populateFullPeriodList, getHasErrors] = [
     useGlobalPeriodListStore((state) => state.fullPeriodList),
     useGlobalPeriodListStore((state) => state.populateFullPeriodList),
+    useGlobalPeriodListStore((state) => state.getHasErrors),
   ];
 
   /** Handle change visually of select list */
@@ -167,7 +177,6 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
     }
     // Period DNE, so we need to add to preference list
     else {
-      console.log("add period");
       setPeriodPrefList([
         ...periodPrefList,
         {
@@ -186,8 +195,16 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
 
   /** Populate full period list with all days */
   useEffect(() => {
-    populateFullPeriodList();
-  }, [isFirstRender, populateFullPeriodList]);
+    // Only repopulate if no errors
+    if (!getHasErrors())
+      populateFullPeriodList();
+  }, [getHasErrors, periodList, populateFullPeriodList]);
+
+  /** Clear selectList when global periodPrefList is empty  */
+  useEffect(() => {
+    if (globalPeriodPrefList.length <= 0)
+      setSelectList([])
+  }, [globalPeriodPrefList.length])
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>

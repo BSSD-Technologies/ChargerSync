@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from "uuid";
 import { CoursePreference } from "../_types/CoursePreference";
 import { PeriodPreference } from "../_types/PeriodPreference";
 import { FormattedSection, Section } from "../_types/Section";
-import { convertTime12, readSections } from "../_hooks/utilHooks";
+import { readSections } from "../_hooks/utilHooks";
 
 /** COURSE STORE */
 interface GlobalCourseListState {
@@ -43,19 +43,26 @@ export const useGlobalCourseListStore = create<GlobalCourseListState>()(
       set((state) => ({
         courseList: [...state.courseList, course],
       }));
+      // Empty all course preferences
+      useGlobalPreferenceListStore.getState().emptyCoursePrefList();
     },
-    deleteCourseList: (id: string) =>
+    deleteCourseList: (id: string) => {
       set((state) => ({
         courseList: [
           // Filter out course with matching id
           ...state.courseList.filter((course) => course.uuid !== id),
         ],
-      })),
+      }));
+      // Empty all course preferences
+      useGlobalPreferenceListStore.getState().emptyCoursePrefList();
+    },
     deleteAllCourseList: () => {
       set((state) => ({
         courseList: [],
         hasErrors: [],
       }));
+      // Empty all course preferences
+      useGlobalPreferenceListStore.getState().emptyCoursePrefList();
     },
     hasErrors: [],
     getHasErrors: () => {
@@ -72,11 +79,13 @@ export const useGlobalCourseListStore = create<GlobalCourseListState>()(
     },
     getRawCourses: () => {
       return get().courseList.map((course) => ({
-        "Department": course.department,
+        Department: course.department,
         "Course Number": course.course_num,
         "Max Enrollment": course.max_enrollment,
-        "Preliminary Enrollment": (course.prelim_enrollment ? course.prelim_enrollment : ""),
-      }))
+        "Preliminary Enrollment": course.prelim_enrollment
+          ? course.prelim_enrollment
+          : "",
+      }));
     },
   })
 );
@@ -146,7 +155,7 @@ export const useGlobalRoomListStore = create<GlobalRoomListState>()(
       return get().roomList.map((room) => ({
         "Room ID": room.room_id,
         "Max Capacity": room.max_capacity,
-      }))
+      }));
     },
   })
 );
@@ -179,25 +188,27 @@ export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
   (set, get) => ({
     periodList: [],
     fullPeriodList: [],
-    updatePeriodList: (period: Period) =>
+    updatePeriodList: (period: Period) => {
       set((state) => ({
         periodList: state.periodList.map((p) =>
           // Find matching period object, update
           p.uuid === period.uuid ? { ...period } : p
         ),
-      })),
+      }));
+    },
     addPeriodList: (period: Period) => {
       set((state) => ({
         periodList: [...state.periodList, period],
       }));
     },
-    deletePeriodList: (id: string) =>
+    deletePeriodList: (id: string) => {
       set((state) => ({
         periodList: [
           // Filter out period with matching id
           ...state.periodList.filter((period) => period.uuid !== id),
         ],
-      })),
+      }));
+    },
     deleteAllPeriodList: () => {
       set((state) => ({
         periodList: [],
@@ -229,12 +240,15 @@ export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
 
       // Set fullPeriodList to the duplicated periods AND original
       set({ fullPeriodList: [...get().periodList, ...duplicatedPeriods] });
+
+      // Empty all period preferences
+      useGlobalPreferenceListStore.getState().emptyPeriodPrefList();
     },
     getRawPeriods: () => {
       return get().periodList.map((period) => ({
         "Start Time": period.start_time,
         "End Time": period.end_time,
-      }))
+      }));
     },
   })
 );
@@ -274,7 +288,7 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
         instructorList: [...state.instructorList, instructor],
       }));
     },
-    deleteInstructorList: (id: string) =>
+    deleteInstructorList: (id: string) => {
       set((state) => ({
         instructorList: [
           // Filter out instructor with matching id
@@ -282,12 +296,17 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
             (instructor) => instructor.uuid !== id
           ),
         ],
-      })),
+      }));
+      useGlobalPreferenceListStore.getState().emptyInstructorPref(id);
+    },
     deleteAllInstructorList: () => {
       set((state) => ({
         instructorList: [],
         hasErrors: [],
       }));
+      // Empty all course and period preferences
+      useGlobalPreferenceListStore.getState().emptyCoursePrefList();
+      useGlobalPreferenceListStore.getState().emptyPeriodPrefList();
     },
     hasErrors: [],
     getHasErrors: () => {
@@ -306,8 +325,8 @@ export const useGlobalInstructorListStore = create<GlobalInstructorListState>()(
       return get().instructorList.map((instructor) => ({
         "First Name": instructor.fname,
         "Last Name": instructor.lname,
-        "Priority": (instructor.priority ? instructor.priority : ""),
-      }))
+        Priority: instructor.priority ? instructor.priority : "",
+      }));
     },
   })
 );
@@ -321,6 +340,8 @@ interface GlobalPreferenceListState {
     list: CoursePreference[],
     instructor_uuid: string
   ) => void;
+  /** Empty entire coursePrefList */
+  emptyCoursePrefList: () => void;
   /** Array of period preferences */
   periodPrefList: PeriodPreference[];
   /** Add a period preference to list based on uuid */
@@ -328,10 +349,14 @@ interface GlobalPreferenceListState {
     list: PeriodPreference[],
     instructor_uuid: string
   ) => void;
+  /** Empty entire periodPrefList */
+  emptyPeriodPrefList: () => void;
+  /** Remove all preferences for given instructor from course and period pref lists */
+  emptyInstructorPref: (instructor_uuid: string) => void;
 }
 
 export const useGlobalPreferenceListStore = create<GlobalPreferenceListState>()(
-  (set) => ({
+  (set, get) => ({
     coursePrefList: [],
     setCoursePrefList: (list: CoursePreference[], instructor_uuid: string) =>
       set((state) => ({
@@ -343,6 +368,7 @@ export const useGlobalPreferenceListStore = create<GlobalPreferenceListState>()(
           ...list,
         ],
       })),
+    emptyCoursePrefList: () => set((state) => ({ coursePrefList: [] })),
     periodPrefList: [],
     setPeriodPrefList: (list: PeriodPreference[], instructor_uuid: string) =>
       set((state) => ({
@@ -354,6 +380,23 @@ export const useGlobalPreferenceListStore = create<GlobalPreferenceListState>()(
           ...list,
         ],
       })),
+    emptyPeriodPrefList: () => set((state) => ({ periodPrefList: [] })),
+    emptyInstructorPref: (instructor_uuid: string) => {
+      set((state) => ({
+        // Filter out course prefs with matching instructor_uuid
+        coursePrefList: [
+          ...state.coursePrefList.filter(
+            (pref) => pref.instructor_uuid !== instructor_uuid
+          ),
+        ],
+        // Filter out period prefs with matching instructor_uuid
+        periodPrefList: [
+          ...state.periodPrefList.filter(
+            (pref) => pref.instructor_uuid !== instructor_uuid
+          ),
+        ],
+      }));
+    },
   })
 );
 

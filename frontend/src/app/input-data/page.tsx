@@ -18,12 +18,13 @@ import PeriodInput from "./input-sections/period-input";
 import InstructorInput from "./input-sections/instructor-input";
 import DownloadTemplates from "./input-sections/download-templates";
 import SubmitInput from "./input-sections/submit-input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PreferenceInput from "./input-sections/preference-input";
 import {
   useGlobalCourseListStore,
   useGlobalInstructorListStore,
   useGlobalPeriodListStore,
+  useGlobalPreferenceListStore,
   useGlobalRoomListStore,
 } from "../_stores/store";
 import { downloadInputCsv } from "../_hooks/utilHooks";
@@ -40,11 +41,20 @@ export default function InputData() {
   const [hasInstructorErrors, setHasInstructorErrors] = useState(true);
 
   /** States for all section data, raw for export */
-  const [getRawCourses, getRawRooms, getRawPeriods, getRawInstructors] = [
+  const [
+    getRawCourses,
+    getRawRooms,
+    getRawPeriods,
+    getRawInstructors,
+    emptyCoursePrefList,
+    emptyPeriodPrefList,
+  ] = [
     useGlobalCourseListStore((state) => state.getRawCourses),
     useGlobalRoomListStore((state) => state.getRawRooms),
     useGlobalPeriodListStore((state) => state.getRawPeriods),
     useGlobalInstructorListStore((state) => state.getRawInstructors),
+    useGlobalPreferenceListStore((state) => state.emptyCoursePrefList),
+    useGlobalPreferenceListStore((state) => state.emptyPeriodPrefList),
   ];
 
   /** Course error handling */
