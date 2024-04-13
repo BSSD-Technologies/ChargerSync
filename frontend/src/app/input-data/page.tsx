@@ -77,14 +77,6 @@ export default function InputData() {
     setHasInstructorErrors(value);
   };
 
-  useEffect(() => {
-    // If on instructor input section, empty preferences
-    if (activeStep == 3) {
-      emptyCoursePrefList();
-      emptyPeriodPrefList();
-    }
-  }, [activeStep, emptyCoursePrefList, emptyPeriodPrefList]);
-
   return (
     <Container
       sx={{

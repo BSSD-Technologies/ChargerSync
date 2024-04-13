@@ -144,9 +144,10 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
   ];
 
   /** Period list */
-  const [fullPeriodList, populateFullPeriodList] = [
+  const [fullPeriodList, populateFullPeriodList, getHasErrors] = [
     useGlobalPeriodListStore((state) => state.fullPeriodList),
     useGlobalPeriodListStore((state) => state.populateFullPeriodList),
+    useGlobalPeriodListStore((state) => state.getHasErrors),
   ];
 
   /** Handle change visually of select list */
@@ -176,7 +177,6 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
     }
     // Period DNE, so we need to add to preference list
     else {
-      console.log("add period");
       setPeriodPrefList([
         ...periodPrefList,
         {
@@ -195,8 +195,10 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
 
   /** Populate full period list with all days */
   useEffect(() => {
-    populateFullPeriodList();
-  }, [isFirstRender, populateFullPeriodList]);
+    // Only repopulate if no errors
+    if (!getHasErrors())
+      populateFullPeriodList();
+  }, [getHasErrors, periodList, populateFullPeriodList]);
 
   /** Clear selectList when global periodPrefList is empty  */
   useEffect(() => {
