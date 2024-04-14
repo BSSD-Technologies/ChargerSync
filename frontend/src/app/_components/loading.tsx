@@ -1,6 +1,8 @@
-import Lottie from "lottie-react";
 import groovyWalkAnimation from "./Animation - 1712038115019.json";
 import { Backdrop, Stack, Typography } from "@mui/material";
+import dynamic from "next/dynamic";
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 const LoadingAnimation = (props: { openState: boolean }) => {
   return (

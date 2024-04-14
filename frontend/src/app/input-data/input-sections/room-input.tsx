@@ -19,7 +19,7 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Room, defaultRoom } from "@/app/_types/Room";
 import { useEffect, useState } from "react";
@@ -152,8 +152,10 @@ export default function RoomInput(props: {
 }) {
   /** Scroll to continue functionality */
   const executeScroll = () => {
-    const section = document.querySelector("#room-continue");
-    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof document !== "undefined") {
+      const section = document.querySelector("#room-continue");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   /** Room list */

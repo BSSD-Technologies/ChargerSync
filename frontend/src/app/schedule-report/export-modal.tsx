@@ -1,3 +1,5 @@
+"use client";
+
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
@@ -50,8 +52,8 @@ function SelectDepartment() {
   /** Update selected departments */
   useEffect(() => {
     updateSelectedDepartments(departmentSelectList);
-    console.log(departmentSelectList)
-  }, [departmentSelectList, updateSelectedDepartments])
+    console.log(departmentSelectList);
+  }, [departmentSelectList, updateSelectedDepartments]);
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -130,7 +132,7 @@ function SelectRoom() {
   /** Update selected rooms */
   useEffect(() => {
     updateSelectedRooms(currentSelectList);
-  }, [currentSelectList, updateSelectedRooms])
+  }, [currentSelectList, updateSelectedRooms]);
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -222,7 +224,7 @@ function SelectInstructor() {
   /** Update selected instructors */
   useEffect(() => {
     updateSelectedInstructors(currentSelectList);
-  }, [currentSelectList, updateSelectedInstructors])
+  }, [currentSelectList, updateSelectedInstructors]);
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -280,7 +282,12 @@ export default function ExportModal(props: ExportModalProps) {
   const [checkedInstructor, setCheckedInstructor] = useState(false);
   const [currentChecked, setCurrentChecked] = useState("");
 
-  const [rawSectionList, selectedDepartments, selectedRooms, selectedInstructors] = [
+  const [
+    rawSectionList,
+    selectedDepartments,
+    selectedRooms,
+    selectedInstructors,
+  ] = [
     useGlobalScheduleStore((state) => state.rawSectionList),
     useGlobalScheduleStore((state) => state.selectedDepartments),
     useGlobalScheduleStore((state) => state.selectedRooms),
@@ -307,26 +314,31 @@ export default function ExportModal(props: ExportModalProps) {
   const handleExport = async () => {
     if (currentChecked == "full") {
       downloadCsv(rawSectionList, "FullSchedule.csv");
-    }
-    else if (currentChecked == "department") {
+    } else if (currentChecked == "department") {
       const data = await UseExportSchedule(currentChecked, selectedDepartments);
       if (data) {
-        downloadCsv(data, ("FilterDeptSchedule-" + selectedDepartments.join("_") + ".csv"));
+        downloadCsv(
+          data,
+          "FilterDeptSchedule-" + selectedDepartments.join("_") + ".csv"
+        );
       }
-    }
-    else if (currentChecked == "room") {
+    } else if (currentChecked == "room") {
       const data = await UseExportSchedule(currentChecked, selectedRooms);
       if (data) {
-        downloadCsv(data, ("FilterRoomSchedule-" + selectedRooms.join("_") + ".csv"));
+        downloadCsv(
+          data,
+          "FilterRoomSchedule-" + selectedRooms.join("_") + ".csv"
+        );
       }
-    }
-    else if (currentChecked == "instructor") {
+    } else if (currentChecked == "instructor") {
       const data = await UseExportSchedule(currentChecked, selectedInstructors);
       if (data) {
-        downloadCsv(data, ("FilterInstructorSchedule-" + selectedInstructors.join("_") + ".csv"));
+        downloadCsv(
+          data,
+          "FilterInstructorSchedule-" + selectedInstructors.join("_") + ".csv"
+        );
       }
-    }
-    else {
+    } else {
       toast.error("An error occurred. Please try again.");
     }
     handleClose();

@@ -88,9 +88,8 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
 
   /** Clear selectList when global coursePrefList is empty  */
   useEffect(() => {
-    if (globalCoursePrefList.length <= 0)
-      setSelectList([])
-  }, [globalCoursePrefList.length])
+    if (globalCoursePrefList.length <= 0) setSelectList([]);
+  }, [globalCoursePrefList.length]);
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -196,15 +195,13 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
   /** Populate full period list with all days */
   useEffect(() => {
     // Only repopulate if no errors
-    if (!getHasErrors())
-      populateFullPeriodList();
+    if (!getHasErrors()) populateFullPeriodList();
   }, [getHasErrors, periodList, populateFullPeriodList]);
 
   /** Clear selectList when global periodPrefList is empty  */
   useEffect(() => {
-    if (globalPeriodPrefList.length <= 0)
-      setSelectList([])
-  }, [globalPeriodPrefList.length])
+    if (globalPeriodPrefList.length <= 0) setSelectList([]);
+  }, [globalPeriodPrefList.length]);
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -278,10 +275,12 @@ function InstructorListAccordion() {
 export default function PreferenceInput() {
   /** Scroll to continue functionality */
   const executeScroll = () => {
-    const section = document.querySelector("#preference-continue");
-    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof document !== "undefined") {
+      const section = document.querySelector("#preference-continue");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
-  
+
   return (
     <Box
       sx={{

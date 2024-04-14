@@ -19,7 +19,7 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Period, defaultPeriod } from "@/app/_types/Period";
 import { useEffect, useState } from "react";
@@ -173,8 +173,10 @@ export default function PeriodInput(props: {
 }) {
   /** Scroll to continue functionality */
   const executeScroll = () => {
-    const section = document.querySelector("#period-continue");
-    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof document !== "undefined") {
+      const section = document.querySelector("#period-continue");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   /** Period list */

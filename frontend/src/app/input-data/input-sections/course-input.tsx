@@ -19,7 +19,7 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Course, defaultCourse } from "@/app/_types/Course";
 import { useEffect, useState } from "react";
@@ -265,8 +265,10 @@ export default function CourseInput(props: {
 }) {
   /** Scroll to continue functionality */
   const executeScroll = () => {
-    const section = document.querySelector("#course-continue");
-    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof document !== "undefined") {
+      const section = document.querySelector("#course-continue");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   /** Course list */

@@ -19,7 +19,7 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -110,8 +110,7 @@ function InstructorTableRow(props: { row: Instructor }) {
     if (isFirstRender) {
       validateFname(fname);
       validateLname(lname);
-      if (priority)
-        validatePriority(priority?.toString());
+      if (priority) validatePriority(priority?.toString());
     }
   }, [
     fname,
@@ -194,8 +193,10 @@ export default function InstructorInput(props: {
 }) {
   /** Scroll to continue functionality */
   const executeScroll = () => {
-    const section = document.querySelector("#instructor-continue");
-    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (typeof document !== "undefined") {
+      const section = document.querySelector("#instructor-continue");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   /** Instructor list */
