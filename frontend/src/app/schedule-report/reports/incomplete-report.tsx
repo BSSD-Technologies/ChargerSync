@@ -29,7 +29,7 @@ export default function IncompleteReport() {
       }
     };
     generateIncompletes();
-  }, []);
+  }, [setIncompleteList]);
 
   return (
     <Box>
