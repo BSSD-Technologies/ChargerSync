@@ -241,49 +241,76 @@ class Scheduler:
             tuple_item = (course_id, sorted_array)
             self.course_preferences.append(tuple_item)
 
-    # Input: self
-    # Output: n/a - puts all sections_to_be_assigned in one array
     def getAllSections(self):
+        """Creates all_sections by querying database
+
+        You may experience issues with this if there are multiple schedulers created.
+        """
+
         self.all_sections = Section.query.all()
-        
 
     # Update Functions -----
 
-    # Input: self, course_id(int), room
-    # Output: n/a - updates values in self
     def updateCourseEnrollmentGivenRoom(self, course_id, room):
+        """Updates course_and_enrollment tuple array attribute after a course has been assigned to a room.
+
+        Course enrollment numbers in the courses_and_enrollment tuple needs to be updated after a section is assigned a room. This function does that.
+
+        Args:
+            course_id: Course ID of the course being updated.
+            room: Room ORM Object that the section has been assigned to.
+        """
         room_occupancy = room.max_occupancy
         for course in self.courses_and_enrollment:
+
+            # course[0] = course_id in in courses_and_enrollment; course[1] = course max enrollment number
             if course[0] == course_id:
+                # Subtract room_occupancy from enrollment
                 new_occupancy = course[1] - room_occupancy
+
                 if new_occupancy <= 0:
                     fulfilled = 1
                 else:
                     fulfilled = 0
+
                 updated_course = (course[0], new_occupancy, fulfilled)
                 index = self.courses_and_enrollment.index(course)
                 self.courses_and_enrollment[index] = updated_course
                 return
             
-    # Input: self, course_id(int)
-    # Output: n/a - updates values in self
     def updateCourseEnrollment(self, course_id):
+        """Updates courses_and_enrollment when there has been no room assigned.
+
+        Course enrollment numbers in the courses_and_enrollment tuple still needs to be updated after a section is assigned no room. This function does that.
+
+        Args:
+            course_id: course whose enrollment needs updating
+        """
         for course in self.courses_and_enrollment:
+            # course[0] = course_id in in courses_and_enrollment; course[1] = course max enrollment number
             if course[0] == course_id:
+                # Subtract room_occupancy from enrollment
                 new_occupancy = course[1] - 50
+
                 if new_occupancy <= 0:
                     fulfilled = 1
                 else:
                     fulfilled = 0
+
                 updated_course = (course[0], new_occupancy, fulfilled)
                 index = self.courses_and_enrollment.index(course)
                 self.courses_and_enrollment[index] = updated_course
                 return
         
-            
-    # Input: self, period_id(int), instructor_id(int)
-    # Output: n/a - updates values in self
     def updateInstructorAvailability(self, period_id, instructor_id):
+        """Updates instructor_availability
+
+        Used after an instructor is assigned to a section. updates the instructor_availability to remove period from the instructor's available periods.
+        
+        Args:
+            period_id: id of the period that needs to be removed from instructor's availability
+            instructor_id: id of the instructor whose availability is being updated
+        """
         for instructor in self.instructor_availability:
             if instructor[0] == instructor_id:
                 availability_array = instructor[2]
@@ -300,12 +327,21 @@ class Scheduler:
                 return  # No need to continue after updating
         # Period ID not found, or room_id not found in the availability array
         print("Period ID or Instructor ID not found.")    
-
-    # Input: self, period_id(int), room_id(int)
-    # Output: n/a - updates values in self        
+       
     def updateRoomAvailability(self, period_id, room_id):
+        """Updates room_availability
+
+        Used after room is assigned to a section. Prevents double booking of rooms.
+
+        Args:
+            period_id: ID of the period 
+            room_id: the room to be removed from room_availabilty at the given period (period_id)
+
+        """
         for room in self.room_availability:
+            #room[0] in room_availability represents period ids
             if room[0] == period_id:
+                # room[1] is an array of rooms available at the period_id
                 availability_array = room[1]
                 if room_id in availability_array:
                     room_index = availability_array.index(room_id)
@@ -314,11 +350,19 @@ class Scheduler:
         # Period ID not found, or room_id not found in the availability array
         print("Period ID or Room ID not found.")
         
-    # Input: self, course_id(int), instructor_id(int)
-    # Output: n/a - updates values in self
     def updateCoursePreferences(self, course_id, instructor_id):
+        """Updates course_preferences tuple to reflect instructors with preferences for a course
+
+        Args:
+            course_id: id of the course that has been assigned an instructor
+            instructor_id: id of the instructor that has been assigned a course
+
+        """
         for course in self.course_preferences:
+
+            # course[0] is the course id
             if course[0] == course_id:
+                # course[1] is a list of instructor ids representing instuctors that have a preference for the course
                 instructor_ids = course[1]
                 if instructor_id in instructor_ids:
                     instructor_index = instructor_ids.index(instructor_id)
@@ -329,9 +373,15 @@ class Scheduler:
 
     # Find Functions ----
             
-    # Input: self, period_id(int)
-    # Output: array or None
     def findRoomAvailability(self, period_id):
+        """Helper function fot getting room_id array from room_availability
+
+        Args:
+            period_id: id for the period
+
+        Return:
+            Array of room ids available at the fiven period
+        """
         for period in self.room_availability:
             if period[0] == period_id:
                 return period[1]  # Return array of rooms available during period
@@ -340,6 +390,14 @@ class Scheduler:
     # Input: self, instructor_id(int)
     # Output: array or None
     def findInstructorAvailability(self, instructor_id):
+        """Helper function fot getting period_id array from instructor_availability
+
+        Args:
+            instructor_id: id for the instructor
+
+        Return:
+            Array of periods when the instructor is available
+        """
         for instructor in self.instructor_availability:
             if instructor[0] == instructor_id:
                 return instructor[2]    # return array of periods instructor is available
