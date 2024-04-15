@@ -7,6 +7,7 @@ import {
   Divider,
   Paper,
   Step,
+  StepButton,
   StepContent,
   StepLabel,
   Stepper,
@@ -47,6 +48,37 @@ export default function InputData() {
     useGlobalInstructorListStore((state) => state.getRawInstructors),
   ];
 
+  /** Handle nonlinear navigation */
+  const handleJumpStep = (step: number) => {
+    // If navigating to preferences
+    if (
+      step == 4 &&
+      !hasCourseErrors &&
+      !hasRoomErrors &&
+      !hasPeriodErrors &&
+      !hasInstructorErrors
+    )
+      setActiveStep(step);
+    // If navigating to instructors
+    else if (
+      step == 3 &&
+      !hasCourseErrors &&
+      !hasRoomErrors &&
+      !hasPeriodErrors
+    )
+      setActiveStep(step);
+    // If navigating to periods
+    else if (step == 2 && !hasCourseErrors && !hasRoomErrors)
+      setActiveStep(step);
+    // If navigating to rooms
+    else if (step == 1 && !hasCourseErrors) {
+      console.log(hasCourseErrors);
+      setActiveStep(step);
+    }
+    // If navigating to courses
+    else if (step == 0) setActiveStep(step);
+  };
+
   /** Course error handling */
   const courseErrors = (value: boolean) => {
     setHasCourseErrors(value);
@@ -85,9 +117,11 @@ export default function InputData() {
       <Divider />
       <br />
       <Box>
-        <Stepper activeStep={activeStep} orientation="vertical">
+        <Stepper nonLinear activeStep={activeStep} orientation="vertical">
           <Step key={0} id="course-top">
-            <StepLabel>List of Courses</StepLabel>
+            <StepButton onClick={() => handleJumpStep(0)}>
+              <StepLabel>List of Courses</StepLabel>
+            </StepButton>
             <StepContent TransitionProps={{ unmountOnExit: false }}>
               <CourseInput handleErrors={courseErrors} />
               {hasCourseErrors ? (
@@ -127,7 +161,9 @@ export default function InputData() {
             </StepContent>
           </Step>
           <Step key={1} id="room-top">
-            <StepLabel>List of Rooms</StepLabel>
+            <StepButton onClick={() => handleJumpStep(1)}>
+              <StepLabel>List of Rooms</StepLabel>
+            </StepButton>
             <StepContent TransitionProps={{ unmountOnExit: false }}>
               <RoomInput handleErrors={roomErrors} />
               {hasRoomErrors ? (
@@ -173,7 +209,9 @@ export default function InputData() {
             </StepContent>
           </Step>
           <Step key={2} id="period-top">
-            <StepLabel>List of Periods</StepLabel>
+            <StepButton onClick={() => handleJumpStep(2)}>
+              <StepLabel>List of Periods</StepLabel>
+            </StepButton>
             <StepContent TransitionProps={{ unmountOnExit: false }}>
               <PeriodInput handleErrors={periodErrors} />
               {hasPeriodErrors ? (
@@ -219,7 +257,9 @@ export default function InputData() {
             </StepContent>
           </Step>
           <Step key={3} id="instructor-top">
-            <StepLabel>List of Instructors</StepLabel>
+            <StepButton onClick={() => handleJumpStep(3)}>
+              <StepLabel>List of Instructors</StepLabel>
+            </StepButton>
             <StepContent TransitionProps={{ unmountOnExit: false }}>
               <InstructorInput handleErrors={instructorErrors} />
               {hasInstructorErrors ? (
@@ -268,7 +308,9 @@ export default function InputData() {
             </StepContent>
           </Step>
           <Step key={4} id="preference-top">
-            <StepLabel>Instructor Preferences</StepLabel>
+            <StepButton onClick={() => handleJumpStep(4)}>
+              <StepLabel>List of Instructor Preferences</StepLabel>
+            </StepButton>
             <StepContent TransitionProps={{ unmountOnExit: false }}>
               <PreferenceInput />
               <Box sx={{ mb: 2 }}>
@@ -295,7 +337,7 @@ export default function InputData() {
         </Stepper>
         {activeStep === 5 && (
           <Paper square elevation={0} sx={{ p: 3 }}>
-            <Typography>All steps completed - you&apos;re finished</Typography>
+            <Typography>All steps completed - you&apos;re finished!</Typography>
             <Button
               onClick={() => {
                 setActiveStep(0);

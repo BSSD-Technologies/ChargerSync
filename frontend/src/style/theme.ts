@@ -141,15 +141,18 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
           ...(ownerState.className === "error" && {
             backgroundColor: theme.palette.error.main,
             color: "white",
-            // border: "2px solid",
-            // borderColor: theme.palette.error.main,
           }),
           ...(ownerState.className === "warning" && {
             backgroundColor: theme.palette.warning.main,
             color: "white",
-            // border: "2px solid",
-            // borderColor: theme.palette.warning.main,
           }),
+        }),
+      },
+    },
+    MuiStepButton: {
+      styleOverrides: {
+        root: ({ theme, ownerState }) => ({
+          borderRadius: "15px",
         }),
       },
     },
