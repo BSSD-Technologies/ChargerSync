@@ -459,7 +459,8 @@ class Scheduler:
             instructor_availablity = self.findInstructorAvailability(instructor_id)
             if period_preferences:
                 for period_pref in period_preferences:
-                    if period_pref in instructor_availablity:
+                    period_id = period_pref.period_id
+                    if period_id in instructor_availablity:
                         order_periods.append(period_pref.period_id)
                 for period in self.room_availability:
                     if ((period[0] not in order_periods) and (period[0] in instructor_availablity)):
