@@ -1,5 +1,12 @@
+"use client";
+
 import { Box, Typography } from "@mui/material";
-import { DataGrid, GridCellParams, GridColDef, gridClasses } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridCellParams,
+  GridColDef,
+  gridClasses,
+} from "@mui/x-data-grid";
 import { useGlobalIncompleteStore } from "@/app/_stores/store";
 import { UseGenerateIncompletes } from "@/app/_hooks/apiHooks";
 import { useEffect } from "react";
@@ -29,7 +36,7 @@ export default function IncompleteReport() {
       }
     };
     generateIncompletes();
-  }, []);
+  }, [setIncompleteList]);
 
   return (
     <Box>

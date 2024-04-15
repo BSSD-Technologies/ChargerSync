@@ -123,9 +123,17 @@ export default function ScheduleReport() {
             <Stack direction={"row"} spacing={2}>
               <Typography variant="h5">Conflict Report</Typography>
               <Chip
-                color="error"
-                icon={<WarningRoundedIcon />}
-                label={`${countConflicts} items`}
+                className={countConflicts ? "error" : "empty"}
+                icon={
+                  <WarningRoundedIcon
+                    style={{ color: countConflicts ? "white" : "empty" }}
+                  />
+                }
+                label={
+                  countConflicts == 1
+                    ? `${countConflicts} item`
+                    : `${countConflicts} items`
+                }
               />
             </Stack>
           </AccordionSummary>
@@ -156,9 +164,17 @@ export default function ScheduleReport() {
             <Stack direction={"row"} spacing={2}>
               <Typography variant="h5">Incomplete Report</Typography>
               <Chip
-                color="warning"
-                icon={<InfoRoundedIcon />}
-                label={`${countIncompletes} items`}
+                className={countIncompletes ? "warning" : "empty"}
+                icon={
+                  <InfoRoundedIcon
+                    style={{ color: countIncompletes ? "white" : "empty" }}
+                  />
+                }
+                label={
+                  countIncompletes == 1
+                    ? `${countIncompletes} item`
+                    : `${countIncompletes} items`
+                }
               />
             </Stack>
           </AccordionSummary>

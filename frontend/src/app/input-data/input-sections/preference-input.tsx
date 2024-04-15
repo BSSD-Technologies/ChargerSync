@@ -3,7 +3,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Button,
   Chip,
   FilledInput,
   FormControl,
@@ -20,6 +19,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -88,9 +88,8 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
 
   /** Clear selectList when global coursePrefList is empty  */
   useEffect(() => {
-    if (globalCoursePrefList.length <= 0)
-      setSelectList([])
-  }, [globalCoursePrefList.length])
+    if (globalCoursePrefList.length <= 0) setSelectList([]);
+  }, [globalCoursePrefList.length]);
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -196,15 +195,13 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
   /** Populate full period list with all days */
   useEffect(() => {
     // Only repopulate if no errors
-    if (!getHasErrors())
-      populateFullPeriodList();
+    if (!getHasErrors()) populateFullPeriodList();
   }, [getHasErrors, periodList, populateFullPeriodList]);
 
   /** Clear selectList when global periodPrefList is empty  */
   useEffect(() => {
-    if (globalPeriodPrefList.length <= 0)
-      setSelectList([])
-  }, [globalPeriodPrefList.length])
+    if (globalPeriodPrefList.length <= 0) setSelectList([]);
+  }, [globalPeriodPrefList.length]);
 
   return (
     <FormControl fullWidth sx={{ margin: 2 }}>
@@ -276,12 +273,22 @@ function InstructorListAccordion() {
 }
 
 export default function PreferenceInput() {
-  /** Scroll to continue functionality */
-  const executeScroll = () => {
-    const section = document.querySelector("#preference-continue");
-    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  /** Scroll to top functionality */
+  const executeScrollUp = () => {
+    if (typeof document !== "undefined") {
+      const section = document.querySelector("#preference-top");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
-  
+
+  /** Scroll to continue functionality */
+  const executeScrollDown = () => {
+    if (typeof document !== "undefined") {
+      const section = document.querySelector("#preference-continue");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -306,6 +313,21 @@ export default function PreferenceInput() {
       </Grid>
       <br />
       <InstructorListAccordion />
+      <div id="preference-continue"></div>
+      <IconButton
+        title={"Scroll to top"}
+        className="scroll-up"
+        onClick={executeScrollUp}
+      >
+        <KeyboardArrowUpRoundedIcon color={"info"} />
+      </IconButton>
+      <IconButton
+        title={"Scroll to bottom"}
+        className="scroll-down"
+        onClick={executeScrollDown}
+      >
+        <KeyboardArrowDownRoundedIcon color={"info"} />
+      </IconButton>
     </Box>
   );
 }
