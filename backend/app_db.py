@@ -10,6 +10,8 @@ from models.Preferences import PeriodPreference, CoursePreference
 from output import formatForOutput
 import csvOutput
 import uuid
+import json
+import DatabaseManager
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/schedule.db'
@@ -21,7 +23,17 @@ with app.app_context():
     # Prepping the database
     db.drop_all()
     db.create_all()
-    DataGenerator.loadData()
+    
+    # Load data from JSON file
+    def load_data_from_json(file_path):
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+        return data
+
+    # Assuming your JSON file contains the scheduler data
+    scheduler_data = load_data_from_json('backend/test.json')
+
+    DatabaseManager.loadData(scheduler_data)
     db.session.commit()
 
     
@@ -44,54 +56,6 @@ with app.app_context():
     for section in schedule.conflicts:
         section.printInfo()
         print('\n')
-
-    print("TEST OF JSON OUTPUT BELOW")
-
-    csvOutput.return_fullSchedule_CSV(schedule)
-    csvOutput.return_filtered_dept(schedule, "CS")
-    csvOutput.return_filtered_prof(schedule, "Robert Preston")
-
-    print(formatForOutput(schedule.schedule))
-    
-    
-    courses = Course.query.all()
-    sections = Section.query.all()
-    instructors = Instructor.query.all()
-    periods = Period.query.all()
-    rooms = Room.query.all()
-    period_prefs = PeriodPreference.query.all()
-    course_prefs = CoursePreference.query.all()
-
-    for course in courses:
-        db.session.delete(course)
-
-    for section in sections: 
-        db.session.delete(section)
-
-    for instructor in instructors:
-        db.session.delete(instructor)
-    
-    for period in periods:
-        db.session.delete(period)
-
-    for room in rooms:
-        db.session.delete(room)
-    
-    for period_pref in period_prefs:
-        db.session.delete(period_pref)
-
-    for course_pref in course_prefs:
-        db.session.delete(course_pref)
-    
-    db.session.commit()
-
-    DataGenerator.loadData()
-    db.session.commit()
-
-    schedule = None
-
-    schedule = Schedule()
-    schedule.generate()
     
 
     print("TEST OF JSON OUTPUT BELOW")
