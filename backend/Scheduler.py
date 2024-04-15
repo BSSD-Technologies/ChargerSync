@@ -590,7 +590,7 @@ class Scheduler:
 
     def generateSchedule(self):
         # MAIN LOOP
-        for i in range(10):
+        while(1):
             self.prepareForMoreSections()
             self.print()
             self.createNewSections()
