@@ -228,7 +228,7 @@ export default function PeriodInput(props: {
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
         <Stack direction={"column"}>
-          <Typography variant="h4">List of Time Blocks</Typography>
+          <Typography variant="h4">List of Periods</Typography>
           <Typography variant="body1">
             A short description about what type of data goes here.
           </Typography>
