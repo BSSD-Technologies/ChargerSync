@@ -27,6 +27,8 @@ interface UseValidateString {
   errorText: string;
   /** Check if a string is valid or not */
   validateString: (value: string) => void;
+  /** Set the value for hasError manually */
+  setError: (value: boolean) => void;
 }
 
 /**
@@ -38,6 +40,10 @@ export function useValidateString(hasErrorDefault = false): UseValidateString {
   const [hasError, setHasError] = useState(hasErrorDefault);
   const [errorText, setErrorText] = useState(" ");
 
+  const setError = useCallback((value: boolean) => {
+    setHasError(value);
+  }, []);
+
   const validateString = useCallback((value: string) => {
     if (!value || value.length <= 0) {
       setHasError(true);
@@ -48,7 +54,7 @@ export function useValidateString(hasErrorDefault = false): UseValidateString {
     }
   }, []);
 
-  return { hasError, errorText, validateString };
+  return { hasError, errorText, validateString, setError };
 }
 
 interface UseValidateInt {

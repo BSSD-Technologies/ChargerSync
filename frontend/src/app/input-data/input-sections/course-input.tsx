@@ -47,11 +47,21 @@ function CourseTableRow(props: { row: Course }) {
   const isFirstRender = useFirstRender(); // Used for first render functions
 
   /** States for updating course list for current row, or deleting from list */
-  const [updateCourseList, deleteCourseList, hasErrors] = [
+  const [updateCourseList, deleteCourseList, hasErrors, courseList] = [
     useGlobalCourseListStore((state) => state.updateCourseList),
     useGlobalCourseListStore((state) => state.deleteCourseList),
     useGlobalCourseListStore((state) => state.hasErrors),
+    useGlobalCourseListStore((state) => state.courseList),
   ];
+
+  /** Handle duplicate courses in courseList */
+  const handleDuplicates = () => {
+    courseList.map((course) => {
+      // If matching course name, combined
+      if (course.department == department && course.course_num == courseNum) {
+      }
+    });
+  };
 
   /** Handle max enrollment & preliminary enrollment dependency validation */
   const handleMaxEnrollment = (value: string) => {

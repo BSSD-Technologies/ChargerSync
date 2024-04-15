@@ -233,13 +233,24 @@ export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
       set({ fullPeriodList: [] });
 
       // Iterate through periodList, duplicate each period for TR days
-      const duplicatedPeriods: Period[] = [];
-      for (const period of get().periodList) {
-        duplicatedPeriods.push({ ...period, uuid: uuidv4(), day: Day["TR"] });
+      const fullPeriodList: Period[] = [];
+      const periodList = get().periodList;
+      for (let i = 0; i < periodList.length; i++) {
+        const period = periodList[i];
+        // Duplicate the period for TR days
+        const duplicatedPeriod: Period = {
+          ...period,
+          uuid: uuidv4(),
+          day: Day["TR"],
+        };
+        // Insert the original period
+        fullPeriodList.push(period);
+        // Insert the duplicated period
+        fullPeriodList.push(duplicatedPeriod);
       }
 
-      // Set fullPeriodList to the duplicated periods AND original
-      set({ fullPeriodList: [...get().periodList, ...duplicatedPeriods] });
+      // Set fullPeriodList
+      set({ fullPeriodList });
 
       // Empty all period preferences
       useGlobalPreferenceListStore.getState().emptyPeriodPrefList();
