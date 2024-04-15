@@ -3,7 +3,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
-  Button,
   Chip,
   FilledInput,
   FormControl,
@@ -20,6 +19,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -273,8 +273,16 @@ function InstructorListAccordion() {
 }
 
 export default function PreferenceInput() {
+  /** Scroll to top functionality */
+  const executeScrollUp = () => {
+    if (typeof document !== "undefined") {
+      const section = document.querySelector("#preference-top");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   /** Scroll to continue functionality */
-  const executeScroll = () => {
+  const executeScrollDown = () => {
     if (typeof document !== "undefined") {
       const section = document.querySelector("#preference-continue");
       section?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -305,6 +313,21 @@ export default function PreferenceInput() {
       </Grid>
       <br />
       <InstructorListAccordion />
+      <div id="preference-continue"></div>
+      <IconButton
+        title={"Scroll to top"}
+        className="scroll-up"
+        onClick={executeScrollUp}
+      >
+        <KeyboardArrowUpRoundedIcon color={"info"} />
+      </IconButton>
+      <IconButton
+        title={"Scroll to bottom"}
+        className="scroll-down"
+        onClick={executeScrollDown}
+      >
+        <KeyboardArrowDownRoundedIcon color={"info"} />
+      </IconButton>
     </Box>
   );
 }

@@ -112,9 +112,17 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
     MuiIconButton: {
       styleOverrides: {
         root: ({ theme, ownerState }) => ({
-          ...(ownerState.className === "Scroll" && {
+          ...(ownerState.className === "scroll-down" && {
             position: "fixed",
             bottom: 0,
+            right: 0,
+            margin: "2%",
+            border: "1.5px solid",
+            borderColor: theme.palette.info.main,
+          }),
+          ...(ownerState.className === "scroll-up" && {
+            position: "fixed",
+            bottom: 50,
             right: 0,
             margin: "2%",
             border: "1.5px solid",
