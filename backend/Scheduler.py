@@ -527,6 +527,7 @@ class Scheduler:
                 sorted_availability = self.createSortedAvailability()
             
             # Instructor has free time - assign section to a period that is available to the instructor
+            # If we want less incompletes we do it here TODO
             self.assignPeriod(section, sorted_availability)
 
             # Assigning room
@@ -589,6 +590,7 @@ class Scheduler:
             self.updateRoomAvailability(section.period_id, available_rooms[0])
         else:
             self.updateCourseEnrollment(section.course_id)
+            # This will be an incomplete
 
     def generateSchedule(self):
         # MAIN LOOP
