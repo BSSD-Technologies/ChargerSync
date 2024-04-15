@@ -19,8 +19,9 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import { Course, defaultCourse } from "@/app/_types/Course";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -263,10 +264,20 @@ function CourseTableRow(props: { row: Course }) {
 export default function CourseInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
+  /** Scroll to top functionality */
+  const executeScrollUp = () => {
+    if (typeof document !== "undefined") {
+      const section = document.querySelector("#course-top");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   /** Scroll to continue functionality */
-  const executeScroll = () => {
-    const section = document.querySelector("#course-continue");
-    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const executeScrollDown = () => {
+    if (typeof document !== "undefined") {
+      const section = document.querySelector("#course-continue");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   /** Course list */
@@ -368,9 +379,16 @@ export default function CourseInput(props: {
         </Box>
       </TableContainer>
       <IconButton
+        title={"Scroll to top"}
+        className="scroll-up"
+        onClick={executeScrollUp}
+      >
+        <KeyboardArrowUpRoundedIcon color={"info"} />
+      </IconButton>
+      <IconButton
         title={"Scroll to bottom"}
-        className="Scroll"
-        onClick={executeScroll}
+        className="scroll-down"
+        onClick={executeScrollDown}
       >
         <KeyboardArrowDownRoundedIcon color={"info"} />
       </IconButton>

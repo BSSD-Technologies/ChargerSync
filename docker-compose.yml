@@ -1,15 +1,15 @@
 version: '3'
 services:
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    ports:
-      - "8080:3000"
-    volumes:
-      - ./frontend/src:/app/frontend/src
-    depends_on:
-      - backend
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.frontend
+  #   ports:
+  #     - "8080:3000"
+  #   volumes:
+  #     - ./frontend/src:/app/frontend/src
+  #   depends_on:
+  #     - backend
 
   backend:
     build:

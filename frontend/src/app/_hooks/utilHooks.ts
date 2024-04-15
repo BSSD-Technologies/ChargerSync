@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Day, Period } from "../_types/Period";
 import { v4 as uuidv4 } from "uuid";
 import { ExportSection, FormattedSection, Section } from "../_types/Section";
-import Papa from 'papaparse';
+import Papa from "papaparse";
 
 /**
  * Detect first render of a component
@@ -361,13 +361,13 @@ export function readSections(rawData: Section[]): FormattedSection[] {
 /** Parse raw section data into exportable section array */
 export function formatCSVSections(rawData: Section[]): ExportSection[] {
   return rawData.map((section) => ({
-    "Course":
+    Course:
       section.course.department +
       " " +
       section.course.course_num +
       "-" +
       section.section_id,
-    "Days":
+    Days:
       section.period.day === "No Period Assigned" ? "TBD" : section.period.day,
     "Start Time":
       section.period.start_time === "No Period Assigned"
@@ -377,8 +377,8 @@ export function formatCSVSections(rawData: Section[]): ExportSection[] {
       section.period.end_time === "No Period Assigned"
         ? "TBD"
         : convertTime12(section.period.end_time),
-    "Location": section.room.id,
-    "Instructor":
+    Location: section.room.id,
+    Instructor:
       section.instructor.fname === "TBD"
         ? "TBD"
         : section.instructor.fname + " " + section.instructor.lname,
@@ -390,16 +390,18 @@ export function formatCSVSections(rawData: Section[]): ExportSection[] {
  * headers and then prompt download of csv
  */
 export const downloadCsv = (data: Section[], filename: string) => {
-  const csvData = Papa.unparse(formatCSVSections(data));
-  const blob = new Blob([csvData], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  window.URL.revokeObjectURL(url);
-  document.body.removeChild(a);
+  if (typeof document !== "undefined" && typeof window !== "undefined") {
+    const csvData = Papa.unparse(formatCSVSections(data));
+    const blob = new Blob([csvData], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
 };
 
 /** JSON to CSV -> INPUTS
@@ -407,14 +409,16 @@ export const downloadCsv = (data: Section[], filename: string) => {
  * headers and then prompt download of csv
  */
 export const downloadInputCsv = (data: any[], filename: string) => {
-  const csvData = Papa.unparse(data);
-  const blob = new Blob([csvData], { type: 'text/csv' });
-  const url = window.URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  window.URL.revokeObjectURL(url);
-  document.body.removeChild(a);
+  if (typeof document !== "undefined" && typeof window !== "undefined") {
+    const csvData = Papa.unparse(data);
+    const blob = new Blob([csvData], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
 };

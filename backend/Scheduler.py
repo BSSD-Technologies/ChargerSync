@@ -418,6 +418,7 @@ class Scheduler:
     def checkCoursesFulfillment(self):
         for course in self.courses_and_enrollment:
             fulfilled = course[2]
+            print(course[0])
             if fulfilled == 0:
                 return False
         return True

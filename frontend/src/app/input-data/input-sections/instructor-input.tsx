@@ -19,8 +19,9 @@ import {
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import HighlightOffRoundedIcon from '@mui/icons-material/HighlightOffRounded';
+import HighlightOffRoundedIcon from "@mui/icons-material/HighlightOffRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Instructor, defaultInstructor } from "@/app/_types/Instructor";
@@ -110,8 +111,7 @@ function InstructorTableRow(props: { row: Instructor }) {
     if (isFirstRender) {
       validateFname(fname);
       validateLname(lname);
-      if (priority)
-        validatePriority(priority?.toString());
+      if (priority) validatePriority(priority?.toString());
     }
   }, [
     fname,
@@ -192,10 +192,20 @@ function InstructorTableRow(props: { row: Instructor }) {
 export default function InstructorInput(props: {
   handleErrors: (value: boolean) => void;
 }) {
+  /** Scroll to top functionality */
+  const executeScrollUp = () => {
+    if (typeof document !== "undefined") {
+      const section = document.querySelector("#instructor-top");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   /** Scroll to continue functionality */
-  const executeScroll = () => {
-    const section = document.querySelector("#instructor-continue");
-    section?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const executeScrollDown = () => {
+    if (typeof document !== "undefined") {
+      const section = document.querySelector("#instructor-continue");
+      section?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   /** Instructor list */
@@ -301,9 +311,16 @@ export default function InstructorInput(props: {
         </Box>
       </TableContainer>
       <IconButton
+        title={"Scroll to top"}
+        className="scroll-up"
+        onClick={executeScrollUp}
+      >
+        <KeyboardArrowUpRoundedIcon color={"info"} />
+      </IconButton>
+      <IconButton
         title={"Scroll to bottom"}
-        className="Scroll"
-        onClick={executeScroll}
+        className="scroll-down"
+        onClick={executeScrollDown}
       >
         <KeyboardArrowDownRoundedIcon color={"info"} />
       </IconButton>
