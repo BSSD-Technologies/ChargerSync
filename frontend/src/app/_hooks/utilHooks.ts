@@ -5,6 +5,7 @@ import { ExportSection, FormattedSection, Section } from "../_types/Section";
 import Papa from "papaparse";
 import { Course } from "../_types/Course";
 import { Instructor } from "../_types/Instructor";
+import { Room } from "../_types/Room";
 
 /**
  * Detect first render of a component
@@ -27,10 +28,9 @@ interface UseValidateString {
   hasError: boolean;
   /** Helper text message for error */
   errorText: string;
-  /** Check if a string is valid or not */
-  validateString: (value: string) => void;
   /** Set the value for hasError manually */
   setError: (value: boolean) => void;
+  /** Check for valid course name */
   validateCourse: (
     value: string,
     uuid: string,
@@ -38,6 +38,9 @@ interface UseValidateString {
     course_num: string,
     courseList: Course[]
   ) => void;
+  /** Check for valid room name */
+  validateRoom: (value: string, uuid: string, roomList: Room[]) => void;
+  /** Check for valid instructor name */
   validateInstructor: (
     value: string,
     uuid: string,
@@ -58,16 +61,6 @@ export function useValidateString(hasErrorDefault = false): UseValidateString {
 
   const setError = useCallback((value: boolean) => {
     setHasError(value);
-  }, []);
-
-  const validateString = useCallback((value: string) => {
-    if (!value || value.length <= 0) {
-      setHasError(true);
-      setErrorText("Please enter a value.");
-    } else {
-      setHasError(false);
-      setErrorText(" ");
-    }
   }, []);
 
   /** Validate string for courses */
@@ -95,10 +88,38 @@ export function useValidateString(hasErrorDefault = false): UseValidateString {
           ) {
             found = true;
             setHasError(true);
-            setErrorText("This course already exists. Please delete one.");
+            setErrorText("This course already exists.");
           }
         });
         // No matching course name found, so no errors
+        if (!found) {
+          setHasError(false);
+          setErrorText(" ");
+        }
+      }
+    },
+    []
+  );
+
+  /** Validate string for room */
+  const validateRoom = useCallback(
+    (value: string, uuid: string, roomList: Room[]) => {
+      if (!value || value.length <= 0) {
+        setHasError(true);
+        setErrorText("Please enter a value.");
+      } else {
+        // Keep track of duplicate room id
+        let found = false;
+        roomList.map((room) => {
+          // If matching room id
+          if (room.uuid != uuid && room.room_id == value) {
+            found = true;
+            setHasError(true);
+            setErrorText("This room already exists.");
+            return;
+          }
+        });
+        // No matching room name found, so no errors
         if (!found) {
           setHasError(false);
           setErrorText(" ");
@@ -122,7 +143,7 @@ export function useValidateString(hasErrorDefault = false): UseValidateString {
         setHasError(true);
         setErrorText("Please enter a value.");
       } else {
-        // Keep track of duplicate course name
+        // Keep track of duplicate instructor name
         let found = false;
         instrutorList.map((instructor) => {
           // If matching instructor name, combined
@@ -133,7 +154,7 @@ export function useValidateString(hasErrorDefault = false): UseValidateString {
           ) {
             found = true;
             setHasError(true);
-            setErrorText("This instructor already exists. Please delete one.");
+            setErrorText("This instructor already exists.");
             return;
           }
         });
@@ -150,7 +171,7 @@ export function useValidateString(hasErrorDefault = false): UseValidateString {
   return {
     hasError,
     errorText,
-    validateString,
+    validateRoom,
     setError,
     validateCourse,
     validateInstructor,
