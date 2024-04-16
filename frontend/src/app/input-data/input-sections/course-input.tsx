@@ -54,15 +54,6 @@ function CourseTableRow(props: { row: Course }) {
     useGlobalCourseListStore((state) => state.courseList),
   ];
 
-  /** Handle duplicate courses in courseList */
-  const handleDuplicates = () => {
-    courseList.map((course) => {
-      // If matching course name, combined
-      if (course.department == department && course.course_num == courseNum) {
-      }
-    });
-  };
-
   /** Handle max enrollment & preliminary enrollment dependency validation */
   const handleMaxEnrollment = (value: string) => {
     validateMaxEnroll(value);
@@ -87,14 +78,16 @@ function CourseTableRow(props: { row: Course }) {
   const {
     hasError: deptError,
     errorText: deptErrorText,
-    validateString: validateDept,
+    validateCourse: validateDept,
+    setError: setDeptError,
   } = useValidateString();
 
   /** Validation and error handling for course number */
   const {
     hasError: courseNumError,
     errorText: courseNumErrorText,
-    validateString: validateCourseNum,
+    validateCourse: validateCourseNum,
+    setError: setCourseNumError,
   } = useValidateString();
 
   /** Validation and error handling for max enrollment */
@@ -102,6 +95,7 @@ function CourseTableRow(props: { row: Course }) {
     hasError: maxEnrollError,
     errorText: maxEnrollErrorText,
     validateInt: validateMaxEnroll,
+    setError: setMaxEnrollError,
   } = useValidateInt();
 
   /** Validation and error handling for prelim enrollment */
@@ -163,17 +157,19 @@ function CourseTableRow(props: { row: Course }) {
   /** First render validation */
   useEffect(() => {
     if (isFirstRender) {
-      validateDept(department);
-      validateCourseNum(courseNum);
+      validateDept(department, uuid, department, courseNum, courseList);
+      validateCourseNum(courseNum, uuid, department, courseNum, courseList);
       validateMaxEnroll(maxEnrollment.toString());
       validatePrelimEnroll(prelimEnrollment.toString(), maxEnrollment);
     }
   }, [
+    courseList,
     courseNum,
     department,
     isFirstRender,
     maxEnrollment,
     prelimEnrollment,
+    uuid,
     validateCourseNum,
     validateDept,
     validateMaxEnroll,
@@ -191,8 +187,21 @@ function CourseTableRow(props: { row: Course }) {
           type="text"
           value={department}
           onChange={(e) => {
-            validateDept(e.target.value);
             setDepartment(e.target.value);
+            validateDept(
+              e.target.value,
+              uuid,
+              e.target.value,
+              courseNum,
+              courseList
+            );
+            validateCourseNum(
+              courseNum,
+              uuid,
+              e.target.value,
+              courseNum,
+              courseList
+            );
           }}
           error={deptError}
           helperText={deptErrorText}
@@ -207,8 +216,21 @@ function CourseTableRow(props: { row: Course }) {
           type="text"
           value={courseNum}
           onChange={(e) => {
-            validateCourseNum(e.target.value);
             setCourseNum(e.target.value);
+            validateCourseNum(
+              e.target.value,
+              uuid,
+              department,
+              e.target.value,
+              courseList
+            );
+            validateDept(
+              department,
+              uuid,
+              department,
+              e.target.value,
+              courseList
+            );
           }}
           error={courseNumError}
           helperText={courseNumErrorText}

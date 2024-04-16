@@ -3,6 +3,8 @@ import { Day, Period } from "../_types/Period";
 import { v4 as uuidv4 } from "uuid";
 import { ExportSection, FormattedSection, Section } from "../_types/Section";
 import Papa from "papaparse";
+import { Course } from "../_types/Course";
+import { Instructor } from "../_types/Instructor";
 
 /**
  * Detect first render of a component
@@ -29,6 +31,20 @@ interface UseValidateString {
   validateString: (value: string) => void;
   /** Set the value for hasError manually */
   setError: (value: boolean) => void;
+  validateCourse: (
+    value: string,
+    uuid: string,
+    department: string,
+    course_num: string,
+    courseList: Course[]
+  ) => void;
+  validateInstructor: (
+    value: string,
+    uuid: string,
+    fname: string,
+    lname: string,
+    instrutorList: Instructor[]
+  ) => void;
 }
 
 /**
@@ -54,7 +70,87 @@ export function useValidateString(hasErrorDefault = false): UseValidateString {
     }
   }, []);
 
-  return { hasError, errorText, validateString, setError };
+  /** Validate string for courses */
+  const validateCourse = useCallback(
+    (
+      value: string,
+      uuid: string,
+      department: string,
+      course_num: string,
+      courseList: Course[]
+    ) => {
+      // General string validation
+      if (!value || value.length <= 0) {
+        setHasError(true);
+        setErrorText("Please enter a value.");
+      } else {
+        // Keep track of duplicate course name
+        let found = false;
+        courseList.map((course) => {
+          // If matching course name, combined
+          if (
+            course.uuid != uuid &&
+            course.department == department &&
+            course.course_num == course_num
+          ) {
+            found = true;
+            setHasError(true);
+            setErrorText("This course already exists. Please delete one.");
+          }
+        });
+        // No matching course name found, so no errors
+        if (!found) {
+          setHasError(false);
+          setErrorText(" ");
+        }
+      }
+    },
+    []
+  );
+
+  /** Validate string for instructors */
+  const validateInstructor = useCallback(
+    (
+      value: string,
+      uuid: string,
+      fname: string,
+      lname: string,
+      instrutorList: Instructor[]
+    ) => {
+      // General string validation
+      if (!value || value.length <= 0) {
+        setHasError(true);
+        setErrorText("Please enter a value.");
+      } else {
+        instrutorList.map((instructor) => {
+          // If matching instructor name, combined
+          if (
+            instructor.uuid != uuid &&
+            instructor.fname == fname &&
+            instructor.lname == lname
+          ) {
+            setHasError(true);
+            setErrorText("This instructor already exists. Please delete one.");
+            return;
+          }
+        });
+        console.log("Oops");
+        // No matching instructor name found, so no errors
+        setHasError(false);
+        setErrorText(" ");
+      }
+    },
+    []
+  );
+
+  return {
+    hasError,
+    errorText,
+    validateString,
+    setError,
+    validateCourse,
+    validateInstructor,
+  };
 }
 
 interface UseValidateInt {
