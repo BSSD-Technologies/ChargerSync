@@ -122,6 +122,8 @@ export function useValidateString(hasErrorDefault = false): UseValidateString {
         setHasError(true);
         setErrorText("Please enter a value.");
       } else {
+        // Keep track of duplicate course name
+        let found = false;
         instrutorList.map((instructor) => {
           // If matching instructor name, combined
           if (
@@ -129,15 +131,17 @@ export function useValidateString(hasErrorDefault = false): UseValidateString {
             instructor.fname == fname &&
             instructor.lname == lname
           ) {
+            found = true;
             setHasError(true);
             setErrorText("This instructor already exists. Please delete one.");
             return;
           }
         });
-        console.log("Oops");
         // No matching instructor name found, so no errors
-        setHasError(false);
-        setErrorText(" ");
+        if (!found) {
+          setHasError(false);
+          setErrorText(" ");
+        }
       }
     },
     []
