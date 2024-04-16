@@ -42,10 +42,16 @@ function InstructorTableRow(props: { row: Instructor }) {
   const isFirstRender = useFirstRender(); // Used for first render functions
 
   /** States for updating instructor list for current row, or deleting from list */
-  const [updateInstructorList, deleteInstructorList, hasErrors] = [
+  const [
+    updateInstructorList,
+    deleteInstructorList,
+    hasErrors,
+    instructorList,
+  ] = [
     useGlobalInstructorListStore((state) => state.updateInstructorList),
     useGlobalInstructorListStore((state) => state.deleteInstructorList),
     useGlobalInstructorListStore((state) => state.hasErrors),
+    useGlobalInstructorListStore((state) => state.instructorList),
   ];
 
   /** Handle row deletion and error handling */
@@ -60,14 +66,14 @@ function InstructorTableRow(props: { row: Instructor }) {
   const {
     hasError: fnameError,
     errorText: fnameErrorText,
-    validateString: validateFname,
+    validateInstructor: validateFname,
   } = useValidateString();
 
   /** Validation and error handling for last name */
   const {
     hasError: lnameError,
     errorText: lnameErrorText,
-    validateString: validateLname,
+    validateInstructor: validateLname,
   } = useValidateString();
 
   /** Validation and error handling for priority */
@@ -109,15 +115,17 @@ function InstructorTableRow(props: { row: Instructor }) {
   /** First render validation */
   useEffect(() => {
     if (isFirstRender) {
-      validateFname(fname);
-      validateLname(lname);
+      validateFname(fname, uuid, fname, lname, instructorList);
+      validateLname(lname, uuid, fname, lname, instructorList);
       if (priority) validatePriority(priority?.toString());
     }
   }, [
     fname,
+    instructorList,
     isFirstRender,
     lname,
     priority,
+    uuid,
     validateFname,
     validateLname,
     validatePriority,
@@ -134,8 +142,15 @@ function InstructorTableRow(props: { row: Instructor }) {
           type="text"
           value={fname}
           onChange={(e) => {
-            validateFname(e.target.value);
             setFname(e.target.value);
+            validateFname(
+              e.target.value,
+              uuid,
+              e.target.value,
+              lname,
+              instructorList
+            );
+            validateLname(lname, uuid, e.target.value, lname, instructorList);
           }}
           error={fnameError}
           helperText={fnameErrorText}
@@ -150,8 +165,15 @@ function InstructorTableRow(props: { row: Instructor }) {
           type="text"
           value={lname}
           onChange={(e) => {
-            validateLname(e.target.value);
             setLname(e.target.value);
+            validateLname(
+              e.target.value,
+              uuid,
+              fname,
+              e.target.value,
+              instructorList
+            );
+            validateFname(fname, uuid, fname, e.target.value, instructorList);
           }}
           error={lnameError}
           helperText={lnameErrorText}

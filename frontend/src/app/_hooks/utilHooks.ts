@@ -3,6 +3,9 @@ import { Day, Period } from "../_types/Period";
 import { v4 as uuidv4 } from "uuid";
 import { ExportSection, FormattedSection, Section } from "../_types/Section";
 import Papa from "papaparse";
+import { Course } from "../_types/Course";
+import { Instructor } from "../_types/Instructor";
+import { Room } from "../_types/Room";
 
 /**
  * Detect first render of a component
@@ -25,8 +28,26 @@ interface UseValidateString {
   hasError: boolean;
   /** Helper text message for error */
   errorText: string;
-  /** Check if a string is valid or not */
-  validateString: (value: string) => void;
+  /** Set the value for hasError manually */
+  setError: (value: boolean) => void;
+  /** Check for valid course name */
+  validateCourse: (
+    value: string,
+    uuid: string,
+    department: string,
+    course_num: string,
+    courseList: Course[]
+  ) => void;
+  /** Check for valid room name */
+  validateRoom: (value: string, uuid: string, roomList: Room[]) => void;
+  /** Check for valid instructor name */
+  validateInstructor: (
+    value: string,
+    uuid: string,
+    fname: string,
+    lname: string,
+    instrutorList: Instructor[]
+  ) => void;
 }
 
 /**
@@ -38,17 +59,123 @@ export function useValidateString(hasErrorDefault = false): UseValidateString {
   const [hasError, setHasError] = useState(hasErrorDefault);
   const [errorText, setErrorText] = useState(" ");
 
-  const validateString = useCallback((value: string) => {
-    if (!value || value.length <= 0) {
-      setHasError(true);
-      setErrorText("Please enter a value.");
-    } else {
-      setHasError(false);
-      setErrorText(" ");
-    }
+  const setError = useCallback((value: boolean) => {
+    setHasError(value);
   }, []);
 
-  return { hasError, errorText, validateString };
+  /** Validate string for courses */
+  const validateCourse = useCallback(
+    (
+      value: string,
+      uuid: string,
+      department: string,
+      course_num: string,
+      courseList: Course[]
+    ) => {
+      // General string validation
+      if (!value || value.length <= 0) {
+        setHasError(true);
+        setErrorText("Please enter a value.");
+      } else {
+        // Keep track of duplicate course name
+        let found = false;
+        courseList.map((course) => {
+          // If matching course name, combined
+          if (
+            course.uuid != uuid &&
+            course.department == department &&
+            course.course_num == course_num
+          ) {
+            found = true;
+            setHasError(true);
+            setErrorText("This course already exists.");
+          }
+        });
+        // No matching course name found, so no errors
+        if (!found) {
+          setHasError(false);
+          setErrorText(" ");
+        }
+      }
+    },
+    []
+  );
+
+  /** Validate string for room */
+  const validateRoom = useCallback(
+    (value: string, uuid: string, roomList: Room[]) => {
+      if (!value || value.length <= 0) {
+        setHasError(true);
+        setErrorText("Please enter a value.");
+      } else {
+        // Keep track of duplicate room id
+        let found = false;
+        roomList.map((room) => {
+          // If matching room id
+          if (room.uuid != uuid && room.room_id == value) {
+            found = true;
+            setHasError(true);
+            setErrorText("This room already exists.");
+            return;
+          }
+        });
+        // No matching room name found, so no errors
+        if (!found) {
+          setHasError(false);
+          setErrorText(" ");
+        }
+      }
+    },
+    []
+  );
+
+  /** Validate string for instructors */
+  const validateInstructor = useCallback(
+    (
+      value: string,
+      uuid: string,
+      fname: string,
+      lname: string,
+      instrutorList: Instructor[]
+    ) => {
+      // General string validation
+      if (!value || value.length <= 0) {
+        setHasError(true);
+        setErrorText("Please enter a value.");
+      } else {
+        // Keep track of duplicate instructor name
+        let found = false;
+        instrutorList.map((instructor) => {
+          // If matching instructor name, combined
+          if (
+            instructor.uuid != uuid &&
+            instructor.fname == fname &&
+            instructor.lname == lname
+          ) {
+            found = true;
+            setHasError(true);
+            setErrorText("This instructor already exists.");
+            return;
+          }
+        });
+        // No matching instructor name found, so no errors
+        if (!found) {
+          setHasError(false);
+          setErrorText(" ");
+        }
+      }
+    },
+    []
+  );
+
+  return {
+    hasError,
+    errorText,
+    validateRoom,
+    setError,
+    validateCourse,
+    validateInstructor,
+  };
 }
 
 interface UseValidateInt {

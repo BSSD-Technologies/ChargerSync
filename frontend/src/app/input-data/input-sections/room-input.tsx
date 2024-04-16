@@ -41,10 +41,11 @@ function RoomTableRow(props: { row: Room }) {
   const isFirstRender = useFirstRender();
 
   /** States for updating room list for current row, or deleting from list */
-  const [updateRoomList, deleteRoomList, hasErrors] = [
+  const [updateRoomList, deleteRoomList, hasErrors, roomList] = [
     useGlobalRoomListStore((state) => state.updateRoomList),
     useGlobalRoomListStore((state) => state.deleteRoomList),
     useGlobalRoomListStore((state) => state.hasErrors),
+    useGlobalRoomListStore((state) => state.roomList),
   ];
 
   /** Handle row deletion and error handling */
@@ -58,7 +59,7 @@ function RoomTableRow(props: { row: Room }) {
   const {
     hasError: roomIdError,
     errorText: roomIdErrorText,
-    validateString: validateRoomId,
+    validateRoom: validateRoomId,
   } = useValidateString();
 
   /** Validation and error handling for max capacity */
@@ -92,10 +93,18 @@ function RoomTableRow(props: { row: Room }) {
   /** First render validation */
   useEffect(() => {
     if (isFirstRender) {
-      validateRoomId(roomId);
+      validateRoomId(roomId, uuid, roomList);
       validateMaxCapacity(maxCapacity.toString());
     }
-  }, [isFirstRender, maxCapacity, roomId, validateMaxCapacity, validateRoomId]);
+  }, [
+    isFirstRender,
+    maxCapacity,
+    roomId,
+    roomList,
+    uuid,
+    validateMaxCapacity,
+    validateRoomId,
+  ]);
 
   return (
     <TableRow key={uuid}>
@@ -108,7 +117,7 @@ function RoomTableRow(props: { row: Room }) {
           type="text"
           value={roomId}
           onChange={(e) => {
-            validateRoomId(e.target.value);
+            validateRoomId(e.target.value, uuid, roomList);
             setRoomId(e.target.value);
           }}
           error={roomIdError}
