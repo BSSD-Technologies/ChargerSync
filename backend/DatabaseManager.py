@@ -41,7 +41,10 @@ def loadData(json_data):
     # PARSE DATA AND PUT INTO DATABASE
     # Add Courses
     for course in json_data.get("courses"):
-        new_course = Course(id=course.get("uuid"), department=course.get("department"), num=course.get("course_num"), max_enrollment=course.get("max_enrollment"))
+        department=course.get("department")
+        num=course.get("course_num")
+        new_name = department + " " + num
+        new_course = Course(id=course.get("uuid"), department=course.get("department"), num=course.get("course_num"), name=new_name, max_enrollment=course.get("max_enrollment"))
         db.session.add(new_course)
     db.session.commit()
 

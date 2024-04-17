@@ -30,8 +30,8 @@ class Course(db.Model):
         return new_section
     
     def newSectionFromId(course_id):
-        new_section = Course.query.filter_by(id=course_id).first()
-        new_section = new_section.newSection()
+        course = Course.query.filter_by(id=course_id).first()
+        new_section = course.newSection()
         db.session.add(new_section)
         db.session.commit()
         return new_section
