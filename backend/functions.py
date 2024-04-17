@@ -22,8 +22,6 @@ def csv_to_list(csv_file):
 
     return list_data
 
-import pandas as pd
-
 def csv_to_json(csv_file, findHeader):
     """
     Convert CSV data to a list of lists.
@@ -42,10 +40,6 @@ def csv_to_json(csv_file, findHeader):
 
 
     # List of valid header combinations to check if the CSV file that was uploaded was a valid file
-    # courseHeaders = ["department","course_number","max_enrollment","preliminary_enrollment"]
-    # instructorHeaders = ["first_name","last_name","priority"]
-    # periodHeaders = ["room_id","max_capacity"]
-    # roomHeaders = ["start_time","end_time"]
 
     validHeaders = {
         "course": ["department","course_number","max_enrollment","preliminary_enrollment"],
@@ -56,18 +50,12 @@ def csv_to_json(csv_file, findHeader):
 
     if (list(df.columns) == validHeaders[findHeader]):
 
-    # if ((list(df.columns) == courseHeaders) or (list(df.columns) == instructorHeaders) or (list(df.columns) == periodHeaders) or (list(df.columns) == roomHeaders)):
-        
-        # Convert DataFrame to dictionary of lists
         json_data = df.to_json(orient='records')
-
         return json_data
     else:
-        # print({"Invalid file provided"})
         return None
 
 def print_JSON(json_data):
-    # Used to make JSON print pretty
     x = json.loads(json_data)
     print(json.dumps(x, indent=2))
 
