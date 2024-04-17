@@ -303,13 +303,6 @@ export default function PreferenceInput() {
             A short description about what type of data goes here.
           </Typography>
         </Stack>
-        <OutlinedInput
-          type="file"
-          startAdornment={<CloudUploadIcon sx={{ marginRight: "10px" }} />}
-          sx={{
-            width: "20%",
-          }}
-        />
       </Grid>
       <br />
       <InstructorListAccordion />

@@ -233,14 +233,16 @@ export default function PeriodInput(props: {
             A short description about what type of data goes here.
           </Typography>
         </Stack>
-        <OutlinedInput
-          type="file"
-          startAdornment={<CloudUploadIcon sx={{ marginRight: "10px" }} />}
-          sx={{
-            width: "20%",
-          }}
-          onChange={handleUpload}
-        />
+        <div className="input-component">
+          <CloudUploadIcon sx={{ marginRight: "10px" }} />
+          <input
+            type="file"
+            onChange={handleUpload}
+            onClick={(event) => {
+              event.currentTarget.value = "";
+            }}
+          />
+        </div>
       </Grid>
       <br />
       <TableContainer>
