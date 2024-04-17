@@ -1,4 +1,10 @@
 #!/bin/bash
+trap cleanup SIGINT
+
+cleanup(){
+    fuser -k 3000/tcp
+    exit
+}
 
 # Function to check if Docker is installed
 check_docker() {
@@ -10,7 +16,7 @@ check_docker() {
 
 # Function to check if Docker Compose is installed
 check_docker_compose() {
-    if ! command -v docker-compose &> /dev/null; then
+    if ! command -v docker compose &> /dev/null; then
         echo "Docker Compose is not installed. Please install Docker Compose to continue."
         exit 1
     fi
@@ -28,7 +34,7 @@ check_npm() {
 build_docker_compose_backend() {
     echo "Building Docker Compose services in the backend directory..."
     cd backend || exit
-    docker-compose up --build &
+    docker compose up --build &
     cd ..
 }
 
