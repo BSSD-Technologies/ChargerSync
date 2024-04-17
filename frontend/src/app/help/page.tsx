@@ -1,45 +1,30 @@
+"use client";
+
 import { Container, Typography } from "@mui/material";
+import Markdown from 'markdown-to-jsx'
+import React, { useState, useEffect } from 'react';
 
 export default function HelpManual() {
+
+  const file_name = 'README.md';
+  const [post, setPost] = useState('');
+
+  useEffect(() => {
+      import(`/Users/benmorgan/Documents/Code/ChargerSync/frontend/src/markdown/${file_name}`)
+          .then(res => {
+              fetch(res.default)
+                  .then(res => res.text())
+                  .then(res => setPost(res))
+                  .catch(err => console.log(err));
+          })
+          .catch(err => console.log(err));
+  });
+
   return (
-    <Container
-      sx={{
-        marginTop: "2%",
-        paddingBottom: "10%",
-      }}
-    >
-      <Typography variant="h3">How to use this software</Typography>
-      <Typography variant="body1">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </Typography>
-      <br />
-      <Typography variant="h3">How to do this</Typography>
-      <Typography variant="body1">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </Typography>
-      <br />
-      <Typography variant="h3">Another instruction</Typography>
-      <Typography variant="body1">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum.
-      </Typography>
-    </Container>
+    <div className="container">
+      <Markdown>
+          {post}
+      </Markdown>
+    </div>
   );
 }
