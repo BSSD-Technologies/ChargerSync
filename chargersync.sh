@@ -2,7 +2,7 @@
 trap cleanup SIGINT
 
 cleanup(){
-    fuser -k 3000/tcp
+    lsof -ti tcp:3000 | xargs kill -9
     exit
 }
 
