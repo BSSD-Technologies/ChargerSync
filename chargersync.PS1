@@ -14,39 +14,65 @@ $cleanupScript = {
 # Register the cleanup script block as an event handler for the Ctrl+C event
 $null = Register-ObjectEvent -InputObject ([console]) -EventName CancelKeyPress -Action $cleanupScript
 
-Write-Host "Perofrming background loading actions..."
+$asciiArt = @"
 
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@...................@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@......@@..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@........@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@..@@@@@@@@..@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@........@@.........@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@..@@@@@@@@@........@@@.......@@@.....@@........@@.......@@@.....@@........@@.........@@@..@@@@...@@........@@@......@@
+@..@@@@@@@@@..@@@@@..@@@@@@@@..@@..@@@@..@@@@@.@@@.@@@@@..@@..@@@@@........@@.........@@@...@@@..@@@..@@@@..@@..@@@@@@@
+@..@@@@@@@@@..@@@@@..@@..@@@@..@@..@@@@@.......@@.........@@..@@@@@@@@@@@@@@@.........@@@@..@@..@@@@..@@@@..@@..@@@@@@@
+@@...@@@@.@@..@@@@@..@...@@@...@@..@@@@..@@@@@@@@@..@@@@@@@@..@@@@@...................@@@@@....@@@@@..@@@@..@@...@@@@@@
+@@@@@....@@@@@@@@@@@@@@@@..@@@@@@@@@@@@@@.......@@@@@...@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@..@@@@@@@@@@@@@@@@@@@...@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@.......@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@....@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+"@
+
+function AsciiArt {
+    param(
+        [string]$Art
+    )
+
+    # Print the ASCII art
+    Write-Output $Art
+}
+
+AsciiArt -Art $asciiArt
+
+Write-Host "Getting ChargerSync ready..."
 $npmInstallLogFile = "NodeJS_install_logs.txt"
 $npmDevLogFile = "NodeJS_dev_logs.txt"
 $dockerLogFile = "Docker_exec_logs.txt"
 
-cd ./frontend
+Set-Location ./frontend
 $npmJob = Start-Job -ScriptBlock {
     param($workingDirectory)
     Set-Location $workingDirectory
     npm install > $using:npmInstallLogFile 
     npm run dev > $using:npmDevLogFile
 } -ArgumentList (Get-Location)
-cd ..
+Set-Location ..
 
 $dockerJob = Start-Job -ScriptBlock {
     param($workingDirectory)
     Set-Location $workingDirectory
     net start com.docker.service
+    #Start-Process -FilePath "C:\Program Files\Docker\Docker\DockerCli.exe" -NoNewWindow
+    #If there is an issue with docker loading, use below line
+    #Start-Process -FilePath  "C:\Program Files\Docker\Docker\Docker Desktop.exe"-NoNewWindow
     docker-compose up --build > $using:dockerLogFile
 } -ArgumentList (Get-Location)
 
-
-$openLocalhost = {
-    Start-Process "http://localhost:3000"
-}
 
 function Show-LoadingBar {
     param(
         [int]$TotalSteps
     )
 
-    Write-Host "Progress: "
     for ($i = 1; $i -le $TotalSteps; $i++) {
         # Calculate the percentage completion
         $percentage = [math]::Round(($i / $TotalSteps) * 100)
@@ -59,8 +85,8 @@ function Show-LoadingBar {
         $barLength = [math]::Round(($progressWidth * $i) / $TotalSteps)
         $bar = "-" * $barLength
         $emptySpace = " " * ($progressWidth - $barLength)
-        Write-Host -NoNewline "`rProgress: [$bar$emptySpace] $percentage%" -ForegroundColor Green
-
+        Write-Host -NoNewline "`rProgress: [$bar$emptySpace] $percentage%" -ForegroundColor DarkBlue
+        #Write-Host -NoNewline "`rProgress: [$bar$emptySpace] $percentage%" -ForegroundColor DarkBlue -BackgroundColor Gray
         # Wait for a short duration (adjust as needed)
         Start-Sleep -Milliseconds 125
     }
@@ -74,7 +100,7 @@ Show-LoadingBar -TotalSteps $TotalSteps
 
 
 # Start the job to open localhost after npm and Docker are ready
-$localHostJob = Start-Job -ScriptBlock $openLocalhost
+Start-Process "http://localhost:3000"
 
 # Wait for npm and Docker jobs to complete
 $npmJob | Wait-Job
