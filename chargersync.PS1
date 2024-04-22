@@ -46,7 +46,7 @@ AsciiArt -Art $asciiArt
 Write-Host "Getting ChargerSync ready..." -ForegroundColor DarkBlue
 $npmInstallLogFile = "NodeJS_install_logs.txt"
 $npmDevLogFile = "NodeJS_dev_logs.txt"
-$dockerLogFile = "Docker_exec_logs.txt"
+# $dockerLogFile = "Docker_exec_logs.txt"
 
 Set-Location ./frontend
 $npmJob = Start-Job -ScriptBlock {
@@ -57,59 +57,61 @@ $npmJob = Start-Job -ScriptBlock {
 } -ArgumentList (Get-Location)
 Set-Location ..
 
-
-$dockerService = Get-Service -Name "com.docker.service"
+# Define paths and service name
 $dockerCLI = "C:\Program Files\Docker\Docker\DockerCli.exe"
-$dockerDesktop = "C:\Program Files\Docker\Docker\DockerCli.exe"
+$dockerDesktop = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+$dockerServiceName = "com.docker.service"
+$dockerLogFile = "dockerlogfile.txt"  # Specify the path to your log file
 
-$dockerJob = Start-Job -ScriptBlock {
-    param($workingDirectory)
-    Set-Location $workingDirectory
+# Check if Docker service exists
+$dockerService = Get-Service -Name $dockerServiceName
+if ($dockerService -eq $null) {
+    Write-Host "Docker service '$dockerServiceName' not found."
+    exit 1
+}
 
-    # Start Docker service
+# Start Docker service if it's not running
+if ($dockerService.Status -ne "Running") {
     try {
-        Start-Service -Name $dockerService -ErrorAction Stop
+        Start-Service -Name $dockerServiceName -ErrorAction Stop
     }
     catch {
-        Write-Host "Error starting Docker service: $_" > $using:dockerLogFile
+        Write-Host "Error starting Docker service: $_"
         exit 1
     }
+}
 
+# Start Docker CLI
+try {
+    Start-Process -FilePath $dockerCLI -NoNewWindow -Wait
+}
+catch {
+    Write-Host "Error starting Docker CLI: $_"
+    exit 1
+}
 
-    try {
-        Start-Process -FilePath $dockerPath -NoNewWindow
-    }
-    catch {
-        Write-Host "Error starting DockerCLI: $_" > $using:dockerLogFile
-        exit 1
-    }
+# Start Docker Desktop
+try {
+    Start-Process -FilePath $dockerDesktop -NoNewWindow -Wait
+}
+catch {
+    Write-Host "Error starting Docker Desktop: $_"
+    exit 1
+}
 
-    
-    try {
-        Start-Process -FilePath $dockerDesktop -NoNewWindow
-    }
-    catch {
-        Write-Host "Error starting Docker Desktop $_" > $using:dockerLogFile
-        exit 1
-    }
+# Change directory to where your docker-compose.yml file resides
+$composeDirectory = Join-Path -Path $PSScriptRoot -ChildPath "ChargerSync"
+Set-Location $composeDirectory
 
+# Run docker-compose up command to build and start services defined in docker-compose.yml
+try {
+    docker-compose up --build | Out-File -FilePath $dockerLogFile -Append
+}
+catch {
+    Write-Host "Error running docker-compose: $_"
+    exit 1
+}
 
-    if ($dockerService -eq "Running"){
-        try {
-            docker-compose up --build > $using:dockerLogFile
-            break  # Exit the loop after successful execution
-        }
-        catch {
-            Write-Host "Error running docker-compose: $_" > $using:dockerLogFile
-            exit 1
-        }
-    } else {
-        Write-Host "Docker service is not running"
-    }
-
-
-
-} -ArgumentList (Get-Location)
 
 
 function Show-LoadingBar {
