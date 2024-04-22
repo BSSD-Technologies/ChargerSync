@@ -2,7 +2,7 @@ from flask import Flask
 from extensions import db
 from unitTestFramework import buildDatabase, buildApp
 from Scheduler import Scheduler
-from models.Course import Section, Course
+from models.Course import Section
 from models.Instructor import Instructor
 from sqlalchemy import or_, and_
 '''
@@ -94,41 +94,23 @@ def test_updateInstructorAvailability_instructor_does_not_exist():
         # Check if the instructor was not in the availability list to begin with
         assert (4, []) not in test.instructor_availability
 
-def test_updateRoomAvailability_nominal_case():
+def test_updateRoomAvailability_time_available():
     app = buildApp()
     with app.app_context():
         buildDatabase(db)        
         test = Scheduler()
-        test.room_availability = [(1,[1,2,3]),(2,[2,3,4]),(3,[3,4,5])]
-        test.updateRoomAvailability(1,1)
-        assert(test.room_availability[0] == (1,[2,3]))
+        test.updateRoomAvailability('t1m','r1')
+        assert(test.room_availability[0] == ('t1m',['r2','r3','r4','r5']))
 
-def test_updateRoomAvailability_off_nominal_case():
+def test_updateRoomAvailability_multiple_updates():
     app = buildApp()
     with app.app_context():
         buildDatabase(db)        
         test = Scheduler()
-        test.room_availability = [(1,[1,2,3]),(2,[2,3,4]),(3,[3,4,5])]
-        test.updateRoomAvailability(1,4)
-        assert(test.room_availability[0] == (1,[1,2,3]))
-
-
-
-'''
-  # Input: self, course_id(int), instructor_id(int)
-    # Output: n/a - updates values in self
-    def updateCoursePreferences(self, course_id, instructor_id):
-        for course in self.course_preferences:
-            if course[0] == course_id:
-                instructor_ids = course[1]
-                if instructor_id in instructor_ids:
-                    instructor_index = instructor_ids.index(instructor_id)
-                    del instructor_ids[instructor_index]
-                return
-
-    # Course ID, [Instructor IDs]
-    course_preferences = []
-'''
+        test.updateRoomAvailability('t1m','r1')
+        test.updateRoomAvailability('t2m','r1')
+        assert(test.room_availability[0] == ('t1m',['r2','r3','r4','r5']))
+        assert(test.room_availability[1] == ('t2m',['r2','r3','r4','r5']))
 
 def test_updateCoursePreferences_preference_unfulfilled():
     app = buildApp()
@@ -191,6 +173,14 @@ def test_findRoomAvailability_room_findable():
         buildDatabase(db)        
         test = Scheduler()
         assert(test.findRoomAvailability('t3t') == ['r1', 'r2', 'r3', 'r4', 'r5'])
+
+def test_findRoomAvailability_room_findable_post_update():
+    app = buildApp()
+    with app.app_context():
+        buildDatabase(db)        
+        test = Scheduler()
+        assert(test.findRoomAvailability('t3t') == ['r1', 'r2', 'r3', 'r4', 'r5'])
+
 
 def test_findRoomAvailability_not_findable():
     app = buildApp()
