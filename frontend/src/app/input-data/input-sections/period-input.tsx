@@ -100,27 +100,36 @@ function PeriodTableRow(props: { row: Period }) {
 
   /** Update hasErrors for start time */
   useEffect(() => {
-    if (startTimeError) hasErrors.push(true);
-    else hasErrors.pop();
-  }, [startTimeError, hasErrors]);
+    if (!isFirstRender) {
+      if (startTimeError) hasErrors.push(true);
+      else hasErrors.pop();
+    }
+  }, [startTimeError, hasErrors, isFirstRender]);
 
   /** Update hasErrors for end time */
   useEffect(() => {
-    if (endTimeError) hasErrors.push(true);
-    else hasErrors.pop();
-  }, [endTimeError, hasErrors]);
+    if (!isFirstRender) {
+      if (endTimeError) hasErrors.push(true);
+      else hasErrors.pop();
+    }
+  }, [endTimeError, hasErrors, isFirstRender]);
 
   /** First render validation */
   useEffect(() => {
     if (isFirstRender) {
       validateStartTime(startTime, uuid, periodList);
       validateEndTime(endTime, uuid, periodList);
+      if (startTimeError) hasErrors.push();
+      if (endTimeError) hasErrors.push();
     }
   }, [
     endTime,
+    endTimeError,
+    hasErrors,
     isFirstRender,
     periodList,
     startTime,
+    startTimeError,
     uuid,
     validateEndTime,
     validateStartTime,
