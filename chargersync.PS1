@@ -1,6 +1,6 @@
 # Define a script block to handle cleanup
 $cleanupScript = {
-    Write-Host "Shutting Down"
+    Write-Host "Shutting Down" -ForegroundColor DarkBlue
     # Find the PID (Process ID) of processes using port 3000
     $pidList = netstat -ano | Select-String "3000" | ForEach-Object { $_.ToString().Trim() -split "\s+" } | Where-Object { $_ -match "\d+$" } | ForEach-Object { $_.Trim() }
 
@@ -43,7 +43,7 @@ function AsciiArt {
 
 AsciiArt -Art $asciiArt
 
-Write-Host "Getting ChargerSync ready..."
+Write-Host "Getting ChargerSync ready..." -ForegroundColor DarkBlue
 $npmInstallLogFile = "NodeJS_install_logs.txt"
 $npmDevLogFile = "NodeJS_dev_logs.txt"
 $dockerLogFile = "Docker_exec_logs.txt"
@@ -60,11 +60,42 @@ Set-Location ..
 $dockerJob = Start-Job -ScriptBlock {
     param($workingDirectory)
     Set-Location $workingDirectory
-    net start com.docker.service
-    #Start-Process -FilePath "C:\Program Files\Docker\Docker\DockerCli.exe" -NoNewWindow
-    #If there is an issue with docker loading, use below line
-    #Start-Process -FilePath  "C:\Program Files\Docker\Docker\Docker Desktop.exe"-NoNewWindow
-    docker-compose up --build > $using:dockerLogFile
+
+    # Start Docker service
+    try {
+        net start com.docker.service
+    }
+    catch {
+        Write-Host "Error starting Docker service: $_" > $using:dockerLogFile
+        exit 1
+    }
+
+
+    try {
+        Start-Process -FilePath "C:\Program Files\Docker\Docker\DockerCli.exe" -NoNewWindow
+    }
+    catch {
+        Write-Host "Error starting DockerCLI: $_" > $using:dockerLogFile
+        exit 1
+    }
+
+    
+    try {
+        Start-Process -FilePath  "C:\Program Files\Docker\Docker\Docker Desktop.exe"-NoNewWindow
+    }
+    catch {
+        Write-Host "Error starting Docker Desktop $_" > $using:dockerLogFile
+        exit 1
+    }
+
+    # Start Docker Compose
+    try {
+        docker-compose up --build > $using:dockerLogFile
+    }
+    catch {
+        Write-Host "Error running docker-compose: $_" > $using:dockerLogFile
+        exit 1
+    }
 } -ArgumentList (Get-Location)
 
 
