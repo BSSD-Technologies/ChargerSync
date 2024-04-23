@@ -43,61 +43,32 @@ function AsciiArt {
 
 AsciiArt -Art $asciiArt
 
-Write-Host "Getting ChargerSync ready..." -ForegroundColor DarkBlue
+Write-Host "Performing background loading actions..." -ForegroundColor DarkBlue
+
 $npmInstallLogFile = "NodeJS_install_logs.txt"
 $npmDevLogFile = "NodeJS_dev_logs.txt"
 $dockerLogFile = "Docker_exec_logs.txt"
 
-Set-Location ./frontend
+cd ./frontend
 $npmJob = Start-Job -ScriptBlock {
     param($workingDirectory)
     Set-Location $workingDirectory
     npm install > $using:npmInstallLogFile 
     npm run dev > $using:npmDevLogFile
 } -ArgumentList (Get-Location)
-Set-Location ..
+cd ..
 
 $dockerJob = Start-Job -ScriptBlock {
     param($workingDirectory)
     Set-Location $workingDirectory
-
-    # Start Docker service
-    try {
-        net start com.docker.service
-    }
-    catch {
-        Write-Host "Error starting Docker service: $_" > $using:dockerLogFile
-        exit 1
-    }
-
-
-    try {
-        Start-Process -FilePath "C:\Program Files\Docker\Docker\DockerCli.exe" -NoNewWindow
-    }
-    catch {
-        Write-Host "Error starting DockerCLI: $_" > $using:dockerLogFile
-        exit 1
-    }
-
-    
-    try {
-        Start-Process -FilePath  "C:\Program Files\Docker\Docker\Docker Desktop.exe"-NoNewWindow
-    }
-    catch {
-        Write-Host "Error starting Docker Desktop $_" > $using:dockerLogFile
-        exit 1
-    }
-
-    # Start Docker Compose
-    try {
-        docker-compose up -d > $using:dockerLogFile
-    }
-    catch {
-        Write-Host "Error running docker-compose: $_" > $using:dockerLogFile
-        exit 1
-    }
+    net start com.docker.service
+    docker-compose up --build > $using:dockerLogFile
 } -ArgumentList (Get-Location)
 
+
+$openLocalhost = {
+    Start-Process "http://localhost:3000"
+}
 
 function Show-LoadingBar {
     param(
@@ -117,7 +88,7 @@ function Show-LoadingBar {
         $bar = "-" * $barLength
         $emptySpace = " " * ($progressWidth - $barLength)
         Write-Host -NoNewline "`rProgress: [$bar$emptySpace] $percentage%" -ForegroundColor DarkBlue
-        #Write-Host -NoNewline "`rProgress: [$bar$emptySpace] $percentage%" -ForegroundColor DarkBlue -BackgroundColor Gray
+
         # Wait for a short duration (adjust as needed)
         Start-Sleep -Milliseconds 125
     }
@@ -131,7 +102,7 @@ Show-LoadingBar -TotalSteps $TotalSteps
 
 
 # Start the job to open localhost after npm and Docker are ready
-Start-Process "http://localhost:3000"
+$localHostJob = Start-Job -ScriptBlock $openLocalhost
 
 # Wait for npm and Docker jobs to complete
 $npmJob | Wait-Job

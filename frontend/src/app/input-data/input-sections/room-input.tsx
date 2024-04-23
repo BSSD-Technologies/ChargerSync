@@ -80,26 +80,35 @@ function RoomTableRow(props: { row: Room }) {
 
   /** Update hasErrors for roomIdError */
   useEffect(() => {
-    if (roomIdError) hasErrors.push(true);
-    else hasErrors.pop();
-  }, [hasErrors, roomIdError]);
+    if (!isFirstRender) {
+      if (roomIdError) hasErrors.push(true);
+      else hasErrors.pop();
+    }
+  }, [hasErrors, isFirstRender, roomIdError]);
 
   /** Update hasErrors for maxCapacityError */
   useEffect(() => {
-    if (maxCapacityError) hasErrors.push(true);
-    else hasErrors.pop();
-  }, [hasErrors, maxCapacityError]);
+    if (!isFirstRender) {
+      if (maxCapacityError) hasErrors.push(true);
+      else hasErrors.pop();
+    }
+  }, [hasErrors, isFirstRender, maxCapacityError]);
 
   /** First render validation */
   useEffect(() => {
     if (isFirstRender) {
       validateRoomId(roomId, uuid, roomList);
       validateMaxCapacity(maxCapacity.toString());
+      if (roomIdError) hasErrors.push();
+      if (maxCapacityError) hasErrors.push();
     }
   }, [
+    hasErrors,
     isFirstRender,
     maxCapacity,
+    maxCapacityError,
     roomId,
+    roomIdError,
     roomList,
     uuid,
     validateMaxCapacity,

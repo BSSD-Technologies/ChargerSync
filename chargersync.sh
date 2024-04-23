@@ -3,6 +3,7 @@ trap cleanup SIGINT
 
 cleanup(){
     lsof -ti tcp:3000 | xargs kill -9
+    docker compose down
     exit
 }
 
@@ -34,7 +35,7 @@ check_npm() {
 build_docker_compose_backend() {
     echo "Building Docker Compose services in the backend directory..."
     cd backend || exit
-    docker compose up --build &
+    docker compose up -d &
     cd ..
 }
 
@@ -85,7 +86,11 @@ main() {
     check_docker_compose
     check_npm
 
+    lsof -ti tcp:3000 | xargs kill -9
+
     loadart
+    open -a docker
+    sleep 15
     build_docker_compose_backend &
     run_npm_rundev_frontend &  
     wait
