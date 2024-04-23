@@ -598,6 +598,8 @@ class Scheduler:
         else:
             # There exists professor(s) with a preference for this course
             # Assign Instructor from Instructors who do have preference for the specific course - based on priority
+            
+            # This is what is causing more than four per professor TODO
             selected_instructor = instructors[0]
             section.setInstructorByID(selected_instructor)
 
@@ -621,7 +623,7 @@ class Scheduler:
                 section.setPeriodByID(period_id)  
                 self.updateInstructorAvailability(period_id, section.instructor_id)
         else:
-            # below currently makes no sense - imma revisit - september
+            # This is not clear
             for period in self.room_availability:
                 if (period[0] in potential_periods) and (period[1]):
                     section.setPeriodByID(period[0])
