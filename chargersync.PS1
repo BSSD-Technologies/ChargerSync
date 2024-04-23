@@ -1,6 +1,6 @@
 # Define a script block to handle cleanup
 $cleanupScript = {
-    Write-Host "Shutting Down" -ForegroundColor DarkBlue
+    Write-Host "Shutting Down"
     # Find the PID (Process ID) of processes using port 3000
     $pidList = netstat -ano | Select-String "3000" | ForEach-Object { $_.ToString().Trim() -split "\s+" } | Where-Object { $_ -match "\d+$" } | ForEach-Object { $_.Trim() }
 
@@ -43,85 +43,32 @@ function AsciiArt {
 
 AsciiArt -Art $asciiArt
 
-Write-Host "Getting ChargerSync ready..." -ForegroundColor DarkBlue
+Write-Host "Performing background loading actions..." -ForegroundColor DarkBlue
+
 $npmInstallLogFile = "NodeJS_install_logs.txt"
 $npmDevLogFile = "NodeJS_dev_logs.txt"
 $dockerLogFile = "Docker_exec_logs.txt"
 
-Set-Location ./frontend
+cd ./frontend
 $npmJob = Start-Job -ScriptBlock {
     param($workingDirectory)
     Set-Location $workingDirectory
     npm install > $using:npmInstallLogFile 
     npm run dev > $using:npmDevLogFile
 } -ArgumentList (Get-Location)
-Set-Location ..
+cd ..
 
 $dockerJob = Start-Job -ScriptBlock {
     param($workingDirectory)
     Set-Location $workingDirectory
-    
-    $dockerCLI = "C:\Program Files\Docker\Docker\DockerCli.exe"
-    $dockerDesktop = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
-    $dockerServiceName = "com.docker.service"
-    
-    # Check if Docker service exists
-    $dockerService = Get-Service -Name $dockerServiceName
-    if ($dockerService -eq $null) {
-        Write-Host "Docker service '$dockerServiceName' not found."
-        exit 1
-    }
-    
-    # Start Docker service if it's not running
-    if ($dockerService.Status -ne "Running") {
-        try {
-            Start-Service -Name $dockerServiceName -ErrorAction Stop
-        }
-        catch {
-            Write-Host "Error starting Docker service: $_"
-            exit 1
-        }
-    }
-    
-    # Start Docker CLI
-    try {
-        Start-Process -FilePath $dockerCLI -NoNewWindow -Wait
-    }
-    catch {
-        Write-Host "Error starting Docker CLI: $_"
-        exit 1
-    }
-    
-    # Start Docker Desktop
-    try {
-        Start-Process -FilePath $dockerDesktop -NoNewWindow -Wait
-    }
-    catch {
-        Write-Host "Error starting Docker Desktop: $_"
-        exit 1
-    }
-    
-    # Start a job to run docker-compose
-    $dockerJob = Start-Job -ScriptBlock {
-        param($workingDirectory)
-        Set-Location $workingDirectory
-    
-        # Run docker-compose up command to build and start services defined in docker-compose.yml
-        try {
-            docker-compose up --build | Out-File -FilePath $using:dockerLogFile -Append
-        }
-        catch {
-            Write-Host "Error running docker-compose: $_"
-            exit 1
-        }
-    } -ArgumentList (Get-Location)
-    
-    # Wait for the job to finish
-    Wait-Job $dockerJob
-
-
+    net start com.docker.service
+    docker-compose up --build > $using:dockerLogFile
 } -ArgumentList (Get-Location)
 
+
+$openLocalhost = {
+    Start-Process "http://localhost:3000"
+}
 
 function Show-LoadingBar {
     param(
@@ -141,7 +88,7 @@ function Show-LoadingBar {
         $bar = "-" * $barLength
         $emptySpace = " " * ($progressWidth - $barLength)
         Write-Host -NoNewline "`rProgress: [$bar$emptySpace] $percentage%" -ForegroundColor DarkBlue
-        #Write-Host -NoNewline "`rProgress: [$bar$emptySpace] $percentage%" -ForegroundColor DarkBlue -BackgroundColor Gray
+
         # Wait for a short duration (adjust as needed)
         Start-Sleep -Milliseconds 125
     }
@@ -155,7 +102,7 @@ Show-LoadingBar -TotalSteps $TotalSteps
 
 
 # Start the job to open localhost after npm and Docker are ready
-Start-Process "http://localhost:3000"
+$localHostJob = Start-Job -ScriptBlock $openLocalhost
 
 # Wait for npm and Docker jobs to complete
 $npmJob | Wait-Job
