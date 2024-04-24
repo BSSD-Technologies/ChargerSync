@@ -203,15 +203,19 @@ class Scheduler:
         instructors = Instructor.query.order_by(Instructor.priority).all()
 
         for instructor in instructors:
-            instructor_remaining_section_count = self.getInstructorSectionCount(instructor.id)
-
-            # check if instructor has a preference for the course and/or instructor has remaining section count
-            if (self.hasUnfulfilledCoursePreference(instructor.id, course_id) == False) and (instructor_remaining_section_count != 0):
+            if self.checkInstructorEligibility(instructor.id, course_id):
                 self.instructors_with_no_preferences.append(instructor.id)
 
         # If size of instrutcors with no_preferences has been changed, readjust instructors_with_no_preference_pos to keep round robin going
         if self.instructors_with_no_preferences_pos > len(self.instructors_with_no_preferences):
             self.instructors_with_no_preferences_pos = 0
+
+    def checkInstructorEligibility(self, instructor_id, course_id):
+        instructor_remaining_section_count = self.getInstructorSectionCount(instructor_id)
+        if (self.hasUnfulfilledCoursePreference(instructor_id, course_id) == False) and (instructor_remaining_section_count >= 1):
+            return True
+        else:
+            return False
 
     def getCoursePreferences(self, courses):
         """Initializes course_preferences tuple array.
@@ -504,7 +508,7 @@ class Scheduler:
             course_id: id representing a course in the database
 
         Return:
-            List of instructors with a preference for the passed course
+            List of instructor_ids with a preference for the passed course
 
         """
         for course in self.course_preferences:
@@ -600,11 +604,13 @@ class Scheduler:
             # Assign Instructor from Instructors who do have preference for the specific course - based on priority
             
             # This is what is causing more than four per professor TODO
-            selected_instructor = instructors[0]
-            section.setInstructorByID(selected_instructor)
-
-            # Update preferences
-            self.updateCoursePreferences(section.course_id, selected_instructor)
+            for instructor in instructors:
+                if self.checkInstructorEligibility(instructor, section.course_id):
+                    section.setInstructorByID(instructor)
+            
+            if section.instructor:
+                # Update preferences
+                self.updateCoursePreferences(section.course_id, instructor)
 
     def assignPeriod(self, section, potential_periods):
         """Chooses and sets (assigns) a period from the potential_periods to the section passed
