@@ -615,11 +615,15 @@ class Scheduler:
 
         """
         if potential_periods:
-            period_id = potential_periods[0]
-            if section.instructor_id:
-                period_id = potential_periods[0]
-                section.setPeriodByID(period_id)  
-                self.updateInstructorAvailability(period_id, section.instructor_id)
+            for potential_period in potential_periods:
+                room_availability = self.findRoomAvailability(potential_period)
+                if room_availability:
+                    period_id = potential_period
+                    if section.instructor_id:
+                        period_id = potential_periods[0]
+                        section.setPeriodByID(period_id)  
+                        self.updateInstructorAvailability(period_id, section.instructor_id)
+                        break
         else:
             # below currently makes no sense - imma revisit - september
             for period in self.room_availability:
