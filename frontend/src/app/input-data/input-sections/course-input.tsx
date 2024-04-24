@@ -132,27 +132,35 @@ function CourseTableRow(props: { row: Course }) {
 
   /** Update hasErrors for deptError */
   useEffect(() => {
-    if (deptError) hasErrors.push(true);
-    else hasErrors.pop();
-  }, [deptError, hasErrors]);
+    if (!isFirstRender) {
+      if (deptError) hasErrors.push(true);
+      else hasErrors.pop();
+    }
+  }, [deptError, hasErrors, isFirstRender]);
 
   /** Update hasErrors for courseNumError */
   useEffect(() => {
-    if (courseNumError) hasErrors.push(true);
-    else hasErrors.pop();
-  }, [courseNumError, hasErrors]);
+    if (!isFirstRender) {
+      if (courseNumError) hasErrors.push(true);
+      else hasErrors.pop();
+    }
+  }, [courseNumError, hasErrors, isFirstRender]);
 
   /** Update hasErrors for maxEnrollError */
   useEffect(() => {
-    if (maxEnrollError) hasErrors.push(true);
-    else hasErrors.pop();
-  }, [hasErrors, maxEnrollError]);
+    if (!isFirstRender) {
+      if (maxEnrollError) hasErrors.push(true);
+      else hasErrors.pop();
+    }
+  }, [hasErrors, isFirstRender, maxEnrollError]);
 
   /** Update hasErrors for prelimEnrollError */
   useEffect(() => {
-    if (prelimEnrollError) hasErrors.push(true);
-    else hasErrors.pop();
-  }, [hasErrors, prelimEnrollError]);
+    if (!isFirstRender && !prelimDisabled) {
+      if (prelimEnrollError) hasErrors.push(true);
+      else hasErrors.pop();
+    }
+  }, [hasErrors, isFirstRender, prelimDisabled, prelimEnrollError]);
 
   /** First render validation */
   useEffect(() => {
@@ -161,13 +169,22 @@ function CourseTableRow(props: { row: Course }) {
       validateCourseNum(courseNum, uuid, department, courseNum, courseList);
       validateMaxEnroll(maxEnrollment.toString());
       validatePrelimEnroll(prelimEnrollment.toString(), maxEnrollment);
+      if (deptError) hasErrors.push();
+      if (courseNumError) hasErrors.push();
+      if (maxEnrollError) hasErrors.push();
+      if (prelimEnrollError) hasErrors.push();
     }
   }, [
     courseList,
     courseNum,
+    courseNumError,
     department,
+    deptError,
+    hasErrors,
     isFirstRender,
+    maxEnrollError,
     maxEnrollment,
+    prelimEnrollError,
     prelimEnrollment,
     uuid,
     validateCourseNum,

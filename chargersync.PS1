@@ -43,7 +43,8 @@ function AsciiArt {
 
 AsciiArt -Art $asciiArt
 
-Write-Host "Getting ChargerSync ready..." -ForegroundColor DarkBlue
+Write-Host "Performing background loading actions..." -ForegroundColor DarkBlue
+
 $npmInstallLogFile = "NodeJS_install_logs.txt"
 $npmDevLogFile = "NodeJS_dev_logs.txt"
 # $dockerLogFile = "Docker_exec_logs.txt"
@@ -132,7 +133,7 @@ function Show-LoadingBar {
         $bar = "-" * $barLength
         $emptySpace = " " * ($progressWidth - $barLength)
         Write-Host -NoNewline "`rProgress: [$bar$emptySpace] $percentage%" -ForegroundColor DarkBlue
-        #Write-Host -NoNewline "`rProgress: [$bar$emptySpace] $percentage%" -ForegroundColor DarkBlue -BackgroundColor Gray
+
         # Wait for a short duration (adjust as needed)
         Start-Sleep -Milliseconds 125
     }

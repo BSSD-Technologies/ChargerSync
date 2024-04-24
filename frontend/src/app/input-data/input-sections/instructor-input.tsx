@@ -39,6 +39,7 @@ function InstructorTableRow(props: { row: Instructor }) {
   const [fname, setFname] = useState(props?.row.fname);
   const [lname, setLname] = useState(props?.row.lname);
   const [priority, setPriority] = useState(props?.row.priority);
+  const [hadPriority, setHadPriority] = useState(false); // Used to detect if priority has been given any value at any point, or just default
   const isFirstRender = useFirstRender(); // Used for first render functions
 
   /** States for updating instructor list for current row, or deleting from list */
@@ -96,35 +97,51 @@ function InstructorTableRow(props: { row: Instructor }) {
 
   /** Update hasErrors for fnameError */
   useEffect(() => {
-    if (fnameError) hasErrors.push(true);
-    else hasErrors.pop();
-  }, [fnameError, hasErrors]);
+    if (!isFirstRender) {
+      if (fnameError) hasErrors.push(true);
+      else hasErrors.pop();
+    }
+  }, [fnameError, hasErrors, isFirstRender]);
 
   /** Update hasErrors for lnameError */
   useEffect(() => {
-    if (lnameError) hasErrors.push(true);
-    else hasErrors.pop();
-  }, [hasErrors, lnameError]);
+    if (!isFirstRender) {
+      if (lnameError) hasErrors.push(true);
+      else hasErrors.pop();
+    }
+  }, [hasErrors, isFirstRender, lnameError]);
 
   /** Update hasErrors for priorityError */
   useEffect(() => {
-    if (priorityError) hasErrors.push(true);
-    else hasErrors.pop();
-  }, [hasErrors, priorityError]);
+    if (!isFirstRender && hadPriority) {
+      if (priorityError) hasErrors.push(true);
+      else hasErrors.pop();
+    }
+  }, [hadPriority, hasErrors, isFirstRender, priority, priorityError]);
 
   /** First render validation */
   useEffect(() => {
     if (isFirstRender) {
       validateFname(fname, uuid, fname, lname, instructorList);
       validateLname(lname, uuid, fname, lname, instructorList);
-      if (priority) validatePriority(priority?.toString());
+      if (priority) {
+        validatePriority(priority?.toString());
+        setHadPriority(true);
+      }
+      if (fnameError) hasErrors.push();
+      if (lnameError) hasErrors.push();
+      if (priorityError) hasErrors.push();
     }
   }, [
     fname,
+    fnameError,
+    hasErrors,
     instructorList,
     isFirstRender,
     lname,
+    lnameError,
     priority,
+    priorityError,
     uuid,
     validateFname,
     validateLname,
