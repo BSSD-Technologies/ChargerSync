@@ -256,10 +256,26 @@ export const useGlobalPeriodListStore = create<GlobalPeriodListState>()(
       useGlobalPreferenceListStore.getState().emptyPeriodPrefList();
     },
     getRawPeriods: () => {
-      return get().periodList.map((period) => ({
-        "Start Time": period.start_time,
-        "End Time": period.end_time,
-      }));
+      return get().periodList.map((period) => {
+        // Convert start time to 12-hour format
+        let startTime = period.start_time.split(":");
+        let startHour = parseInt(startTime[0], 10);
+        let startSuffix = startHour >= 12 ? "PM" : "AM";
+        startHour = startHour % 12 || 12; // Convert midnight (00:00) to 12:00 AM
+        let formattedStart = startHour + ":" + startTime[1] + " " + startSuffix;
+
+        // Convert end time to 12-hour format
+        let endTime = period.end_time.split(":");
+        let endHour = parseInt(endTime[0], 10);
+        let endSuffix = endHour >= 12 ? "PM" : "AM";
+        endHour = endHour % 12 || 12; // Convert midnight (00:00) to 12:00 AM
+        let formattedEnd = endHour + ":" + endTime[1] + " " + endSuffix;
+
+        return {
+          "Start Time": formattedStart,
+          "End Time": formattedEnd,
+        };
+      });
     },
   })
 );
