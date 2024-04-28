@@ -34,7 +34,7 @@ import {
 import { useGlobalCourseListStore } from "@/app/_stores/store";
 import { UseUploadCourses } from "@/app/_hooks/apiHooks";
 
-function CourseTableRow(props: { row: Course }) {
+function CourseTableRow(props: { row: Course; rowNum: number }) {
   /** States for course row inputs */
   const uuid = props?.row.uuid;
   const [department, setDepartment] = useState(props?.row.department);
@@ -195,6 +195,7 @@ function CourseTableRow(props: { row: Course }) {
 
   return (
     <TableRow key={uuid}>
+      <TableCell>{props.rowNum}</TableCell>
       <TableCell>
         <TextField
           fullWidth
@@ -391,6 +392,7 @@ export default function CourseInput(props: {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell>Course Department *</TableCell>
               <TableCell>Course Number *</TableCell>
               <TableCell>Max Enrollment *</TableCell>
@@ -409,8 +411,8 @@ export default function CourseInput(props: {
             </TableRow>
           </TableHead>
           <TableBody>
-            {courseList.map((row) => (
-              <CourseTableRow key={row.uuid} row={row} />
+            {courseList.map((row, index) => (
+              <CourseTableRow key={row.uuid} row={row} rowNum={index + 1} />
             ))}
           </TableBody>
         </Table>

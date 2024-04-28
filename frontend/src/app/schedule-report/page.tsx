@@ -87,9 +87,12 @@ export default function ScheduleReport() {
         }}
       >
         <Link passHref href={"/input-data"}>
-          <Button startIcon={<ArrowBackIosNewRoundedIcon />} variant="text">
+          <LoadingButton
+            startIcon={<ArrowBackIosNewRoundedIcon />}
+            variant="text"
+          >
             Edit schedule data
-          </Button>
+          </LoadingButton>
         </Link>
         <br />
         <Typography variant="h3">Schedule Report</Typography>
