@@ -243,7 +243,7 @@ function InstructorListAccordion() {
   ];
 
   return (
-    <div>
+    <div style={{ borderRadius: "20px", overflow: "hidden" }}>
       {instructorList.map((instructor) => (
         <Accordion key={instructor.uuid}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>

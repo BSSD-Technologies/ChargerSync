@@ -12,12 +12,12 @@ import { UseGenerateConflicts } from "@/app/_hooks/apiHooks";
 import { useEffect } from "react";
 
 const columns: GridColDef[] = [
-  { field: "course", headerName: "Course" },
-  { field: "days", headerName: "Days" },
-  { field: "start", headerName: "Start Time" },
-  { field: "end", headerName: "End Time" },
-  { field: "location", headerName: "Location" },
-  { field: "instructor", headerName: "Instructor" },
+  { field: "course", headerName: "Course", minWidth: 150 },
+  { field: "days", headerName: "Days", minWidth: 100 },
+  { field: "start", headerName: "Start Time", minWidth: 120 },
+  { field: "end", headerName: "End Time", minWidth: 120 },
+  { field: "location", headerName: "Location", minWidth: 150 },
+  { field: "instructor", headerName: "Instructor", minWidth: 300 },
 ];
 
 export default function ConflictReport() {

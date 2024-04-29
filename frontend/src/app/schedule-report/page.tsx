@@ -121,88 +121,90 @@ export default function ScheduleReport() {
           </Button>
         </Grid>
         <br />
-        <Accordion key={"conflict-report"} disabled={countConflicts <= 0}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Stack direction={"row"} spacing={2}>
-              <Typography variant="h5">Conflict Report</Typography>
-              <Chip
-                className={countConflicts ? "error" : "empty"}
-                icon={
-                  <WarningRoundedIcon
-                    style={{ color: countConflicts ? "white" : "empty" }}
-                  />
-                }
-                label={
-                  countConflicts == 1
-                    ? `${countConflicts} item`
-                    : `${countConflicts} items`
-                }
-              />
-            </Stack>
-          </AccordionSummary>
-          <AccordionDetails>
-            <ConflictReport />
-          </AccordionDetails>
-          <AccordionActions
-            sx={{
-              padding: "2%",
-            }}
-          >
-            <LoadingButton
-              variant="contained"
-              color="success"
-              loading={false}
-              startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+        <div style={{ borderRadius: "20px", overflow: "hidden" }}>
+          <Accordion key={"conflict-report"} disabled={countConflicts <= 0}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Stack direction={"row"} spacing={2}>
+                <Typography variant="h5">Conflict Report</Typography>
+                <Chip
+                  className={countConflicts ? "error" : "empty"}
+                  icon={
+                    <WarningRoundedIcon
+                      style={{ color: countConflicts ? "white" : "empty" }}
+                    />
+                  }
+                  label={
+                    countConflicts == 1
+                      ? `${countConflicts} item`
+                      : `${countConflicts} items`
+                  }
+                />
+              </Stack>
+            </AccordionSummary>
+            <AccordionDetails>
+              <ConflictReport />
+            </AccordionDetails>
+            <AccordionActions
               sx={{
-                paddingLeft: "15px",
+                padding: "2%",
               }}
-              onClick={handleConflictExport}
             >
-              <span>Export Conflicts</span>
-            </LoadingButton>
-          </AccordionActions>
-        </Accordion>
-        <Accordion key={"incomplete-report"} disabled={countIncompletes <= 0}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Stack direction={"row"} spacing={2}>
-              <Typography variant="h5">Incomplete Report</Typography>
-              <Chip
-                className={countIncompletes ? "warning" : "empty"}
-                icon={
-                  <InfoRoundedIcon
-                    style={{ color: countIncompletes ? "white" : "empty" }}
-                  />
-                }
-                label={
-                  countIncompletes == 1
-                    ? `${countIncompletes} item`
-                    : `${countIncompletes} items`
-                }
-              />
-            </Stack>
-          </AccordionSummary>
-          <AccordionDetails>
-            <IncompleteReport />
-          </AccordionDetails>
-          <AccordionActions
-            sx={{
-              padding: "2%",
-            }}
-          >
-            <LoadingButton
-              variant="contained"
-              color="success"
-              loading={false}
-              startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+              <LoadingButton
+                variant="contained"
+                color="success"
+                loading={false}
+                startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+                sx={{
+                  paddingLeft: "15px",
+                }}
+                onClick={handleConflictExport}
+              >
+                <span>Export Conflicts</span>
+              </LoadingButton>
+            </AccordionActions>
+          </Accordion>
+          <Accordion key={"incomplete-report"} disabled={countIncompletes <= 0}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Stack direction={"row"} spacing={2}>
+                <Typography variant="h5">Incomplete Report</Typography>
+                <Chip
+                  className={countIncompletes ? "warning" : "empty"}
+                  icon={
+                    <InfoRoundedIcon
+                      style={{ color: countIncompletes ? "white" : "empty" }}
+                    />
+                  }
+                  label={
+                    countIncompletes == 1
+                      ? `${countIncompletes} item`
+                      : `${countIncompletes} items`
+                  }
+                />
+              </Stack>
+            </AccordionSummary>
+            <AccordionDetails>
+              <IncompleteReport />
+            </AccordionDetails>
+            <AccordionActions
               sx={{
-                paddingLeft: "15px",
+                padding: "2%",
               }}
-              onClick={handleIncompleteExport}
             >
-              <span>Export Incompletes</span>
-            </LoadingButton>
-          </AccordionActions>
-        </Accordion>
+              <LoadingButton
+                variant="contained"
+                color="success"
+                loading={false}
+                startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+                sx={{
+                  paddingLeft: "15px",
+                }}
+                onClick={handleIncompleteExport}
+              >
+                <span>Export Incompletes</span>
+              </LoadingButton>
+            </AccordionActions>
+          </Accordion>
+        </div>
         <ExportModal open={open} onClose={() => setOpen(false)} />
       </Container>
     );
