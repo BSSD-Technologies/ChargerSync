@@ -3,7 +3,6 @@
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -24,7 +23,7 @@ import { useEffect, useState } from "react";
 import { UseExportSchedule } from "../_hooks/apiHooks";
 import { useGlobalScheduleStore } from "../_stores/store";
 import toast from "react-hot-toast";
-import { downloadCsv, readSections } from "../_hooks/utilHooks";
+import { downloadCsv } from "../_hooks/utilHooks";
 
 function SelectDepartment() {
   const [departmentSelectList, setDepartmentSelectList] = useState<string[]>(
@@ -62,17 +61,9 @@ function SelectDepartment() {
         fullWidth
         multiple
         labelId="department-list-select"
-        label="Select Department"
         value={departmentSelectList}
         onChange={handleChange}
-        input={
-          <OutlinedInput
-            inputProps={{
-              id: "department-list-select",
-              labelId: "Select Departments",
-            }}
-          />
-        }
+        input={<OutlinedInput label="Select Department" />}
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
@@ -141,17 +132,9 @@ function SelectRoom() {
         fullWidth
         multiple
         labelId="room-list-select"
-        label="Select Room"
         value={roomSelectList}
         onChange={handleChange}
-        input={
-          <OutlinedInput
-            inputProps={{
-              id: "room-list-select",
-              labelId: "Select Rooms",
-            }}
-          />
-        }
+        input={<OutlinedInput label="Select Room" />}
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
@@ -233,17 +216,9 @@ function SelectInstructor() {
         fullWidth
         multiple
         labelId="instructor-list-select"
-        label="Select Instructor"
         value={instructorSelectList}
         onChange={handleChange}
-        input={
-          <OutlinedInput
-            inputProps={{
-              id: "instructor-list-select",
-              labelId: "Select Instructors",
-            }}
-          />
-        }
+        input={<OutlinedInput label="Select Instructor" />}
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (

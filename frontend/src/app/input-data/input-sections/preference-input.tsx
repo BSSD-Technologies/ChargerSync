@@ -10,14 +10,12 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   SelectChangeEvent,
   Stack,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import { useEffect, useState } from "react";
@@ -97,17 +95,9 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
       <Select
         fullWidth
         multiple
-        id="course-list-select"
         value={selectList}
         onChange={handleChange}
-        input={
-          <FilledInput
-            inputProps={{
-              id: "course-list-select",
-              label: "Course Preferences",
-            }}
-          />
-        }
+        input={<FilledInput />}
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
@@ -115,6 +105,7 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
             ))}
           </Box>
         )}
+        sx={{ height: "auto" }}
       >
         {courseList.map((course) => (
           <MenuItem
@@ -209,7 +200,6 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
       <Select
         fullWidth
         multiple
-        id="period-list-select"
         value={selectList}
         onChange={handleChange}
         input={
@@ -263,6 +253,7 @@ function InstructorListAccordion() {
             <Grid container alignItems={"center"} justifyContent={"left"}>
               <Typography variant="subtitle1">Course preferences</Typography>
               <CoursePreferenceSelect instructorId={instructor.uuid} />
+              <Typography variant="subtitle1">Period preferences</Typography>
               <PeriodPreferenceSelect instructorId={instructor.uuid} />
             </Grid>
           </AccordionDetails>
