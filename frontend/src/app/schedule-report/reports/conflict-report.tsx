@@ -41,7 +41,10 @@ export default function ConflictReport() {
   return (
     <Box>
       <Typography variant="body1">
-        Insert a description about the conflicts in the scheduler.
+        Conflict sections are sections that were not able to be assigned a time
+        period. Other assignments such as location or instructor may also be
+        missing. Note that conflict sections are not included in the generated
+        schedule.
       </Typography>
       <br />
       <Box

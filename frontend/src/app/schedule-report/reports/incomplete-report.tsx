@@ -41,7 +41,11 @@ export default function IncompleteReport() {
   return (
     <Box>
       <Typography variant="body1">
-        Insert a description about the incompletes in the scheduler.
+        Incomplete sections are sections that were assigned a time period, but
+        were not able to be assigned either a location, instructor, or both.
+        Note that incomplete sections are still included in the generated
+        schedule, given that more resources could resolve this issue (e.g. more
+        rooms or more instructors).
       </Typography>
       <br />
       <Box
