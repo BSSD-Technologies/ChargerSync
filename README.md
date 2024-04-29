@@ -1,11 +1,19 @@
 # ChargerSync
 
-## Running the Docker container
-- Build the container: `docker-compose up --build`
-- Go to `http://localhost:8080`
+## Software Requirements
+- Docker Desktop
+- Node.js
+- Web Browser
 
-## Accessing Frontend Container Docker Terminal
-docker exec -it chargersync-frontend-1 /bin/sh
+## Running the Project
+- Run Docker Desktop as a background process
+- For Windows:
+  - Run ``chargersync.ps1`` with admin privileges
+- For Mac/Linux:
+  - Run ``chargersync.sh`` with admin privileges
+- The project should open a browser window to ``localhost:3000``
 
-## Accessing Backend Container Docker Terminal
-docker exec -it chargersync-backend-1 /bin/sh
+NOTE: Do not close the terminal as it contains a running process
+
+## Exit the Project
+- To exit, enter ``CTRL + C`` in the running terminal

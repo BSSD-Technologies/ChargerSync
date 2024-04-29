@@ -33,8 +33,12 @@ function PeriodTableRow(props: { row: Period }) {
   /** States for course row inputs */
   const uuid = props?.row.uuid;
   const day = props?.row.day;
-  const [startTime, setStartTime] = useState(props?.row.start_time);
-  const [endTime, setEndTime] = useState(props?.row.end_time);
+  const [startTime, setStartTime] = useState(
+    props?.row.start_time ? props?.row.start_time : ""
+  );
+  const [endTime, setEndTime] = useState(
+    props?.row.end_time ? props?.row.end_time : ""
+  );
   const [endTimeDisabled, setEndTimeDisabled] = useState<boolean>(true); // Disabled state for end time input
   const isFirstRender = useFirstRender(); // Used for first render functions
 
