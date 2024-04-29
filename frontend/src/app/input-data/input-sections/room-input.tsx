@@ -33,7 +33,7 @@ import {
 import { useGlobalRoomListStore } from "@/app/_stores/store";
 import { UseUploadRooms } from "@/app/_hooks/apiHooks";
 
-function RoomTableRow(props: { row: Room }) {
+function RoomTableRow(props: { row: Room; rowNum: number }) {
   /** States for room inputs */
   const uuid = props?.row.uuid;
   const [roomId, setRoomId] = useState(props?.row.room_id);
@@ -117,6 +117,7 @@ function RoomTableRow(props: { row: Room }) {
 
   return (
     <TableRow key={uuid}>
+      <TableCell>{props.rowNum}</TableCell>
       <TableCell>
         <TextField
           fullWidth
@@ -246,6 +247,7 @@ export default function RoomInput(props: {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell>Room ID *</TableCell>
               <TableCell>Max Capacity *</TableCell>
               <TableCell title="Clear All">
@@ -262,8 +264,8 @@ export default function RoomInput(props: {
             </TableRow>
           </TableHead>
           <TableBody>
-            {roomList.map((row) => (
-              <RoomTableRow key={row.uuid} row={row} />
+            {roomList.map((row, index) => (
+              <RoomTableRow key={row.uuid} row={row} rowNum={index + 1} />
             ))}
           </TableBody>
         </Table>

@@ -29,7 +29,7 @@ import { useFirstRender, useValidateTime } from "@/app/_hooks/utilHooks";
 import { useGlobalPeriodListStore } from "@/app/_stores/store";
 import { UseUploadPeriods } from "@/app/_hooks/apiHooks";
 
-function PeriodTableRow(props: { row: Period }) {
+function PeriodTableRow(props: { row: Period; rowNum: number }) {
   /** States for course row inputs */
   const uuid = props?.row.uuid;
   const day = props?.row.day;
@@ -141,6 +141,7 @@ function PeriodTableRow(props: { row: Period }) {
 
   return (
     <TableRow key={uuid}>
+      <TableCell>{props.rowNum}</TableCell>
       <TableCell>
         <TextField
           fullWidth
@@ -262,6 +263,7 @@ export default function PeriodInput(props: {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell>Start Time *</TableCell>
               <TableCell>End Time *</TableCell>
               <TableCell title="Clear All">
@@ -278,8 +280,8 @@ export default function PeriodInput(props: {
             </TableRow>
           </TableHead>
           <TableBody>
-            {periodList.map((row) => (
-              <PeriodTableRow key={row.uuid} row={row} />
+            {periodList.map((row, index) => (
+              <PeriodTableRow key={row.uuid} row={row} rowNum={index + 1} />
             ))}
           </TableBody>
         </Table>

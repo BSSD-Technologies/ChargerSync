@@ -33,7 +33,7 @@ import {
 import { useGlobalInstructorListStore } from "@/app/_stores/store";
 import { UseUploadInstructors } from "@/app/_hooks/apiHooks";
 
-function InstructorTableRow(props: { row: Instructor }) {
+function InstructorTableRow(props: { row: Instructor; rowNum: number }) {
   /** States for instructor row inputs */
   const uuid = props?.row.uuid;
   const [fname, setFname] = useState(props?.row.fname);
@@ -150,6 +150,7 @@ function InstructorTableRow(props: { row: Instructor }) {
 
   return (
     <TableRow key={uuid}>
+      <TableCell>{props.rowNum}</TableCell>
       <TableCell>
         <TextField
           fullWidth
@@ -314,6 +315,7 @@ export default function InstructorInput(props: {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell>First Name *</TableCell>
               <TableCell>Last Name *</TableCell>
               <TableCell>Priority</TableCell>
@@ -331,8 +333,8 @@ export default function InstructorInput(props: {
             </TableRow>
           </TableHead>
           <TableBody>
-            {instructorList.map((row) => (
-              <InstructorTableRow key={row.uuid} row={row} />
+            {instructorList.map((row, index) => (
+              <InstructorTableRow key={row.uuid} row={row} rowNum={index + 1} />
             ))}
           </TableBody>
         </Table>
