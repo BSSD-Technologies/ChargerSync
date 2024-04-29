@@ -5,7 +5,6 @@ import {
   Button,
   Grid,
   IconButton,
-  OutlinedInput,
   Stack,
   Table,
   TableBody,
@@ -241,13 +240,19 @@ export default function PeriodInput(props: {
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
-        <Stack direction={"column"}>
-          <Typography variant="h4">List of Periods</Typography>
-          <Typography variant="body1">
-            A short description about what type of data goes here.
-          </Typography>
-        </Stack>
-        <div className="input-component">
+        <Grid item sm={8}>
+          <Stack direction={"column"}>
+            <Typography variant="h4">List of Periods</Typography>
+            <br />
+            <Typography variant="body1">
+              Enter information about the available time periods that classes
+              can be scheduled for. These time periods will be available for
+              Monday/Wednesday classes and Tuesday/Thursday classes. Note that
+              time periods cannot overlap with one another.
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item className="input-component" sm={3}>
           <CloudUploadIcon sx={{ marginRight: "10px" }} />
           <input
             type="file"
@@ -256,7 +261,7 @@ export default function PeriodInput(props: {
               event.currentTarget.value = "";
             }}
           />
-        </div>
+        </Grid>
       </Grid>
       <br />
       <TableContainer>

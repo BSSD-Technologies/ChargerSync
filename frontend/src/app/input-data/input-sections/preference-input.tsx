@@ -18,6 +18,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -290,9 +291,23 @@ export default function PreferenceInput() {
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
         <Stack direction={"column"}>
           <Typography variant="h4">Instructor Preferences</Typography>
+          <br />
           <Typography variant="body1">
-            A short description about what type of data goes here.
+            If applicable, enter information about each instructor&apos;s course
+            or period preferences. These preferences are not guaranteed, but
+            will be taken into account during schedule generation.
           </Typography>
+          <br />
+          <Stack direction={"row"}>
+            <InfoRoundedIcon sx={{ marginRight: "15px" }} />
+            <Typography variant="body1" justifyContent={"center"}>
+              <em>
+                Note: If changes are made to the <u>course list</u> or{" "}
+                <u>period list</u>, preferences for all instructors will be
+                emptied and will need to be re-entered.
+              </em>
+            </Typography>
+          </Stack>
         </Stack>
       </Grid>
       <br />

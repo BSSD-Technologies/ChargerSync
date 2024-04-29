@@ -293,13 +293,20 @@ export default function InstructorInput(props: {
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
-        <Stack direction={"column"}>
-          <Typography variant="h4">List of Instructors</Typography>
-          <Typography variant="body1">
-            A short description about what type of data goes here.
-          </Typography>
-        </Stack>
-        <div className="input-component">
+        <Grid item sm={8}>
+          <Stack direction={"column"}>
+            <Typography variant="h4">List of Instructors</Typography>
+            <br />
+            <Typography variant="body1">
+              Enter information about available instructors. Include the
+              instructor&apos;s first and last name. If applicable, enter the
+              priority of the professor to rank the order in which they receive
+              class assignments. A priority value of 1 is the lowest priority,
+              with each increasing value adding an increasingly higher priority.
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item className="input-component" sm={3}>
           <CloudUploadIcon sx={{ marginRight: "10px" }} />
           <input
             type="file"
@@ -308,7 +315,7 @@ export default function InstructorInput(props: {
               event.currentTarget.value = "";
             }}
           />
-        </div>
+        </Grid>
       </Grid>
       <br />
       <TableContainer>

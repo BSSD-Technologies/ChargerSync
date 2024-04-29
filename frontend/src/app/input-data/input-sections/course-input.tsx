@@ -370,13 +370,18 @@ export default function CourseInput(props: {
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
-        <Stack direction={"column"}>
-          <Typography variant="h4">List of Courses</Typography>
-          <Typography variant="body1">
-            A short description about what type of data goes here.
-          </Typography>
-        </Stack>
-        <div className="input-component">
+        <Grid item sm={8}>
+          <Stack direction={"column"}>
+            <Typography variant="h4">List of Courses</Typography>
+            <br />
+            <Typography variant="body1">
+              Enter information about the courses to be offered. Include the
+              course department (e.g. CS), course number (e.g. 101), and maximum
+              enrollment. Include preliminary enrollment if applicable.
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item className="input-component" sm={3}>
           <CloudUploadIcon sx={{ marginRight: "10px" }} />
           <input
             type="file"
@@ -385,7 +390,7 @@ export default function CourseInput(props: {
               event.currentTarget.value = "";
             }}
           />
-        </div>
+        </Grid>
       </Grid>
       <br />
       <TableContainer>
