@@ -9,6 +9,7 @@ import {
   DialogTitle,
   FormControl,
   FormControlLabel,
+  IconButton,
   InputLabel,
   MenuItem,
   OutlinedInput,
@@ -16,7 +17,6 @@ import {
   RadioGroup,
   Select,
   SelectChangeEvent,
-  TextField,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -24,6 +24,7 @@ import { UseExportSchedule } from "../_hooks/apiHooks";
 import { useGlobalScheduleStore } from "../_stores/store";
 import toast from "react-hot-toast";
 import { downloadCsv } from "../_hooks/utilHooks";
+import CloseIcon from "@mui/icons-material/Close";
 
 function SelectDepartment() {
   const [departmentSelectList, setDepartmentSelectList] = useState<string[]>(
@@ -331,6 +332,18 @@ export default function ExportModal(props: ExportModalProps) {
         },
       }}
     >
+      <IconButton
+        aria-label="close"
+        onClick={handleClose}
+        sx={{
+          position: "absolute",
+          right: 8,
+          top: 8,
+          color: (theme) => theme.palette.grey[500],
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
       <DialogTitle>
         <Typography variant="h5">Export Options</Typography>
       </DialogTitle>
