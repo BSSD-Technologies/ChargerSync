@@ -1,5 +1,7 @@
-from extensions import db
+# This file is used for testing
 
+
+from extensions import db
 from models.Course import Course
 from models.Instructor import Instructor
 from models.Room import Room
