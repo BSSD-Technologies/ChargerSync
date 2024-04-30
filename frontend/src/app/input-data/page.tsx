@@ -124,7 +124,7 @@ export default function InputData() {
       <br />
       <Box>
         <Stepper nonLinear activeStep={activeStep} orientation="vertical">
-          <Step key={0} id="course-top">
+          <Step key={0} id="course-top" completed={!hasCourseErrors}>
             <StepButton onClick={() => handleJumpStep(0)}>
               <StepLabel>List of Courses</StepLabel>
             </StepButton>
@@ -166,7 +166,7 @@ export default function InputData() {
               </Box>
             </StepContent>
           </Step>
-          <Step key={1} id="room-top">
+          <Step key={1} id="room-top" completed={!hasRoomErrors}>
             <StepButton onClick={() => handleJumpStep(1)}>
               <StepLabel>List of Rooms</StepLabel>
             </StepButton>
@@ -214,7 +214,7 @@ export default function InputData() {
               </Box>
             </StepContent>
           </Step>
-          <Step key={2} id="period-top">
+          <Step key={2} id="period-top" completed={!hasPeriodErrors}>
             <StepButton onClick={() => handleJumpStep(2)}>
               <StepLabel>List of Periods</StepLabel>
             </StepButton>
@@ -262,7 +262,7 @@ export default function InputData() {
               </Box>
             </StepContent>
           </Step>
-          <Step key={3} id="instructor-top">
+          <Step key={3} id="instructor-top" completed={!hasInstructorErrors}>
             <StepButton onClick={() => handleJumpStep(3)}>
               <StepLabel>List of Instructors</StepLabel>
             </StepButton>
@@ -313,7 +313,7 @@ export default function InputData() {
               </Box>
             </StepContent>
           </Step>
-          <Step key={4} id="preference-top">
+          <Step key={4} id="preference-top" completed={activeStep > 4}>
             <StepButton onClick={() => handleJumpStep(4)}>
               <StepLabel>List of Instructor Preferences</StepLabel>
             </StepButton>
