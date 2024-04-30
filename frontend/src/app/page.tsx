@@ -22,7 +22,7 @@ export default function Home() {
           style={{ width: "55vw", height: "auto" }}
         />
         <Typography sx={{ wordWrap: "break-word" }} variant="h6">
-          Insert some basic description about the site here.
+          <em>Take charge of your time with Charger Sync</em>
         </Typography>
         <Link passHref href="/input-data">
           <Button variant="contained" sx={{ width: "50vw" }}>

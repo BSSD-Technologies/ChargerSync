@@ -19,7 +19,7 @@ export default function Report() {
   ];
 
   return (
-    <Box sx={{ height: '100%', width: '100%' }}>
+    <Box sx={{ height: "100%", width: "100%" }}>
       <DataGrid
         rows={sectionList}
         columns={columns}
@@ -33,11 +33,11 @@ export default function Report() {
         pageSizeOptions={[5]}
         disableRowSelectionOnClick
         sx={{
-          borderRadius: "10px",
-          '& .MuiDataGrid-columnHeaders': {
+          borderRadius: "15px",
+          "& .MuiDataGrid-columnHeaders": {
             backgroundColor: "grey",
             color: "white",
-            borderRadius: "10px"
+            borderRadius: "15px",
           },
         }}
       />

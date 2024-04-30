@@ -5,7 +5,6 @@ import {
   FormHelperText,
   Grid,
   IconButton,
-  OutlinedInput,
   Stack,
   Table,
   TableBody,
@@ -33,7 +32,7 @@ import {
 import { useGlobalRoomListStore } from "@/app/_stores/store";
 import { UseUploadRooms } from "@/app/_hooks/apiHooks";
 
-function RoomTableRow(props: { row: Room }) {
+function RoomTableRow(props: { row: Room; rowNum: number }) {
   /** States for room inputs */
   const uuid = props?.row.uuid;
   const [roomId, setRoomId] = useState(props?.row.room_id);
@@ -117,6 +116,7 @@ function RoomTableRow(props: { row: Room }) {
 
   return (
     <TableRow key={uuid}>
+      <TableCell>{props.rowNum}</TableCell>
       <TableCell>
         <TextField
           fullWidth
@@ -224,13 +224,17 @@ export default function RoomInput(props: {
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
-        <Stack direction={"column"}>
-          <Typography variant="h4">List of Rooms</Typography>
-          <Typography variant="body1">
-            A short description about what type of data goes here.
-          </Typography>
-        </Stack>
-        <div className="input-component">
+        <Grid item sm={8}>
+          <Stack direction={"column"}>
+            <Typography variant="h4">List of Rooms</Typography>
+            <br />
+            <Typography variant="body1">
+              Enter information about the rooms available. Include the room ID
+              (e.g. OKT N324) and maximum capacity.
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item className="input-component" sm={3}>
           <CloudUploadIcon sx={{ marginRight: "10px" }} />
           <input
             type="file"
@@ -239,13 +243,14 @@ export default function RoomInput(props: {
               event.currentTarget.value = "";
             }}
           />
-        </div>
+        </Grid>
       </Grid>
       <br />
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell>Room ID *</TableCell>
               <TableCell>Max Capacity *</TableCell>
               <TableCell title="Clear All">
@@ -262,8 +267,8 @@ export default function RoomInput(props: {
             </TableRow>
           </TableHead>
           <TableBody>
-            {roomList.map((row) => (
-              <RoomTableRow key={row.uuid} row={row} />
+            {roomList.map((row, index) => (
+              <RoomTableRow key={row.uuid} row={row} rowNum={index + 1} />
             ))}
           </TableBody>
         </Table>

@@ -3,13 +3,14 @@
 import { LoadingButton } from "@mui/lab";
 import {
   Box,
-  Button,
+  Chip,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   FormControl,
   FormControlLabel,
+  IconButton,
   InputLabel,
   MenuItem,
   OutlinedInput,
@@ -17,14 +18,14 @@ import {
   RadioGroup,
   Select,
   SelectChangeEvent,
-  TextField,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { UseExportSchedule } from "../_hooks/apiHooks";
 import { useGlobalScheduleStore } from "../_stores/store";
 import toast from "react-hot-toast";
-import { downloadCsv, readSections } from "../_hooks/utilHooks";
+import { downloadCsv } from "../_hooks/utilHooks";
+import CloseIcon from "@mui/icons-material/Close";
 
 function SelectDepartment() {
   const [departmentSelectList, setDepartmentSelectList] = useState<string[]>(
@@ -56,40 +57,36 @@ function SelectDepartment() {
   }, [departmentSelectList, updateSelectedDepartments]);
 
   return (
-    <FormControl fullWidth sx={{ margin: 2 }}>
-      <InputLabel id="department-list-select">Select Department</InputLabel>
-      <Select
-        fullWidth
-        multiple
-        labelId="department-list-select"
-        label="Select Department"
-        value={departmentSelectList}
-        onChange={handleChange}
-        input={
-          <OutlinedInput
-            inputProps={{
-              id: "department-list-select",
-              labelId: "Select Departments",
-            }}
-          />
-        }
-        renderValue={(selected) => (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-            {selected.map((value) => (
-              <Typography variant="body1" key={value}>
-                {value}
-              </Typography>
-            ))}
-          </Box>
-        )}
-      >
-        {currentDepartments.map((department) => (
-          <MenuItem key={department} value={department}>
-            {department}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <Box marginLeft={4}>
+      <Typography variant="body2">
+        Select the department(s) whose courses will be included in the exported
+        report.
+      </Typography>
+      <FormControl fullWidth sx={{ marginTop: 2, marginBottom: 2 }}>
+        <InputLabel id="department-list-select">Select Department</InputLabel>
+        <Select
+          fullWidth
+          multiple
+          labelId="department-list-select"
+          value={departmentSelectList}
+          onChange={handleChange}
+          input={<OutlinedInput label="Select Department" />}
+          renderValue={(selected) => (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              {selected.map((value) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )}
+        >
+          {currentDepartments.map((department) => (
+            <MenuItem key={department} value={department}>
+              {department}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
   );
 }
 
@@ -135,44 +132,40 @@ function SelectRoom() {
   }, [currentSelectList, updateSelectedRooms]);
 
   return (
-    <FormControl fullWidth sx={{ margin: 2 }}>
-      <InputLabel id="room-list-select">Select Room</InputLabel>
-      <Select
-        fullWidth
-        multiple
-        labelId="room-list-select"
-        label="Select Room"
-        value={roomSelectList}
-        onChange={handleChange}
-        input={
-          <OutlinedInput
-            inputProps={{
-              id: "room-list-select",
-              labelId: "Select Rooms",
-            }}
-          />
-        }
-        renderValue={(selected) => (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-            {selected.map((value) => (
-              <Typography variant="body1" key={value}>
-                {value}
-              </Typography>
-            ))}
-          </Box>
-        )}
-      >
-        {currentRooms.map((room, index) => (
-          <MenuItem
-            key={room}
-            value={room}
-            onClick={(e: any) => handleSelectedID(currentRoomsID[index])}
-          >
-            {room}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <Box marginLeft={4}>
+      <Typography variant="body2">
+        Select the room(s) whose courses will be included in the exported
+        report.
+      </Typography>
+      <FormControl fullWidth sx={{ marginTop: 2, marginBottom: 2 }}>
+        <InputLabel id="room-list-select">Select Room</InputLabel>
+        <Select
+          fullWidth
+          multiple
+          labelId="room-list-select"
+          value={roomSelectList}
+          onChange={handleChange}
+          input={<OutlinedInput label="Select Room" />}
+          renderValue={(selected) => (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              {selected.map((value) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )}
+        >
+          {currentRooms.map((room, index) => (
+            <MenuItem
+              key={room}
+              value={room}
+              onClick={(e: any) => handleSelectedID(currentRoomsID[index])}
+            >
+              {room}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
   );
 }
 
@@ -227,44 +220,42 @@ function SelectInstructor() {
   }, [currentSelectList, updateSelectedInstructors]);
 
   return (
-    <FormControl fullWidth sx={{ margin: 2 }}>
-      <InputLabel id="instructor-list-select">Select Instructor</InputLabel>
-      <Select
-        fullWidth
-        multiple
-        labelId="instructor-list-select"
-        label="Select Instructor"
-        value={instructorSelectList}
-        onChange={handleChange}
-        input={
-          <OutlinedInput
-            inputProps={{
-              id: "instructor-list-select",
-              labelId: "Select Instructors",
-            }}
-          />
-        }
-        renderValue={(selected) => (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-            {selected.map((value) => (
-              <Typography variant="body1" key={value}>
-                {value}
-              </Typography>
-            ))}
-          </Box>
-        )}
-      >
-        {currenInstructors.map((instructor, index) => (
-          <MenuItem
-            key={instructor}
-            value={instructor}
-            onClick={(e: any) => handleSelectedID(currentInstructorsID[index])}
-          >
-            {instructor}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <Box marginLeft={4}>
+      <Typography variant="body2">
+        Select the instructor(s) whose courses will be included in the exported
+        report.
+      </Typography>
+      <FormControl fullWidth sx={{ marginTop: 2, marginBottom: 2 }}>
+        <InputLabel id="instructor-list-select">Select Instructor</InputLabel>
+        <Select
+          fullWidth
+          multiple
+          labelId="instructor-list-select"
+          value={instructorSelectList}
+          onChange={handleChange}
+          input={<OutlinedInput label="Select Instructor" />}
+          renderValue={(selected) => (
+            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+              {selected.map((value) => (
+                <Chip key={value} label={value} />
+              ))}
+            </Box>
+          )}
+        >
+          {currenInstructors.map((instructor, index) => (
+            <MenuItem
+              key={instructor}
+              value={instructor}
+              onClick={(e: any) =>
+                handleSelectedID(currentInstructorsID[index])
+              }
+            >
+              {instructor}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
   );
 }
 
@@ -317,26 +308,17 @@ export default function ExportModal(props: ExportModalProps) {
     } else if (currentChecked == "department") {
       const data = await UseExportSchedule(currentChecked, selectedDepartments);
       if (data) {
-        downloadCsv(
-          data,
-          "FilterDeptSchedule-" + selectedDepartments.join("_") + ".csv"
-        );
+        downloadCsv(data, "FilterDeptSchedule.csv");
       }
     } else if (currentChecked == "room") {
       const data = await UseExportSchedule(currentChecked, selectedRooms);
       if (data) {
-        downloadCsv(
-          data,
-          "FilterRoomSchedule-" + selectedRooms.join("_") + ".csv"
-        );
+        downloadCsv(data, "FilterRoomSchedule.csv");
       }
     } else if (currentChecked == "instructor") {
       const data = await UseExportSchedule(currentChecked, selectedInstructors);
       if (data) {
-        downloadCsv(
-          data,
-          "FilterInstructorSchedule-" + selectedInstructors.join("_") + ".csv"
-        );
+        downloadCsv(data, "FilterInstructorSchedule.csv");
       }
     } else {
       toast.error("An error occurred. Please try again.");
@@ -356,6 +338,18 @@ export default function ExportModal(props: ExportModalProps) {
         },
       }}
     >
+      <IconButton
+        aria-label="close"
+        onClick={handleClose}
+        sx={{
+          position: "absolute",
+          right: 8,
+          top: 8,
+          color: (theme) => theme.palette.grey[500],
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
       <DialogTitle>
         <Typography variant="h5">Export Options</Typography>
       </DialogTitle>
