@@ -353,8 +353,6 @@ class Scheduler:
             if not period[1]:
                 del period
         return 
-        # Period ID not found, or room_id not found in the availability array
-        print("Period ID or Room ID not found.")
         
     def updateCoursePreferences(self, course_id, instructor_id):
         """Updates course_preferences tuple to reflect instructors with preferences for a course

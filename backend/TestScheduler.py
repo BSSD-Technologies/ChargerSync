@@ -63,7 +63,6 @@ def test_updateCourseEnrollmentGivenRoom_fulfillment_does_not_occur():
 
 
 def test_updateInstructorAvailability_updating_claimed_slot():
-    #Initializing Database
     app = buildApp()
     with app.app_context():
         buildDatabase(db)        
@@ -76,22 +75,18 @@ def test_updateInstructorAvailability__updating_unclaimabile_slot():
     app = buildApp()
     with app.app_context():
         buildDatabase(db)        
-        test = Scheduler() # The class that contains the method to be tested
+        test = Scheduler() 
         test.instructor_availability = [(1, 3, [1,2,3])]
-        # Test when the period does not exist for the instructor
         test.updateInstructorAvailability(2, 4)
-        # Check if the period was not in the availability array to begin with
         assert (2,4) not in test.instructor_availability
 
 def test_updateInstructorAvailability_instructor_does_not_exist():
     app = buildApp()
     with app.app_context():
         buildDatabase(db)        
-        test = Scheduler() # The class that contains the method to be tested
+        test = Scheduler()
         test.instructor_availability = [(1, 3, [1,2,3]),(2, 3, [1,2,3]),(3, 3, [1,2,3])]
-        # Test when the instructor does not exist
         test.updateInstructorAvailability(4, 2)
-        # Check if the instructor was not in the availability list to begin with
         assert (4, []) not in test.instructor_availability
 
 def test_updateRoomAvailability_time_available():

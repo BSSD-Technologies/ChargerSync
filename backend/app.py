@@ -5,7 +5,6 @@ from extensions import db
 from Schedule import Schedule
 from output import formatForOutput
 import DatabaseManager
-#from csvOutput import return_fullSchedule_CSV, return_filtered_dept, return_filtered_prof, return_filtered_room
 from models.Course import Section
 
 app = Flask(__name__)

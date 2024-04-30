@@ -6,7 +6,7 @@ from models.Preferences import CoursePreference
 class Course(db.Model):
     __tablename__ = 'course'
 
-    id = db.Column(db.String(255), primary_key=True) # To be converted to UUID once api is complete
+    id = db.Column(db.String(255), primary_key=True) 
     name = db.Column(db.String(255)) # TODO Split to department and course number
     department = db.Column(db.String(255), nullable=False) 
     num = db.Column(db.String(255), nullable=False)
@@ -40,7 +40,7 @@ class Course(db.Model):
 class Section(db.Model):
     __tablename__ = 'section'
 
-    id = db.Column(db.Integer, primary_key=True) # To be converted to UUID once api is complete
+    id = db.Column(db.Integer, primary_key=True) 
     name = db.Column(db.String(255), nullable=False)
     department = db.Column(db.String(255), nullable=False) 
     num = db.Column(db.String(255), nullable=False)

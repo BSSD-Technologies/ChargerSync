@@ -88,10 +88,6 @@ class Schedule:
         self.conflicts.clear()
         self.incompletes.clear()
 
-        #if self.scheduler:
-        #    self.scheduler.clear()
-        
-
 
 
 
