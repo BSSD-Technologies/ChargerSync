@@ -20,3 +20,8 @@ input[type="file"]::file-selector-button {
   border-width: 1px;
   border-radius: 10px;
 }
+
+.help-style {
+    margin-top: 2pc;
+    padding-bottom: 10pc;
+}
