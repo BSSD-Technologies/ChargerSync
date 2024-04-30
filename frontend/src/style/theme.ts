@@ -149,10 +149,11 @@ export const getTheme = (mode: PaletteMode): ThemeOptions => ({
         }),
       },
     },
-    MuiStepButton: {
+    MuiAccordion: {
       styleOverrides: {
         root: ({ theme, ownerState }) => ({
-          borderRadius: "15px",
+          overflow: "hidden",
+          backgroundColor: theme.palette.action.hover,
         }),
       },
     },

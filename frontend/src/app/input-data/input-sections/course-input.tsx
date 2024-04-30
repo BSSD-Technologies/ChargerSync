@@ -34,7 +34,7 @@ import {
 import { useGlobalCourseListStore } from "@/app/_stores/store";
 import { UseUploadCourses } from "@/app/_hooks/apiHooks";
 
-function CourseTableRow(props: { row: Course }) {
+function CourseTableRow(props: { row: Course; rowNum: number }) {
   /** States for course row inputs */
   const uuid = props?.row.uuid;
   const [department, setDepartment] = useState(props?.row.department);
@@ -195,6 +195,7 @@ function CourseTableRow(props: { row: Course }) {
 
   return (
     <TableRow key={uuid}>
+      <TableCell>{props.rowNum}</TableCell>
       <TableCell>
         <TextField
           fullWidth
@@ -369,13 +370,18 @@ export default function CourseInput(props: {
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
-        <Stack direction={"column"}>
-          <Typography variant="h4">List of Courses</Typography>
-          <Typography variant="body1">
-            A short description about what type of data goes here.
-          </Typography>
-        </Stack>
-        <div className="input-component">
+        <Grid item sm={8}>
+          <Stack direction={"column"}>
+            <Typography variant="h4">List of Courses</Typography>
+            <br />
+            <Typography variant="body1">
+              Enter information about the courses to be offered. Include the
+              course department (e.g. CS), course number (e.g. 101), and maximum
+              enrollment. Include preliminary enrollment if applicable.
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item className="input-component" sm={3}>
           <CloudUploadIcon sx={{ marginRight: "10px" }} />
           <input
             type="file"
@@ -384,13 +390,14 @@ export default function CourseInput(props: {
               event.currentTarget.value = "";
             }}
           />
-        </div>
+        </Grid>
       </Grid>
       <br />
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell>Course Department *</TableCell>
               <TableCell>Course Number *</TableCell>
               <TableCell>Max Enrollment *</TableCell>
@@ -409,8 +416,8 @@ export default function CourseInput(props: {
             </TableRow>
           </TableHead>
           <TableBody>
-            {courseList.map((row) => (
-              <CourseTableRow key={row.uuid} row={row} />
+            {courseList.map((row, index) => (
+              <CourseTableRow key={row.uuid} row={row} rowNum={index + 1} />
             ))}
           </TableBody>
         </Table>

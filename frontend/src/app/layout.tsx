@@ -15,6 +15,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Charger Sync",
   description: "",
+  icons: [{ rel: "icon", url: "/icon.ico" }],
 };
 
 export default function RootLayout({

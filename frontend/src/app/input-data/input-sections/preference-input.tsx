@@ -10,16 +10,15 @@ import {
   IconButton,
   InputLabel,
   MenuItem,
-  OutlinedInput,
   Select,
   SelectChangeEvent,
   Stack,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -97,17 +96,9 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
       <Select
         fullWidth
         multiple
-        id="course-list-select"
         value={selectList}
         onChange={handleChange}
-        input={
-          <FilledInput
-            inputProps={{
-              id: "course-list-select",
-              label: "Course Preferences",
-            }}
-          />
-        }
+        input={<FilledInput />}
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
             {selected.map((value) => (
@@ -115,6 +106,7 @@ function CoursePreferenceSelect(props: { instructorId: string }) {
             ))}
           </Box>
         )}
+        sx={{ height: "auto" }}
       >
         {courseList.map((course) => (
           <MenuItem
@@ -209,7 +201,6 @@ function PeriodPreferenceSelect(props: { instructorId: string }) {
       <Select
         fullWidth
         multiple
-        id="period-list-select"
         value={selectList}
         onChange={handleChange}
         input={
@@ -253,7 +244,7 @@ function InstructorListAccordion() {
   ];
 
   return (
-    <div>
+    <div style={{ borderRadius: "20px", overflow: "hidden" }}>
       {instructorList.map((instructor) => (
         <Accordion key={instructor.uuid}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -263,6 +254,7 @@ function InstructorListAccordion() {
             <Grid container alignItems={"center"} justifyContent={"left"}>
               <Typography variant="subtitle1">Course preferences</Typography>
               <CoursePreferenceSelect instructorId={instructor.uuid} />
+              <Typography variant="subtitle1">Period preferences</Typography>
               <PeriodPreferenceSelect instructorId={instructor.uuid} />
             </Grid>
           </AccordionDetails>
@@ -299,9 +291,23 @@ export default function PreferenceInput() {
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
         <Stack direction={"column"}>
           <Typography variant="h4">Instructor Preferences</Typography>
+          <br />
           <Typography variant="body1">
-            A short description about what type of data goes here.
+            If applicable, enter information about each instructor&apos;s course
+            or period preferences. These preferences are not guaranteed, but
+            will be taken into account during schedule generation.
           </Typography>
+          <br />
+          <Stack direction={"row"}>
+            <InfoRoundedIcon sx={{ marginRight: "15px" }} />
+            <Typography variant="body1" justifyContent={"center"}>
+              <em>
+                Note: If changes are made to the <u>course list</u> or{" "}
+                <u>period list</u>, preferences for all instructors will be
+                emptied and will need to be re-entered.
+              </em>
+            </Typography>
+          </Stack>
         </Stack>
       </Grid>
       <br />
