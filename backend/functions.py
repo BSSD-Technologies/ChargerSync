@@ -42,11 +42,6 @@ def csv_to_json(csv_file, findHeader):
 
 
     # List of valid header combinations to check if the CSV file that was uploaded was a valid file
-    # courseHeaders = ["department","course_number","max_enrollment","preliminary_enrollment"]
-    # instructorHeaders = ["first_name","last_name","priority"]
-    # periodHeaders = ["room_id","max_capacity"]
-    # roomHeaders = ["start_time","end_time"]
-
     validHeaders = {
         "course": ["department","course_number","max_enrollment","preliminary_enrollment"],
         "instructor": ["first_name","last_name","priority"],
