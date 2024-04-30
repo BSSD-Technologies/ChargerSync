@@ -170,7 +170,7 @@ class Scheduler:
         for instructor in instructors:
             pull_insturctor = instructor.id
             period_ids = [period.id for period in periods]
-            tuple_item = (pull_insturctor, 4, period_ids)
+            tuple_item = (pull_insturctor, 3, period_ids)
             self.instructor_availability.append(tuple_item)
 
     def getInstructorSectionCount(self, instructor_id):
@@ -203,15 +203,19 @@ class Scheduler:
         instructors = Instructor.query.order_by(Instructor.priority).all()
 
         for instructor in instructors:
-            instructor_remaining_section_count = self.getInstructorSectionCount(instructor.id)
-
-            # check if instructor has a preference for the course and/or instructor has remaining section count
-            if (self.hasUnfulfilledCoursePreference(instructor.id, course_id) == False) and (instructor_remaining_section_count != 0):
+            if self.checkInstructorEligibility(instructor.id, course_id):
                 self.instructors_with_no_preferences.append(instructor.id)
 
         # If size of instrutcors with no_preferences has been changed, readjust instructors_with_no_preference_pos to keep round robin going
         if self.instructors_with_no_preferences_pos > len(self.instructors_with_no_preferences):
             self.instructors_with_no_preferences_pos = 0
+
+    def checkInstructorEligibility(self, instructor_id, course_id):
+        instructor_remaining_section_count = self.getInstructorSectionCount(instructor_id)
+        if (self.hasUnfulfilledCoursePreference(instructor_id, course_id) == False) and (instructor_remaining_section_count >= 1):
+            return True
+        else:
+            return False
 
     def getCoursePreferences(self, courses):
         """Initializes course_preferences tuple array.
@@ -504,7 +508,7 @@ class Scheduler:
             course_id: id representing a course in the database
 
         Return:
-            List of instructors with a preference for the passed course
+            List of instructor_ids with a preference for the passed course
 
         """
         for course in self.course_preferences:
@@ -598,11 +602,15 @@ class Scheduler:
         else:
             # There exists professor(s) with a preference for this course
             # Assign Instructor from Instructors who do have preference for the specific course - based on priority
-            selected_instructor = instructors[0]
-            section.setInstructorByID(selected_instructor)
-
-            # Update preferences
-            self.updateCoursePreferences(section.course_id, selected_instructor)
+            
+            # This is what is causing more than four per professor TODO
+            for instructor in instructors:
+                if self.checkInstructorEligibility(instructor, section.course_id):
+                    section.setInstructorByID(instructor)
+            
+            if section.instructor:
+                # Update preferences
+                self.updateCoursePreferences(section.course_id, instructor)
 
     def assignPeriod(self, section, potential_periods):
         """Chooses and sets (assigns) a period from the potential_periods to the section passed
@@ -615,17 +623,13 @@ class Scheduler:
 
         """
         if potential_periods:
-            for potential_period in potential_periods:
-                room_availability = self.findRoomAvailability(potential_period)
-                if room_availability:
-                    period_id = potential_period
-                    if section.instructor_id:
-                        period_id = potential_periods[0]
-                        section.setPeriodByID(period_id)  
-                        self.updateInstructorAvailability(period_id, section.instructor_id)
-                        break
+            period_id = potential_periods[0]
+            if section.instructor_id:
+                period_id = potential_periods[0]
+                section.setPeriodByID(period_id)  
+                self.updateInstructorAvailability(period_id, section.instructor_id)
         else:
-            # below currently makes no sense - imma revisit - september
+            # This is not clear
             for period in self.room_availability:
                 if (period[0] in potential_periods) and (period[1]):
                     section.setPeriodByID(period[0])
