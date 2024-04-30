@@ -107,9 +107,15 @@ export default function InputData() {
       }}
     >
       <Typography variant="h3">Schedule Inputs</Typography>
+      <br />
       <Typography variant="body1">
-        Insert a description of the input process. Let people know that they can
-        upload data or they can manually input it.
+        This is where you will input all registrar data, including courses being
+        offered, available rooms, class time periods, available instructors, and
+        instructor preferences if applicable. You must complete the current
+        section in order to continue to the next. Once a section is complete,
+        you may jump between any completed or in progress section. When all
+        sections are complete, you will be prompted to generate a schedule based
+        on your inputs.
       </Typography>
       <br />
       <Divider />
@@ -118,7 +124,7 @@ export default function InputData() {
       <br />
       <Box>
         <Stepper nonLinear activeStep={activeStep} orientation="vertical">
-          <Step key={0} id="course-top">
+          <Step key={0} id="course-top" completed={!hasCourseErrors}>
             <StepButton onClick={() => handleJumpStep(0)}>
               <StepLabel>List of Courses</StepLabel>
             </StepButton>
@@ -160,7 +166,7 @@ export default function InputData() {
               </Box>
             </StepContent>
           </Step>
-          <Step key={1} id="room-top">
+          <Step key={1} id="room-top" completed={!hasRoomErrors}>
             <StepButton onClick={() => handleJumpStep(1)}>
               <StepLabel>List of Rooms</StepLabel>
             </StepButton>
@@ -208,7 +214,7 @@ export default function InputData() {
               </Box>
             </StepContent>
           </Step>
-          <Step key={2} id="period-top">
+          <Step key={2} id="period-top" completed={!hasPeriodErrors}>
             <StepButton onClick={() => handleJumpStep(2)}>
               <StepLabel>List of Periods</StepLabel>
             </StepButton>
@@ -256,7 +262,7 @@ export default function InputData() {
               </Box>
             </StepContent>
           </Step>
-          <Step key={3} id="instructor-top">
+          <Step key={3} id="instructor-top" completed={!hasInstructorErrors}>
             <StepButton onClick={() => handleJumpStep(3)}>
               <StepLabel>List of Instructors</StepLabel>
             </StepButton>
@@ -307,7 +313,7 @@ export default function InputData() {
               </Box>
             </StepContent>
           </Step>
-          <Step key={4} id="preference-top">
+          <Step key={4} id="preference-top" completed={activeStep > 4}>
             <StepButton onClick={() => handleJumpStep(4)}>
               <StepLabel>List of Instructor Preferences</StepLabel>
             </StepButton>

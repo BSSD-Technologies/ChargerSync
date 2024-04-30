@@ -87,25 +87,45 @@ export default function ScheduleReport() {
         }}
       >
         <Link passHref href={"/input-data"}>
-          <Button startIcon={<ArrowBackIosNewRoundedIcon />} variant="text">
+          <LoadingButton
+            startIcon={<ArrowBackIosNewRoundedIcon />}
+            variant="text"
+          >
             Edit schedule data
-          </Button>
+          </LoadingButton>
         </Link>
         <br />
         <Typography variant="h3">Schedule Report</Typography>
+        <br />
         <Typography variant="body1">
-          Insert a description about the report generated, with the necessary
-          details.
+          The following schedule has been generated based on the registrar data
+          you have provided. This includes both complete and incomplete class
+          sections, if they exist. Incomplete sections may be missing some
+          resource(s), including a location or an instructor assginment.
+        </Typography>
+        <br />
+        <Typography variant="body1">
+          To sort by column, hover over the desired column header and click the
+          arrow to sort ascending or descending. To filter values in a column,
+          hover over the desired column header and click the three-dot menu
+          button. Then, select &quot;Filter&quot; and enter the desired filter
+          value.
+        </Typography>
+        <br />
+        <Typography variant="body1">
+          Use the arrow navigation buttons in the bottom right corner of the
+          table to view more generated schedule sections for 20+ sections.
         </Typography>
         <br />
         <Report />
+        <br />
         <br />
         <Grid container alignItems={"center"} justifyContent={"space-between"}>
           <Stack direction={"column"}>
             <Typography variant="h4">Export Schedule</Typography>
             <Typography variant="body1">
-              Export the generated schedule, with the option of filtering by
-              different categories.
+              Export the generated schedule above as a CSV, with the option of
+              filtering by different categories.
             </Typography>
           </Stack>
           <Button
@@ -118,88 +138,91 @@ export default function ScheduleReport() {
           </Button>
         </Grid>
         <br />
-        <Accordion key={"conflict-report"} disabled={countConflicts <= 0}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Stack direction={"row"} spacing={2}>
-              <Typography variant="h5">Conflict Report</Typography>
-              <Chip
-                className={countConflicts ? "error" : "empty"}
-                icon={
-                  <WarningRoundedIcon
-                    style={{ color: countConflicts ? "white" : "empty" }}
-                  />
-                }
-                label={
-                  countConflicts == 1
-                    ? `${countConflicts} item`
-                    : `${countConflicts} items`
-                }
-              />
-            </Stack>
-          </AccordionSummary>
-          <AccordionDetails>
-            <ConflictReport />
-          </AccordionDetails>
-          <AccordionActions
-            sx={{
-              padding: "2%",
-            }}
-          >
-            <LoadingButton
-              variant="contained"
-              color="success"
-              loading={false}
-              startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+        <br />
+        <div style={{ borderRadius: "20px", overflow: "hidden" }}>
+          <Accordion key={"conflict-report"} disabled={countConflicts <= 0}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Stack direction={"row"} spacing={2}>
+                <Typography variant="h5">Conflict Report</Typography>
+                <Chip
+                  className={countConflicts ? "error" : "empty"}
+                  icon={
+                    <WarningRoundedIcon
+                      style={{ color: countConflicts ? "white" : "empty" }}
+                    />
+                  }
+                  label={
+                    countConflicts == 1
+                      ? `${countConflicts} item`
+                      : `${countConflicts} items`
+                  }
+                />
+              </Stack>
+            </AccordionSummary>
+            <AccordionDetails>
+              <ConflictReport />
+            </AccordionDetails>
+            <AccordionActions
               sx={{
-                paddingLeft: "15px",
+                padding: "2%",
               }}
-              onClick={handleConflictExport}
             >
-              <span>Export Conflicts</span>
-            </LoadingButton>
-          </AccordionActions>
-        </Accordion>
-        <Accordion key={"incomplete-report"} disabled={countIncompletes <= 0}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Stack direction={"row"} spacing={2}>
-              <Typography variant="h5">Incomplete Report</Typography>
-              <Chip
-                className={countIncompletes ? "warning" : "empty"}
-                icon={
-                  <InfoRoundedIcon
-                    style={{ color: countIncompletes ? "white" : "empty" }}
-                  />
-                }
-                label={
-                  countIncompletes == 1
-                    ? `${countIncompletes} item`
-                    : `${countIncompletes} items`
-                }
-              />
-            </Stack>
-          </AccordionSummary>
-          <AccordionDetails>
-            <IncompleteReport />
-          </AccordionDetails>
-          <AccordionActions
-            sx={{
-              padding: "2%",
-            }}
-          >
-            <LoadingButton
-              variant="contained"
-              color="success"
-              loading={false}
-              startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+              <LoadingButton
+                variant="contained"
+                color="success"
+                loading={false}
+                startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+                sx={{
+                  paddingLeft: "15px",
+                }}
+                onClick={handleConflictExport}
+              >
+                <span>Export Conflicts</span>
+              </LoadingButton>
+            </AccordionActions>
+          </Accordion>
+          <Accordion key={"incomplete-report"} disabled={countIncompletes <= 0}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Stack direction={"row"} spacing={2}>
+                <Typography variant="h5">Incomplete Report</Typography>
+                <Chip
+                  className={countIncompletes ? "warning" : "empty"}
+                  icon={
+                    <InfoRoundedIcon
+                      style={{ color: countIncompletes ? "white" : "empty" }}
+                    />
+                  }
+                  label={
+                    countIncompletes == 1
+                      ? `${countIncompletes} item`
+                      : `${countIncompletes} items`
+                  }
+                />
+              </Stack>
+            </AccordionSummary>
+            <AccordionDetails>
+              <IncompleteReport />
+            </AccordionDetails>
+            <AccordionActions
               sx={{
-                paddingLeft: "15px",
+                padding: "2%",
               }}
-              onClick={handleIncompleteExport}
             >
-              <span>Export Incompletes</span>
-            </LoadingButton>
-          </AccordionActions>
-        </Accordion>
+              <LoadingButton
+                variant="contained"
+                color="success"
+                loading={false}
+                startIcon={<DownloadRoundedIcon sx={{ marginLeft: "5px" }} />}
+                sx={{
+                  paddingLeft: "15px",
+                }}
+                onClick={handleIncompleteExport}
+              >
+                <span>Export Incompletes</span>
+              </LoadingButton>
+            </AccordionActions>
+          </Accordion>
+        </div>
         <ExportModal open={open} onClose={() => setOpen(false)} />
       </Container>
     );

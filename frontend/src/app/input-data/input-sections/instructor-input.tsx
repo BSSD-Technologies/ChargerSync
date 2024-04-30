@@ -33,7 +33,7 @@ import {
 import { useGlobalInstructorListStore } from "@/app/_stores/store";
 import { UseUploadInstructors } from "@/app/_hooks/apiHooks";
 
-function InstructorTableRow(props: { row: Instructor }) {
+function InstructorTableRow(props: { row: Instructor; rowNum: number }) {
   /** States for instructor row inputs */
   const uuid = props?.row.uuid;
   const [fname, setFname] = useState(props?.row.fname);
@@ -150,6 +150,7 @@ function InstructorTableRow(props: { row: Instructor }) {
 
   return (
     <TableRow key={uuid}>
+      <TableCell>{props.rowNum}</TableCell>
       <TableCell>
         <TextField
           fullWidth
@@ -292,13 +293,20 @@ export default function InstructorInput(props: {
       }}
     >
       <Grid container alignItems={"center"} justifyContent={"space-between"}>
-        <Stack direction={"column"}>
-          <Typography variant="h4">List of Instructors</Typography>
-          <Typography variant="body1">
-            A short description about what type of data goes here.
-          </Typography>
-        </Stack>
-        <div className="input-component">
+        <Grid item sm={8}>
+          <Stack direction={"column"}>
+            <Typography variant="h4">List of Instructors</Typography>
+            <br />
+            <Typography variant="body1">
+              Enter information about available instructors. Include the
+              instructor&apos;s first and last name. If applicable, enter the
+              priority of the professor to rank the order in which they receive
+              class assignments. A priority value of 1 is the lowest priority,
+              with each increasing value adding an increasingly higher priority.
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid item className="input-component" sm={3}>
           <CloudUploadIcon sx={{ marginRight: "10px" }} />
           <input
             type="file"
@@ -307,13 +315,14 @@ export default function InstructorInput(props: {
               event.currentTarget.value = "";
             }}
           />
-        </div>
+        </Grid>
       </Grid>
       <br />
       <TableContainer>
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell></TableCell>
               <TableCell>First Name *</TableCell>
               <TableCell>Last Name *</TableCell>
               <TableCell>Priority</TableCell>
@@ -331,8 +340,8 @@ export default function InstructorInput(props: {
             </TableRow>
           </TableHead>
           <TableBody>
-            {instructorList.map((row) => (
-              <InstructorTableRow key={row.uuid} row={row} />
+            {instructorList.map((row, index) => (
+              <InstructorTableRow key={row.uuid} row={row} rowNum={index + 1} />
             ))}
           </TableBody>
         </Table>

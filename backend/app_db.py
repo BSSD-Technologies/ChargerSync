@@ -1,15 +1,9 @@
+# This file is used for testing
+
 from flask import Flask
 from extensions import db
-import DataGenerator
 from Schedule import Schedule
-from models.Course import Course, Section
-from models.Instructor import Instructor
-from models.Room import Room
-from models.Period import Period
-from models.Preferences import PeriodPreference, CoursePreference
 from output import formatForOutput
-import csvOutput
-import uuid
 import json
 import DatabaseManager
 

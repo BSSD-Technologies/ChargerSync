@@ -21,11 +21,18 @@ export default function UploadInput() {
             <Typography variant="h5">
               Download course schedule input templates
             </Typography>
+            <br />
             <Typography variant="body1">
-              Download these CSV templates, fill out the course schedule
-              information for the respective input file, and upload to the
-              respective sections below to bulk upload your scheduling
-              information.
+              To bulk upload schedule input data, download these CSV templates
+              and fill out the schedule input data for the respective files.
+              Then, upload the corresponding CSV file to the proper input
+              section.
+            </Typography>
+            <Typography variant="body1">
+              <em>
+                Note: You may only upload a valid input template from the ones
+                provided.
+              </em>
             </Typography>
           </Stack>
         </Grid>
