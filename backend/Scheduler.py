@@ -170,7 +170,7 @@ class Scheduler:
         for instructor in instructors:
             pull_insturctor = instructor.id
             period_ids = [period.id for period in periods]
-            tuple_item = (pull_insturctor, 3, period_ids)
+            tuple_item = (pull_insturctor, 4, period_ids)
             self.instructor_availability.append(tuple_item)
 
     def getInstructorSectionCount(self, instructor_id):
