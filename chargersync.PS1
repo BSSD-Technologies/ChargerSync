@@ -47,28 +47,73 @@ Write-Host "Performing background loading actions..." -ForegroundColor DarkBlue
 
 $npmInstallLogFile = "NodeJS_install_logs.txt"
 $npmDevLogFile = "NodeJS_dev_logs.txt"
-$dockerLogFile = "Docker_exec_logs.txt"
+# $dockerLogFile = "Docker_exec_logs.txt"
 
-cd ./frontend
+Set-Location ./frontend
 $npmJob = Start-Job -ScriptBlock {
     param($workingDirectory)
     Set-Location $workingDirectory
     npm install > $using:npmInstallLogFile 
     npm run dev > $using:npmDevLogFile
 } -ArgumentList (Get-Location)
-cd ..
+Set-Location ..
 
-$dockerJob = Start-Job -ScriptBlock {
-    param($workingDirectory)
-    Set-Location $workingDirectory
-    net start com.docker.service
-    docker-compose up --build > $using:dockerLogFile
-} -ArgumentList (Get-Location)
+# Define paths and service name
+$dockerCLI = "C:\Program Files\Docker\Docker\DockerCli.exe"
+$dockerDesktop = "C:\Program Files\Docker\Docker\Docker Desktop.exe"
+$dockerServiceName = "com.docker.service"
+$dockerLogFile = "dockerlogfile.txt"  # Specify the path to your log file
 
-
-$openLocalhost = {
-    Start-Process "http://localhost:3000"
+# Check if Docker service exists
+$dockerService = Get-Service -Name $dockerServiceName
+if ($dockerService -eq $null) {
+    Write-Host "Docker service '$dockerServiceName' not found."
+    exit 1
 }
+
+# Start Docker service if it's not running
+if ($dockerService.Status -ne "Running") {
+    try {
+        Start-Service -Name $dockerServiceName -ErrorAction Stop
+    }
+    catch {
+        Write-Host "Error starting Docker service: $_"
+        exit 1
+    }
+}
+
+# Start Docker CLI
+try {
+    Start-Process -FilePath $dockerCLI -NoNewWindow -Wait
+}
+catch {
+    Write-Host "Error starting Docker CLI: $_"
+    exit 1
+}
+
+# Start Docker Desktop
+try {
+    Start-Process -FilePath $dockerDesktop -NoNewWindow -Wait
+}
+catch {
+    Write-Host "Error starting Docker Desktop: $_"
+    exit 1
+}
+
+# Change directory to where your docker-compose.yml file resides
+$composeDirectory = Join-Path -Path $PSScriptRoot -ChildPath "ChargerSync"
+Set-Location $composeDirectory
+
+# Run docker-compose up command to build and start services defined in docker-compose.yml
+try {
+    docker-compose up --build | Out-File -FilePath $dockerLogFile -Append
+}
+catch {
+    Write-Host "Error running docker-compose: $_"
+    exit 1
+}
+
+
 
 function Show-LoadingBar {
     param(
@@ -102,7 +147,7 @@ Show-LoadingBar -TotalSteps $TotalSteps
 
 
 # Start the job to open localhost after npm and Docker are ready
-$localHostJob = Start-Job -ScriptBlock $openLocalhost
+Start-Process "http://localhost:3000"
 
 # Wait for npm and Docker jobs to complete
 $npmJob | Wait-Job

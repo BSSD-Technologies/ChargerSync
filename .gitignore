@@ -7,3 +7,6 @@ backend/models/__pycache__
 backend/.DS_Store
 runBackendSH.bat
 node_modules
+frontend/NodeJS_install_logs.txt
+frontend/NodeJS_dev_logs.txt
+dockerlogfile.txt
