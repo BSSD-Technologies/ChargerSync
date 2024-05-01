@@ -10,9 +10,6 @@ class Instructor(db.Model):
     fname = db.Column(db.String(256), default=None)
     lname = db.Column(db.String(256), nullable=None)
     priority = db.Column(db.Integer, default=None)
-    
-    # one to many relationship with sections
-    # sections = db.relationship('Section', backref='instructor', lazy=True)
 
     # one to many relationship with course preferences
     course_preferences = db.relationship('CoursePreference', backref='instructor', lazy=True)
