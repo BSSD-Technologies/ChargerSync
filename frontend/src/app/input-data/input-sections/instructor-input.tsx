@@ -36,9 +36,11 @@ import { UseUploadInstructors } from "@/app/_hooks/apiHooks";
 function InstructorTableRow(props: { row: Instructor; rowNum: number }) {
   /** States for instructor row inputs */
   const uuid = props?.row.uuid;
-  const [fname, setFname] = useState(props?.row.fname);
-  const [lname, setLname] = useState(props?.row.lname);
-  const [priority, setPriority] = useState(props?.row.priority);
+  const [fname, setFname] = useState(props?.row.fname ? props?.row.fname : "");
+  const [lname, setLname] = useState(props?.row.lname ? props?.row.lname : "");
+  const [priority, setPriority] = useState(
+    props?.row.priority ? props?.row.priority : NaN
+  );
   const [hadPriority, setHadPriority] = useState(false); // Used to detect if priority has been given any value at any point, or just default
   const isFirstRender = useFirstRender(); // Used for first render functions
 
@@ -117,7 +119,15 @@ function InstructorTableRow(props: { row: Instructor; rowNum: number }) {
       if (priorityError) hasErrors.push(true);
       else hasErrors.pop();
     }
-  }, [hadPriority, hasErrors, isFirstRender, priority, priorityError]);
+  }, [
+    fname,
+    hadPriority,
+    hasErrors,
+    isFirstRender,
+    lname,
+    priority,
+    priorityError,
+  ]);
 
   /** First render validation */
   useEffect(() => {
@@ -208,6 +218,7 @@ function InstructorTableRow(props: { row: Instructor; rowNum: number }) {
           }}
           value={priority}
           onChange={(e) => {
+            setHadPriority(true);
             validatePriority(e.target.value);
             setPriority(parseInt(e.target.value));
           }}
