@@ -312,8 +312,10 @@ export default function InstructorInput(props: {
               Enter information about available instructors. Include the
               instructor&apos;s first and last name. If applicable, enter the
               priority of the professor to rank the order in which they receive
-              class assignments. A priority value of 1 is the lowest priority,
-              with each increasing value adding an increasingly higher priority.
+              class assignments. A priority value of 1 is the highest priority,
+              with each increasing value adding an increasingly lower priority.
+              If no priority value is provided, they will be put at the lowest
+              priority.
             </Typography>
           </Stack>
         </Grid>
