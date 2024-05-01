@@ -11,6 +11,11 @@ a, a:hover, a:focus, a:active {
 input[type="file"]::file-selector-button {
   display: none;
 }
+
+iframe {
+  border-radius: 20px;
+}
+
 .input-component {
   display: flex;
   align-items: center;
@@ -22,6 +27,6 @@ input[type="file"]::file-selector-button {
 }
 
 .help-style {
-    margin-top: 2pc;
-    padding-bottom: 10pc;
+  margin-top: 2px;
+  padding-bottom: 20px;
 }
