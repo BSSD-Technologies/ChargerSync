@@ -35,7 +35,7 @@ check_npm() {
 build_docker_compose_backend() {
     echo "Building Docker Compose services in the backend directory..."
     cd backend || exit
-    docker compose up -d &
+    docker compose up -d --remove-orphans &
     cd ..
 }
 
@@ -43,6 +43,7 @@ build_docker_compose_backend() {
 run_npm_rundev_frontend() {
     echo "Running npm rundev in the frontend directory..."
     cd frontend || exit
+    npm install
     npm run dev &
     cd ..
 }
